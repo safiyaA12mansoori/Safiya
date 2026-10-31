@@ -94,6 +94,67 @@ export interface BillTotals {
   balanceDueCents: number;
 }
 
+export type DoseUnit =
+  | "mg"
+  | "ml"
+  | "tablet"
+  | "capsule"
+  | "drop"
+  | "unit";
+
+export interface Medicine {
+  id: Id;
+  name: string;
+  genericName?: string;
+  form: string;
+  strengthLabel: string;
+  unit: DoseUnit;
+  /** Inclusive lower bound for a single dose amount (in `unit`). */
+  minDose: number;
+  /** Inclusive upper bound for a single dose amount (in `unit`). */
+  maxDose: number;
+  /** Inclusive upper bound for doseAmount * frequencyPerDay. */
+  maxDailyDose: number;
+  /** Units available in clinic stock. */
+  stockQuantity: number;
+  /** Hard cap on a single dispense quantity. */
+  maxDispenseQuantity: number;
+  active: boolean;
+  notes?: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export type PrescriptionStatus =
+  | "draft"
+  | "active"
+  | "fulfilled"
+  | "cancelled";
+
+export interface PrescriptionItem {
+  id: Id;
+  medicineId: Id;
+  doseAmount: number;
+  doseUnit: DoseUnit;
+  frequencyPerDay: number;
+  durationDays: number;
+  quantity: number;
+  instructions?: string;
+}
+
+export interface Prescription {
+  id: Id;
+  patientId: Id;
+  dentistId?: Id;
+  appointmentId?: Id;
+  items: PrescriptionItem[];
+  status: PrescriptionStatus;
+  notes?: string;
+  prescribedAt: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
 export class DomainError extends Error {
   constructor(
     message: string,

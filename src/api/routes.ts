@@ -164,6 +164,73 @@ export function createApiRouter(ctx: AppContext): Router {
     res.status(204).send();
   });
 
+  // —— Medicines ——
+  router.get("/medicines", (_req, res) => {
+    res.json(ctx.medicines.list());
+  });
+
+  router.get("/medicines/:id", (req, res) => {
+    res.json(ctx.medicines.get(req.params.id));
+  });
+
+  router.post("/medicines", (req, res) => {
+    const medicine = ctx.medicines.create(req.body);
+    res.status(201).json(medicine);
+  });
+
+  router.put("/medicines/:id", (req, res) => {
+    res.json(ctx.medicines.update(req.params.id, req.body));
+  });
+
+  router.post("/medicines/:id/stock", (req, res) => {
+    const delta = Number(req.body.delta);
+    res.json(ctx.medicines.adjustStock(req.params.id, delta));
+  });
+
+  router.delete("/medicines/:id", (req, res) => {
+    ctx.medicines.delete(req.params.id);
+    res.status(204).send();
+  });
+
+  // —— Prescriptions ——
+  router.get("/prescriptions", (_req, res) => {
+    res.json(ctx.prescriptions.list());
+  });
+
+  router.get("/prescriptions/:id", (req, res) => {
+    res.json(ctx.prescriptions.get(req.params.id));
+  });
+
+  router.get("/patients/:id/prescriptions", (req, res) => {
+    res.json(ctx.prescriptions.listForPatient(req.params.id));
+  });
+
+  router.post("/prescriptions", (req, res) => {
+    const prescription = ctx.prescriptions.create(req.body);
+    res.status(201).json(prescription);
+  });
+
+  router.put("/prescriptions/:id", (req, res) => {
+    res.json(ctx.prescriptions.update(req.params.id, req.body));
+  });
+
+  router.post("/prescriptions/:id/activate", (req, res) => {
+    res.json(ctx.prescriptions.activate(req.params.id));
+  });
+
+  router.post("/prescriptions/:id/fulfill", (req, res) => {
+    res.json(ctx.prescriptions.fulfill(req.params.id));
+  });
+
+  router.post("/prescriptions/:id/cancel", (req, res) => {
+    res.json(ctx.prescriptions.cancel(req.params.id));
+  });
+
+  router.delete("/prescriptions/:id", (req, res) => {
+    ctx.prescriptions.delete(req.params.id);
+    res.status(204).send();
+  });
+
   router.get("/health", (_req, res) => {
     res.json({ status: "ok" });
   });

@@ -109,4 +109,82 @@ describe("REST API", () => {
 
     expect(paid.body.status).toBe("paid");
   });
+
+  it("rejects invalid patient and over-dose prescriptions via API", async () => {
+    const ctx = createAppContext();
+    const app = createApp(ctx);
+
+    await request(app)
+      .post("/api/patients")
+      .send({
+        firstName: "Ada",
+        lastName: "Lovelace",
+        email: "not-valid",
+        phone: "555-1",
+        dateOfBirth: "1815-12-10",
+      })
+      .expect(400);
+
+    const patient = await request(app)
+      .post("/api/patients")
+      .send({
+        firstName: "Ada",
+        lastName: "Lovelace",
+        email: "ada@example.com",
+        phone: "555-1",
+        dateOfBirth: "1815-12-10",
+      })
+      .expect(201);
+
+    const medicine = await request(app)
+      .post("/api/medicines")
+      .send({
+        name: "Amoxicillin",
+        form: "capsule",
+        strengthLabel: "500mg",
+        unit: "capsule",
+        minDose: 1,
+        maxDose: 2,
+        maxDailyDose: 6,
+        stockQuantity: 40,
+        maxDispenseQuantity: 30,
+      })
+      .expect(201);
+
+    const badDose = await request(app)
+      .post("/api/prescriptions")
+      .send({
+        patientId: patient.body.id,
+        items: [
+          {
+            medicineId: medicine.body.id,
+            doseAmount: 5,
+            frequencyPerDay: 1,
+            durationDays: 5,
+            quantity: 5,
+          },
+        ],
+      })
+      .expect(400);
+
+    expect(badDose.body.error.code).toBe("DOSE_OUT_OF_RANGE");
+
+    const ok = await request(app)
+      .post("/api/prescriptions")
+      .send({
+        patientId: patient.body.id,
+        items: [
+          {
+            medicineId: medicine.body.id,
+            doseAmount: 1,
+            frequencyPerDay: 3,
+            durationDays: 5,
+            quantity: 15,
+          },
+        ],
+      })
+      .expect(201);
+
+    expect(ok.body.items[0].quantity).toBe(15);
+  });
 });

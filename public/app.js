@@ -4,6 +4,8 @@ const state = {
   treatments: [],
   appointments: [],
   bills: [],
+  medicines: [],
+  prescriptions: [],
 };
 
 const $ = (sel) => document.querySelector(sel);
@@ -75,8 +77,12 @@ function renderStats() {
 
   $("#stats").innerHTML = [
     ["Patients", state.patients.length],
-    ["Dentists", state.dentists.length],
-    ["Appointments", state.appointments.filter((a) => a.status !== "cancelled").length],
+    ["Medicines", state.medicines.length],
+    [
+      "Active Rx",
+      state.prescriptions.filter((p) => p.status === "active" || p.status === "draft")
+        .length,
+    ],
     ["Open balance", money(openBalance)],
   ]
     .map(
@@ -239,6 +245,65 @@ function renderBills() {
     : `<p class="empty">No bills yet.</p>`;
 }
 
+function renderMedicines() {
+  $("#medicines-list").innerHTML = state.medicines.length
+    ? state.medicines
+        .map(
+          (m) => `<div class="row">
+            <div>
+              <h3>${m.name}</h3>
+              <p class="meta">${m.strengthLabel} · ${m.form} · dose ${m.minDose}–${m.maxDose} ${m.unit}/dose · stock ${m.stockQuantity}</p>
+              <span class="badge">${m.active ? "active" : "inactive"}</span>
+            </div>
+            <div class="actions">
+              <button class="action danger" data-delete-medicine="${m.id}">Delete</button>
+            </div>
+          </div>`,
+        )
+        .join("")
+    : `<p class="empty">No medicines yet.</p>`;
+}
+
+function renderPrescriptions() {
+  $("#prescriptions-list").innerHTML = state.prescriptions.length
+    ? state.prescriptions
+        .map((p) => {
+          const patient = findById(state.patients, p.patientId);
+          const lines = p.items
+            .map((item) => {
+              const med = findById(state.medicines, item.medicineId);
+              return `${med?.name || "Medicine"}: ${item.doseAmount} ${item.doseUnit} × ${item.frequencyPerDay}/day × ${item.durationDays}d (qty ${item.quantity})`;
+            })
+            .join("; ");
+          return `<div class="row">
+            <div>
+              <h3>${nameOf(patient)}</h3>
+              <p class="meta">${lines}</p>
+              <span class="badge ${p.status}">${p.status}</span>
+            </div>
+            <div class="actions">
+              ${
+                p.status === "draft"
+                  ? `<button class="action secondary" data-activate-rx="${p.id}">Activate</button>`
+                  : ""
+              }
+              ${
+                p.status === "active"
+                  ? `<button class="action" data-fulfill-rx="${p.id}">Fulfill</button>`
+                  : ""
+              }
+              ${
+                p.status !== "fulfilled" && p.status !== "cancelled"
+                  ? `<button class="action danger" data-cancel-rx="${p.id}">Cancel</button>`
+                  : ""
+              }
+            </div>
+          </div>`;
+        })
+        .join("")
+    : `<p class="empty">No prescriptions yet.</p>`;
+}
+
 function refreshSelects() {
   fillSelect($('#appointment-form [name="patientId"]'), state.patients, nameOf);
   fillSelect($('#appointment-form [name="dentistId"]'), state.dentists, nameOf);
@@ -260,17 +325,41 @@ function refreshSelects() {
     true,
     "None",
   );
+  fillSelect($('#prescription-form [name="patientId"]'), state.patients, nameOf);
+  fillSelect(
+    $('#prescription-form [name="dentistId"]'),
+    state.dentists,
+    nameOf,
+    true,
+    "Optional",
+  );
+  fillSelect(
+    $('#prescription-form [name="medicineId"]'),
+    state.medicines.filter((m) => m.active),
+    (m) => `${m.name} (${m.strengthLabel})`,
+  );
 }
 
 async function refresh() {
-  const [patients, dentists, treatments, appointments, bills] = await Promise.all([
-    api("/patients"),
-    api("/dentists"),
-    api("/treatments"),
-    api("/appointments"),
-    api("/bills"),
-  ]);
-  Object.assign(state, { patients, dentists, treatments, appointments, bills });
+  const [patients, dentists, treatments, appointments, bills, medicines, prescriptions] =
+    await Promise.all([
+      api("/patients"),
+      api("/dentists"),
+      api("/treatments"),
+      api("/appointments"),
+      api("/bills"),
+      api("/medicines"),
+      api("/prescriptions"),
+    ]);
+  Object.assign(state, {
+    patients,
+    dentists,
+    treatments,
+    appointments,
+    bills,
+    medicines,
+    prescriptions,
+  });
   renderStats();
   renderUpcoming();
   renderOpenBills();
@@ -279,6 +368,8 @@ async function refresh() {
   renderTreatments();
   renderAppointments();
   renderBills();
+  renderMedicines();
+  renderPrescriptions();
   refreshSelects();
 }
 
@@ -397,6 +488,54 @@ $("#appointment-form").addEventListener("submit", async (e) => {
   $(`#appointment-form [name="${name}"]`).addEventListener("change", checkConflict);
 });
 
+$("#medicine-form").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const fd = new FormData(e.target);
+  const payload = Object.fromEntries(fd.entries());
+  payload.minDose = Number(payload.minDose);
+  payload.maxDose = Number(payload.maxDose);
+  payload.maxDailyDose = Number(payload.maxDailyDose);
+  payload.stockQuantity = Number(payload.stockQuantity);
+  payload.maxDispenseQuantity = Number(payload.maxDispenseQuantity);
+  if (!payload.genericName) delete payload.genericName;
+  try {
+    await api("/medicines", { method: "POST", body: JSON.stringify(payload) });
+    e.target.reset();
+    toast("Medicine saved");
+    await refresh();
+  } catch (err) {
+    toast(err.message, true);
+  }
+});
+
+$("#prescription-form").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const fd = new FormData(e.target);
+  const payload = {
+    patientId: fd.get("patientId"),
+    items: [
+      {
+        medicineId: fd.get("medicineId"),
+        doseAmount: Number(fd.get("doseAmount")),
+        frequencyPerDay: Number(fd.get("frequencyPerDay")),
+        durationDays: Number(fd.get("durationDays")),
+        quantity: Number(fd.get("quantity")),
+        instructions: String(fd.get("instructions") || "").trim() || undefined,
+      },
+    ],
+  };
+  const dentistId = fd.get("dentistId");
+  if (dentistId) payload.dentistId = dentistId;
+  try {
+    await api("/prescriptions", { method: "POST", body: JSON.stringify(payload) });
+    e.target.reset();
+    toast("Prescription draft created");
+    await refresh();
+  } catch (err) {
+    toast(err.message, true);
+  }
+});
+
 $("#bill-form").addEventListener("submit", async (e) => {
   e.preventDefault();
   const fd = new FormData(e.target);
@@ -463,6 +602,24 @@ document.body.addEventListener("click", async (e) => {
     } else if (t.dataset.voidBill) {
       await api(`/bills/${t.dataset.voidBill}/void`, { method: "POST" });
       toast("Bill voided");
+    } else if (t.dataset.deleteMedicine) {
+      await api(`/medicines/${t.dataset.deleteMedicine}`, { method: "DELETE" });
+      toast("Medicine deleted");
+    } else if (t.dataset.activateRx) {
+      await api(`/prescriptions/${t.dataset.activateRx}/activate`, {
+        method: "POST",
+      });
+      toast("Prescription activated");
+    } else if (t.dataset.fulfillRx) {
+      await api(`/prescriptions/${t.dataset.fulfillRx}/fulfill`, {
+        method: "POST",
+      });
+      toast("Prescription fulfilled");
+    } else if (t.dataset.cancelRx) {
+      await api(`/prescriptions/${t.dataset.cancelRx}/cancel`, {
+        method: "POST",
+      });
+      toast("Prescription cancelled");
     } else {
       return;
     }

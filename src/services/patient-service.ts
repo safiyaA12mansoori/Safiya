@@ -11,6 +11,9 @@ export interface PatientInput {
   notes?: string;
 }
 
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const DOB_RE = /^\d{4}-\d{2}-\d{2}$/;
+
 function validatePatientInput(input: PatientInput): void {
   if (!input.firstName?.trim() || !input.lastName?.trim()) {
     throw new DomainError("Patient first and last name are required", "VALIDATION");
@@ -18,11 +21,30 @@ function validatePatientInput(input: PatientInput): void {
   if (!input.email?.trim()) {
     throw new DomainError("Patient email is required", "VALIDATION");
   }
+  if (!EMAIL_RE.test(input.email.trim())) {
+    throw new DomainError("Patient email is invalid", "INVALID_EMAIL");
+  }
   if (!input.phone?.trim()) {
     throw new DomainError("Patient phone is required", "VALIDATION");
   }
   if (!input.dateOfBirth?.trim()) {
     throw new DomainError("Patient date of birth is required", "VALIDATION");
+  }
+  if (!DOB_RE.test(input.dateOfBirth.trim())) {
+    throw new DomainError(
+      "Patient date of birth must be YYYY-MM-DD",
+      "INVALID_DATE_OF_BIRTH",
+    );
+  }
+  const dob = Date.parse(`${input.dateOfBirth.trim()}T00:00:00.000Z`);
+  if (Number.isNaN(dob)) {
+    throw new DomainError("Patient date of birth is invalid", "INVALID_DATE_OF_BIRTH");
+  }
+  if (dob > Date.now()) {
+    throw new DomainError(
+      "Patient date of birth cannot be in the future",
+      "INVALID_DATE_OF_BIRTH",
+    );
   }
 }
 
@@ -91,6 +113,15 @@ export class PatientService {
       throw new DomainError(
         "Cannot delete patient with active appointments",
         "PATIENT_HAS_APPOINTMENTS",
+      );
+    }
+    const hasPrescriptions = this.store
+      .listPrescriptions()
+      .some((p) => p.patientId === id && p.status !== "cancelled");
+    if (hasPrescriptions) {
+      throw new DomainError(
+        "Cannot delete patient with active prescriptions",
+        "PATIENT_HAS_PRESCRIPTIONS",
       );
     }
     this.store.patients.delete(id);

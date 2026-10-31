@@ -4,7 +4,9 @@ import type {
   Bill,
   Dentist,
   Id,
+  Medicine,
   Patient,
+  Prescription,
   Treatment,
 } from "../domain/types.js";
 import { NotFoundError } from "../domain/types.js";
@@ -37,6 +39,8 @@ export class MemoryStore {
   readonly appointments: EntityMap<Appointment> = new Map();
   readonly treatments: EntityMap<Treatment> = new Map();
   readonly bills: EntityMap<Bill> = new Map();
+  readonly medicines: EntityMap<Medicine> = new Map();
+  readonly prescriptions: EntityMap<Prescription> = new Map();
 
   clear(): void {
     this.patients.clear();
@@ -44,6 +48,8 @@ export class MemoryStore {
     this.appointments.clear();
     this.treatments.clear();
     this.bills.clear();
+    this.medicines.clear();
+    this.prescriptions.clear();
   }
 
   getPatient(id: Id): Patient {
@@ -66,6 +72,14 @@ export class MemoryStore {
     return requireEntity(this.bills, "Bill", id);
   }
 
+  getMedicine(id: Id): Medicine {
+    return requireEntity(this.medicines, "Medicine", id);
+  }
+
+  getPrescription(id: Id): Prescription {
+    return requireEntity(this.prescriptions, "Prescription", id);
+  }
+
   listPatients(): Patient[] {
     return [...this.patients.values()];
   }
@@ -84,5 +98,13 @@ export class MemoryStore {
 
   listBills(): Bill[] {
     return [...this.bills.values()];
+  }
+
+  listMedicines(): Medicine[] {
+    return [...this.medicines.values()];
+  }
+
+  listPrescriptions(): Prescription[] {
+    return [...this.prescriptions.values()];
   }
 }

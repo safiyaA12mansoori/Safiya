@@ -28,6 +28,8 @@
         <button class="tab" data-view="dentists">Dentists</button>
         <button class="tab" data-view="treatments">Treatments</button>
         <button class="tab" data-view="appointments">Appointments</button>
+        <button class="tab" data-view="medicines">Medicines</button>
+        <button class="tab" data-view="prescriptions">Prescriptions</button>
         <button class="tab" data-view="billing">Billing</button>
       </nav>
     </header>
@@ -36,7 +38,7 @@
       <section id="view-dashboard" class="view is-active">
         <h1>Today at the clinic</h1>
         <p class="lede">
-          Manage patients, dentists, treatments, appointments, and billing from one place.
+          Manage patients, medicines, prescriptions, appointments, treatments, and billing from one place.
         </p>
         <div class="stat-row" id="stats"></div>
         <div class="split">
@@ -169,6 +171,66 @@
             <button type="submit">Create draft</button>
           </form>
           <div id="bills-list" class="list-panel"></div>
+        </div>
+      </section>
+
+      <section id="view-medicines" class="view">
+        <div class="section-head">
+          <div>
+            <h1>Medicines</h1>
+            <p class="lede">Clinic formulary with dose and stock limits.</p>
+          </div>
+        </div>
+        <div class="panel-grid">
+          <form id="medicine-form" class="form-panel">
+            <h2>Add medicine</h2>
+            <label>Name <input name="name" required /></label>
+            <label>Generic name <input name="genericName" /></label>
+            <label>Form <input name="form" placeholder="tablet, capsule, syrup" required /></label>
+            <label>Strength label <input name="strengthLabel" placeholder="500mg" required /></label>
+            <label
+              >Unit
+              <select name="unit" required>
+                <option value="tablet">tablet</option>
+                <option value="capsule">capsule</option>
+                <option value="mg">mg</option>
+                <option value="ml">ml</option>
+                <option value="drop">drop</option>
+                <option value="unit">unit</option>
+              </select>
+            </label>
+            <label>Min dose <input name="minDose" type="number" min="0.01" step="any" required /></label>
+            <label>Max dose <input name="maxDose" type="number" min="0.01" step="any" required /></label>
+            <label>Max daily dose <input name="maxDailyDose" type="number" min="0.01" step="any" required /></label>
+            <label>Stock quantity <input name="stockQuantity" type="number" min="0" step="1" required /></label>
+            <label>Max dispense qty <input name="maxDispenseQuantity" type="number" min="1" step="1" required /></label>
+            <button type="submit">Save medicine</button>
+          </form>
+          <div id="medicines-list" class="list-panel"></div>
+        </div>
+      </section>
+
+      <section id="view-prescriptions" class="view">
+        <div class="section-head">
+          <div>
+            <h1>Prescriptions</h1>
+            <p class="lede">Write prescriptions with dosage and quantity checks.</p>
+          </div>
+        </div>
+        <div class="panel-grid">
+          <form id="prescription-form" class="form-panel">
+            <h2>New prescription</h2>
+            <label>Patient <select name="patientId" required></select></label>
+            <label>Dentist <select name="dentistId"><option value="">Optional</option></select></label>
+            <label>Medicine <select name="medicineId" required></select></label>
+            <label>Dose amount <input name="doseAmount" type="number" min="0.01" step="any" required /></label>
+            <label>Times per day <input name="frequencyPerDay" type="number" min="1" max="24" step="1" required /></label>
+            <label>Duration (days) <input name="durationDays" type="number" min="1" max="365" step="1" required /></label>
+            <label>Quantity to dispense <input name="quantity" type="number" min="1" step="1" required /></label>
+            <label>Instructions <input name="instructions" /></label>
+            <button type="submit">Create draft</button>
+          </form>
+          <div id="prescriptions-list" class="list-panel"></div>
         </div>
       </section>
     </main>

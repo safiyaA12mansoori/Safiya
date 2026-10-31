@@ -71,4 +71,47 @@ export function seedDemoData(ctx: AppContext): void {
     fromAppointmentTreatment: true,
   });
   ctx.billing.issue(bill.id);
+
+  const amox = ctx.medicines.create({
+    name: "Amoxicillin",
+    genericName: "amoxicillin",
+    form: "capsule",
+    strengthLabel: "500mg",
+    unit: "capsule",
+    minDose: 1,
+    maxDose: 2,
+    maxDailyDose: 6,
+    stockQuantity: 120,
+    maxDispenseQuantity: 42,
+  });
+
+  ctx.medicines.create({
+    name: "Ibuprofen",
+    genericName: "ibuprofen",
+    form: "tablet",
+    strengthLabel: "200mg",
+    unit: "tablet",
+    minDose: 1,
+    maxDose: 2,
+    maxDailyDose: 6,
+    stockQuantity: 200,
+    maxDispenseQuantity: 60,
+  });
+
+  const rx = ctx.prescriptions.create({
+    patientId: alice.id,
+    dentistId: drPatel.id,
+    appointmentId: appointment.id,
+    items: [
+      {
+        medicineId: amox.id,
+        doseAmount: 1,
+        frequencyPerDay: 3,
+        durationDays: 7,
+        quantity: 21,
+        instructions: "Take after meals",
+      },
+    ],
+  });
+  ctx.prescriptions.activate(rx.id);
 }

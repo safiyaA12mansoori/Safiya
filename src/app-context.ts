@@ -2,7 +2,9 @@ import { MemoryStore } from "./repositories/memory-store.js";
 import { AppointmentService } from "./services/appointment-service.js";
 import { BillingService } from "./services/billing-service.js";
 import { DentistService } from "./services/dentist-service.js";
+import { MedicineService } from "./services/medicine-service.js";
 import { PatientService } from "./services/patient-service.js";
+import { PrescriptionService } from "./services/prescription-service.js";
 import { TreatmentService } from "./services/treatment-service.js";
 
 export interface AppContext {
@@ -12,6 +14,8 @@ export interface AppContext {
   appointments: AppointmentService;
   treatments: TreatmentService;
   billing: BillingService;
+  medicines: MedicineService;
+  prescriptions: PrescriptionService;
 }
 
 export function createAppContext(store = new MemoryStore()): AppContext {
@@ -22,5 +26,7 @@ export function createAppContext(store = new MemoryStore()): AppContext {
     appointments: new AppointmentService(store),
     treatments: new TreatmentService(store),
     billing: new BillingService(store),
+    medicines: new MedicineService(store),
+    prescriptions: new PrescriptionService(store),
   };
 }
