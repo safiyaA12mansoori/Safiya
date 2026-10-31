@@ -1,7 +1,7 @@
 {
   "name": "dental-clinic-management",
   "version": "1.0.0",
-  "description": "Dental Clinic Management System — patients, dentists, appointments, treatments, and billing",
+  "description": "Dental Clinic Management System — patients, dentists, appointments, treatments, medicines, prescriptions, and billing",
   "private": true,
   "type": "module",
   "scripts": {
