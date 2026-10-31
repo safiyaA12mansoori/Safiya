@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Safiya Dental Clinic</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&family=Literata:opsz,wght@7..72,500;7..72,700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <div class="backdrop" aria-hidden="true"></div>
+    <header class="topbar">
+      <div class="brand">
+        <span class="brand-mark" aria-hidden="true"></span>
+        <div>
+          <p class="brand-name">Safiya Dental</p>
+          <p class="brand-tag">Clinic management</p>
+        </div>
+      </div>
+      <nav class="tabs" aria-label="Modules">
+        <button class="tab is-active" data-view="dashboard">Overview</button>
+        <button class="tab" data-view="patients">Patients</button>
+        <button class="tab" data-view="dentists">Dentists</button>
+        <button class="tab" data-view="treatments">Treatments</button>
+        <button class="tab" data-view="appointments">Appointments</button>
+        <button class="tab" data-view="billing">Billing</button>
+      </nav>
+    </header>
+
+    <main class="shell">
+      <section id="view-dashboard" class="view is-active">
+        <h1>Today at the clinic</h1>
+        <p class="lede">
+          Manage patients, dentists, treatments, appointments, and billing from one place.
+        </p>
+        <div class="stat-row" id="stats"></div>
+        <div class="split">
+          <div>
+            <h2>Upcoming appointments</h2>
+            <div id="upcoming" class="stack"></div>
+          </div>
+          <div>
+            <h2>Open balances</h2>
+            <div id="open-bills" class="stack"></div>
+          </div>
+        </div>
+      </section>
+
+      <section id="view-patients" class="view">
+        <div class="section-head">
+          <div>
+            <h1>Patients</h1>
+            <p class="lede">Create and update patient records.</p>
+          </div>
+        </div>
+        <div class="panel-grid">
+          <form id="patient-form" class="form-panel">
+            <h2>Add patient</h2>
+            <label>First name <input name="firstName" required /></label>
+            <label>Last name <input name="lastName" required /></label>
+            <label>Email <input name="email" type="email" required /></label>
+            <label>Phone <input name="phone" required /></label>
+            <label>Date of birth <input name="dateOfBirth" type="date" required /></label>
+            <label>Notes <textarea name="notes" rows="2"></textarea></label>
+            <button type="submit">Save patient</button>
+          </form>
+          <div id="patients-list" class="list-panel"></div>
+        </div>
+      </section>
+
+      <section id="view-dentists" class="view">
+        <div class="section-head">
+          <div>
+            <h1>Dentists</h1>
+            <p class="lede">Provider roster and specialties.</p>
+          </div>
+        </div>
+        <div class="panel-grid">
+          <form id="dentist-form" class="form-panel">
+            <h2>Add dentist</h2>
+            <label>First name <input name="firstName" required /></label>
+            <label>Last name <input name="lastName" required /></label>
+            <label>Email <input name="email" type="email" required /></label>
+            <label>Phone <input name="phone" required /></label>
+            <label>Specialty <input name="specialty" required /></label>
+            <button type="submit">Save dentist</button>
+          </form>
+          <div id="dentists-list" class="list-panel"></div>
+        </div>
+      </section>
+
+      <section id="view-treatments" class="view">
+        <div class="section-head">
+          <div>
+            <h1>Treatments</h1>
+            <p class="lede">Catalog of billable procedures.</p>
+          </div>
+        </div>
+        <div class="panel-grid">
+          <form id="treatment-form" class="form-panel">
+            <h2>Add treatment</h2>
+            <label>Name <input name="name" required /></label>
+            <label>Description <textarea name="description" rows="2"></textarea></label>
+            <label
+              >Category
+              <select name="category" required>
+                <option value="preventive">Preventive</option>
+                <option value="restorative">Restorative</option>
+                <option value="cosmetic">Cosmetic</option>
+                <option value="surgical">Surgical</option>
+                <option value="orthodontic">Orthodontic</option>
+                <option value="other">Other</option>
+              </select>
+            </label>
+            <label>Duration (minutes) <input name="durationMinutes" type="number" min="1" required /></label>
+            <label>Base price (USD) <input name="basePrice" type="number" min="0" step="0.01" required /></label>
+            <button type="submit">Save treatment</button>
+          </form>
+          <div id="treatments-list" class="list-panel"></div>
+        </div>
+      </section>
+
+      <section id="view-appointments" class="view">
+        <div class="section-head">
+          <div>
+            <h1>Appointments</h1>
+            <p class="lede">Scheduling with automatic dentist conflict detection.</p>
+          </div>
+        </div>
+        <div class="panel-grid">
+          <form id="appointment-form" class="form-panel">
+            <h2>Book appointment</h2>
+            <label>Patient <select name="patientId" required></select></label>
+            <label>Dentist <select name="dentistId" required></select></label>
+            <label>Treatment <select name="treatmentId"><option value="">Optional</option></select></label>
+            <label>Start <input name="startTime" type="datetime-local" required /></label>
+            <label>End <input name="endTime" type="datetime-local" required /></label>
+            <label>Reason <input name="reason" /></label>
+            <p id="conflict-hint" class="hint" hidden></p>
+            <button type="submit">Book</button>
+          </form>
+          <div id="appointments-list" class="list-panel"></div>
+        </div>
+      </section>
+
+      <section id="view-billing" class="view">
+        <div class="section-head">
+          <div>
+            <h1>Billing</h1>
+            <p class="lede">Create bills from treatments or appointments, issue, and record payments.</p>
+          </div>
+        </div>
+        <div class="panel-grid">
+          <form id="bill-form" class="form-panel">
+            <h2>Create bill</h2>
+            <label>Patient <select name="patientId" required></select></label>
+            <label>Appointment <select name="appointmentId"><option value="">None</option></select></label>
+            <label class="checkbox">
+              <input name="fromAppointmentTreatment" type="checkbox" checked />
+              Include appointment treatment
+            </label>
+            <label>Or line description <input name="description" placeholder="Custom line item" /></label>
+            <label>Amount (USD) <input name="amount" type="number" min="0" step="0.01" /></label>
+            <button type="submit">Create draft</button>
+          </form>
+          <div id="bills-list" class="list-panel"></div>
+        </div>
+      </section>
+    </main>
+
+    <div id="toast" class="toast" hidden></div>
+    <script type="module" src="/app.js"></script>
+  </body>
+</html>
