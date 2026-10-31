@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="AromaLuxe">
+  <rect width="64" height="64" rx="14" fill="#641E32"/>
+  <rect x="22" y="24" width="20" height="26" rx="3" fill="#FFF7EC"/>
+  <rect x="25" y="34" width="14" height="14" fill="#D9A8B4"/>
+  <path d="M32 24c2-8 0-12 0-12s-1 6-3 9c3 1 5 3 3 3z" fill="#C5A05A"/>
+  <path d="M18 18h28" stroke="#C5A05A" stroke-width="1.5"/>
+</svg>
