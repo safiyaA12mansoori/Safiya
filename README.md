@@ -14,6 +14,16 @@ python3 -m http.server 8000
 
 Then visit `http://127.0.0.1:8000`.
 
+## Render
+
+The site is a static site on Render. There is no server process. `render.yaml` copies the HTML, `css`, `js`, and `assets` into `public`, and Render publishes that folder.
+
+Approve it on your Render account with this link. It deploys the current catalogue branch:
+
+https://render.com/deploy?repo=https://github.com/safiyaA12mansoori/Safiya/tree/cursor/aromaluxe-website-6709
+
+Render then gives the site an `onrender.com` address. Later pushes to that branch publish again. After this branch is merged, point the Render service at `main`.
+
 JavaScript needs to be on for the product grids, product details, and the hamper summary. The rest of the pages are readable without it. Fonts and Bootstrap load from the network; if they are blocked, the pages still use Georgia and a system sans-serif.
 
 ## Orders
