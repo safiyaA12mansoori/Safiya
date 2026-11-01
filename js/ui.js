@@ -35,28 +35,10 @@ const UI = (() => {
     return "mailto:" + AROMALUXE.email + "?subject=" + encodeURIComponent(subject) + "&body=" + encodeURIComponent(body);
   }
 
-  function motif(name) {
-    const photos = {
-      jar: "assets/photos/candle.jpg",
-      pillar: "assets/photos/candle.jpg",
-      flower: "assets/photos/bouquet.jpg",
-      bouquet: "assets/photos/bouquet.jpg",
-      laddu: "assets/photos/chocolate.jpg",
-      decorative: "assets/photos/candle.jpg",
-      hamper: "assets/photos/hamper.jpg",
-      box: "assets/photos/hamper.jpg",
-      ribbon: "assets/photos/bouquet.jpg",
-      chocolate: "assets/photos/chocolate.jpg",
-      rose: "assets/photos/bouquet.jpg",
-      perfume: "assets/photos/perfume.jpg",
-      jewellery: "assets/photos/jewellery.jpg",
-      diya: "assets/photos/diya.jpg",
-      tray: "assets/photos/diya.jpg",
-      dryfruit: "assets/photos/hamper.jpg",
-      sweet: "assets/photos/chocolate.jpg"
-    };
-    const src = photos[name] || photos.jar;
-    return `<img class="motif-photo" src="${src}" alt="">`;
+  function motif(product) {
+    const src = product && product.image ? product.image : "";
+    if (!src) return `<span class="motif-photo motif-empty" aria-hidden="true"></span>`;
+    return `<img class="motif-photo" src="${esc(src)}" alt="">`;
   }
 
   function stockMeta(stock) {
@@ -107,12 +89,13 @@ const UI = (() => {
     const qty = Math.max(1, Number(options.qty) || 1);
     const selections = options.selections || defaultSelections(product);
     const category = getCategory(product.category);
+    const sub = typeof getSub === "function" ? getSub(product.category, product.sub) : null;
     const unit = unitPrice(product, selections);
     const lines = [
       "Hello AromaLuxe, I would like to enquire about a gift.",
       "",
       "Product: " + product.name,
-      "Category: " + (category ? category.name : product.category),
+      "Category: " + (category ? category.name : product.category) + (sub ? " / " + sub.name : ""),
       "Quantity: " + qty
     ];
     Object.keys(selections).forEach((label) => {
@@ -133,6 +116,7 @@ const UI = (() => {
 
   function productCard(product) {
     const category = getCategory(product.category);
+    const sub = typeof getSub === "function" ? getSub(product.category, product.sub) : null;
     const stock = stockMeta(product.stock);
     const message = enquiryMessage(product, { qty: 1, selections: defaultSelections(product) });
     const discount = product.compareAt && product.price != null && product.compareAt > product.price
@@ -141,10 +125,10 @@ const UI = (() => {
     return `<article class="product-card">
       <a class="product-visual" href="product.html?id=${esc(product.id)}">
         ${discount}
-        ${motif(product.motif, product.accent)}
+        ${motif(product)}
       </a>
       <div class="product-copy">
-        <p class="kicker">${esc(category ? category.short : "")}</p>
+        <p class="kicker">${esc(sub ? sub.name : (category ? category.short : ""))}</p>
         <h3><a href="product.html?id=${esc(product.id)}">${esc(product.name)}</a></h3>
         ${priceBlock(product)}
         <p class="pill ${stock.cls}">${esc(stock.text)}</p>

@@ -34,6 +34,7 @@ function hamperMessage(input, evaluation) {
       ? "Box price: on request"
       : "Box catalogue price: " + UI.rs(input.box.price));
   }
+  lines.push(input.pack ? "Packaging: " + input.pack.name : "Packaging: not chosen yet");
   lines.push("Budget guide: " + (input.budget ? input.budget.name : "Not sure yet"));
   lines.push("Recipient: " + (input.recipient || "—"));
   lines.push("");
@@ -93,7 +94,12 @@ function initHamper() {
   if (!form) return;
   const boxMount = document.querySelector("#box-options");
   const budgetMount = document.querySelector("#budget-options");
-  const groupMount = document.querySelector("#hamper-groups");
+  const packMount = document.querySelector("#pack-options");
+  const groupMounts = {
+    style: document.querySelector("#hamper-style"),
+    sweets: document.querySelector("#hamper-sweets"),
+    candles: document.querySelector("#hamper-candles")
+  };
   const summary = document.querySelector("#hamper-summary");
   const preview = document.querySelector("#hamper-preview");
   const status = document.querySelector("#hamper-status");
@@ -115,21 +121,41 @@ function initHamper() {
       <span>${UI.esc(budget.name)}</span>
     </label>`).join("");
 
-  groupMount.innerHTML = HAMPER_GROUPS.map((group) => {
-    const items = PRODUCTS.filter((product) => product.hamperGroup === group.id);
+  if (packMount) {
+    packMount.innerHTML = PACKAGING.map((pack) => `
+      <label class="choice">
+        <input type="radio" name="pack" value="${UI.esc(pack.id)}" ${saved.pack === pack.id ? "checked" : ""}>
+        <span><strong>${UI.esc(pack.name)}</strong><br>${UI.esc(pack.detail)}</span>
+      </label>`).join("");
+  }
+
+  function hamperItems(groupId) {
+    const addons = (typeof CUSTOM_ADDONS === "undefined" ? [] : CUSTOM_ADDONS).filter((item) => item.group === groupId);
+    const products = PRODUCTS.filter((product) => product.hamperGroup === groupId);
+    return addons.concat(products);
+  }
+
+  function groupHtml(group) {
+    const items = hamperItems(group.id);
     if (!items.length) return "";
     const rows = items.map((product) => {
       const qty = saved.qty && saved.qty[product.id] ? saved.qty[product.id] : 0;
       const label = product.quoteOnly || product.price == null ? "Price on request" : UI.inr(product.price);
       return `<div class="line-row">
-        ${UI.motif(product.motif, product.accent)}
+        ${UI.motif(product)}
         <label>${UI.esc(product.name)}<br><span class="fine-print">${label}</span>
           <span class="visually-hidden">Quantity</span></label>
         <input class="line-price" aria-label="Quantity for ${UI.esc(product.name)}" data-qty="${UI.esc(product.id)}" type="number" min="0" max="12" value="${UI.esc(qty)}">
       </div>`;
     }).join("");
     return `<section class="group-block"><h3>${UI.esc(group.name)}</h3><p class="fine-print">${UI.esc(group.copy)}</p>${rows}</section>`;
-  }).join("");
+  }
+
+  const mountFor = { fragrance: "style", jewellery: "style", chocolates: "sweets", candles: "candles" };
+  Object.keys(groupMounts).forEach((key) => {
+    if (!groupMounts[key]) return;
+    groupMounts[key].innerHTML = HAMPER_GROUPS.filter((group) => mountFor[group.id] === key).map(groupHtml).join("");
+  });
 
   const recipient = form.elements.recipient;
   const note = form.elements.note;
@@ -146,7 +172,9 @@ function initHamper() {
   function collect() {
     const boxId = (form.elements.box.value || "");
     const budgetId = (form.elements.budget.value || "unsure");
+    const packId = form.elements.pack ? form.elements.pack.value : "";
     const box = HAMPER_BOXES.find((item) => item.id === boxId) || null;
+    const pack = (typeof PACKAGING === "undefined" ? [] : PACKAGING).find((item) => item.id === packId) || null;
     const budget = BUDGETS.find((item) => item.id === budgetId) || BUDGETS[0];
     const lines = [];
     const qtyMap = {};
@@ -156,13 +184,14 @@ function initHamper() {
       if (qty > 12) qty = 12;
       input.value = String(qty);
       if (!qty) return;
-      const product = getProduct(input.getAttribute("data-qty"));
+      const product = findCatalogueItem(input.getAttribute("data-qty"));
       if (!product) return;
       qtyMap[product.id] = qty;
       lines.push({ product, qty, unit: UI.unitPrice(product, UI.defaultSelections(product)) });
     });
     return {
       box,
+      pack,
       budget,
       lines,
       qtyMap,
@@ -177,6 +206,7 @@ function initHamper() {
     const input = collect();
     writeHamperStorage({
       box: input.box ? input.box.id : "",
+      pack: input.pack ? input.pack.id : "",
       budget: input.budget ? input.budget.id : "unsure",
       qty: input.qtyMap,
       recipient: input.recipient,
@@ -188,16 +218,17 @@ function initHamper() {
     const bits = [];
     if (!input.box) bits.push("<p>Choose a gift box to start.</p>");
     else bits.push(`<p><strong>Box.</strong> ${UI.esc(input.box.name)}</p>`);
+    if (input.pack) bits.push(`<p><strong>Packaging.</strong> ${UI.esc(input.pack.name)}</p>`);
     if (!input.lines.length) bits.push("<p>Add at least one product.</p>");
     else {
       bits.push("<ul>" + input.lines.map((line) => `<li>${UI.esc(line.product.name)} × ${line.qty}</li>`).join("") + "</ul>");
     }
     if (evaluation.quote) {
-      bits.push(`<p class="total">Request a custom quote</p><p class="fine-print">${evaluation.blocks.map(UI.esc).join(" ")}</p>`);
-      submit.textContent = "Request a Custom Quote";
+      bits.push(`<p class="total">Amount confirmed by AromaLuxe</p><p class="fine-print">${evaluation.blocks.map(UI.esc).join(" ")}</p>`);
+      submit.textContent = "Submit on WhatsApp";
     } else if (evaluation.total != null) {
       bits.push(`<p class="price-note">Indicative total</p><p class="total">${UI.inr(evaluation.total)}</p><p class="fine-print">A catalogue total to discuss on WhatsApp. It is not a charge.</p>`);
-      submit.textContent = "Send hamper on WhatsApp";
+      submit.textContent = "Submit on WhatsApp";
       if (input.budget && input.budget.max && evaluation.total > input.budget.max) {
         bits.push("<p>This is above your budget guide. Lower a quantity, or ask the studio for another combination.</p>");
       }
@@ -232,6 +263,7 @@ function initHamper() {
     const result = render();
     const errors = [];
     if (!result.input.box) errors.push("Choose a gift box.");
+    if (!result.input.pack) errors.push("Choose packaging.");
     if (!result.input.lines.length) errors.push("Add at least one product.");
     if (result.input.recipient.length < 2) errors.push("Add the recipient’s name.");
     status.hidden = false;
@@ -251,7 +283,7 @@ function initHamper() {
     wa.target = "_blank";
     wa.rel = "noopener";
     wa.href = UI.waLink(result.message);
-    wa.textContent = result.evaluation.quote ? "Request a Custom Quote on WhatsApp" : "Open WhatsApp";
+    wa.textContent = "Submit on WhatsApp";
     const mail = document.createElement("a");
     mail.className = "btn btn-line";
     mail.href = UI.mailLink(result.evaluation.quote ? "Custom hamper quote" : "Custom hamper enquiry", result.message);
@@ -265,6 +297,7 @@ function initHamper() {
   document.querySelector("#hamper-clear").addEventListener("click", () => {
     form.querySelectorAll("[data-qty]").forEach((input) => { input.value = "0"; });
     form.querySelectorAll('input[name="box"]').forEach((input) => { input.checked = false; });
+    form.querySelectorAll('input[name="pack"]').forEach((input) => { input.checked = false; });
     const unsure = form.querySelector('input[name="budget"][value="unsure"]');
     if (unsure) unsure.checked = true;
     recipient.value = "";

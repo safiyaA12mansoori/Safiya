@@ -30,7 +30,7 @@ The contact form, the bulk form, and the hamper builder open WhatsApp or the vis
 
 Product names, prices, variants, and stock labels live in `js/catalog.js`. Prices are indicative labels for the conversation with AromaLuxe. They are not a charge.
 
-Sample reviews are written on the homepage and marked **Sample review**. Replace them when real customer words are ready. The look follows the rose-gold AromaLuxe logo. Photographs in `assets/photos/` are styled stand-ins and can be swapped for the studio’s own pictures.
+Sample reviews are written on the homepage and marked **Sample review**. Replace them when real customer words are ready. The shop uses only these categories: Handmade Candles, Gift Hampers, Bouquets, Personalized Gifts, Festive Collections, Home Décor, and Customize Gifting. Photographs already supplied are in those categories. Subcategories without a picture yet say that more photos are on the way. Prices on the photographed pieces are confirmed on enquiry.
 
 ## Still to be confirmed by AromaLuxe
 

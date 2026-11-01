@@ -3,11 +3,11 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Customized Gifts | AromaLuxe</title>
-  <meta name="description" content="Build a personalized hamper with AromaLuxe. Choose a box, a budget, and products, then send the summary on WhatsApp. No online payment.">
+  <title>Customize Gifting | AromaLuxe</title>
+  <meta name="description" content="Create a gift that's truly yours. Choose a box, perfumes, jewellery, chocolates, candles, a budget, a message, and packaging. Submit on WhatsApp. No online payment.">
   <meta name="theme-color" content="#C48B6A">
-  <meta property="og:title" content="Customized Gifts | AromaLuxe">
-  <meta property="og:description" content="Build a personalized hamper with AromaLuxe. Choose a box, a budget, and products, then send the summary on WhatsApp. No online payment.">
+  <meta property="og:title" content="Customize Gifting | AromaLuxe">
+  <meta property="og:description" content="Create a gift that's truly yours. Choose a box, perfumes, jewellery, chocolates, candles, a budget, a message, and packaging. Submit on WhatsApp. No online payment.">
   <meta property="og:type" content="website">
   <link rel="icon" href="assets/logo.jpg">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -45,7 +45,7 @@
             <li><a data-nav="home" href="index.html">Home</a></li>
             <li><a data-nav="shop" href="shop.html">Shop</a></li>
             <li><a data-nav="candles" href="candles.html">Candles</a></li>
-            <li><a data-nav="hamper" href="hamper.html">Custom Gifts</a></li>
+            <li><a data-nav="hamper" href="hamper.html">Customize Gifting</a></li>
             <li><a data-nav="bulk" href="bulk.html">Bulk Orders</a></li>
             <li><a data-nav="about" href="about.html">About</a></li>
             <li><a data-nav="gallery" href="gallery.html">Gallery</a></li>
@@ -59,25 +59,40 @@
 
     <section class="page-hero">
       <div class="container">
-        <nav aria-label="Breadcrumb"><ol class="breadcrumb"><li><a href="index.html">Home</a></li><li>/</li><li>Customized Gifts</li></ol></nav>
-        <p class="kicker">Hamper builder</p>
-        <h1>Your Gift, Your Way!</h1>
-        <p class="lead">Choose your favourite products, select your budget, add a personal message and create a gift that is uniquely yours.</p>
-        <p>The builder adds catalogue prices into an indicative total. If a box, a product, a personalisation, or a reference photo needs the studio to confirm it, the page switches to <strong>Request a Custom Quote</strong> and does not show a total. Your selection stays in this browser only. Nothing is charged and nothing is saved on a server.</p>
-        <p class="fine-print">Prefer a ready combination? See <a href="shop.html?cat=hampers">gift hampers</a>, including personalized birthday gifts and anniversary gift hampers.</p>
+        <nav aria-label="Breadcrumb"><ol class="breadcrumb"><li><a href="index.html">Home</a></li><li>/</li><li>Customize Gifting</li></ol></nav>
+        <p class="kicker">Customize Gifting</p>
+        <h1>Create a gift that's truly yours</h1>
+        <p class="lead">Choose from perfumes, jewellery, accessories, chocolates, dry fruits, and premium gifting products. Customize your own hamper for any occasion, recipient, or budget.</p>
+        <div class="link-row">
+          <a class="btn btn-fill" href="#builder">Customize Your Gift</a>
+          <a class="btn btn-line" href="#builder">Build Your Own Hamper</a>
+          <a class="btn btn-line" href="bulk.html">Request Bulk Order</a>
+        </div>
+        <p>Your selection stays in this browser only. Submitting opens WhatsApp or email. Nothing is charged and nothing is saved on a server. If a piece still needs a photograph or a confirmation, AromaLuxe quotes it before making the gift.</p>
+        <h2>Products available for customization</h2>
+        <div class="service-grid">
+          <article class="service"><h3>Perfumes &amp; Fragrances</h3><p>Men's perfumes, women's perfumes, unisex fragrances, and perfume gift sets.</p></article>
+          <article class="service"><h3>Jewellery &amp; Accessories</h3><p>Earrings, bracelets, necklaces, rings, fashion accessories, and jewellery gift sets.</p></article>
+          <article class="service"><h3>Chocolates &amp; Sweet Gifts</h3><p>Chocolate gift boxes, chocolate bouquets, dry fruit gifts, and chocolate combos.</p></article>
+          <article class="service"><h3>Special &amp; Bulk Gifting</h3><p>Corporate gift hampers, wedding return gifts, event giveaways, employee appreciation gifts, and reseller or wholesale orders. <a href="bulk.html">Request a bulk order</a>.</p></article>
+        </div>
       </div>
     </section>
-    <section class="section" style="padding-top:0">
+    <section class="section" id="builder" style="padding-top:0">
       <div class="container split">
         <form id="hamper-form">
-          <h2>1. Gift box</h2>
+          <h2>1. Select your gift box</h2>
           <div class="choice-grid" id="box-options"></div>
-          <h2 style="margin-top:1.4rem">2. Budget guide</h2>
-          <p class="fine-print">A guide for you and the studio. It does not change the catalogue prices.</p>
+          <h2 style="margin-top:1.4rem">2. Perfumes, jewellery and accessories</h2>
+          <div id="hamper-style"></div>
+          <h2 style="margin-top:1.4rem">3. Chocolates and dry fruits</h2>
+          <div id="hamper-sweets"></div>
+          <h2 style="margin-top:1.4rem">4. AromaLuxe candles</h2>
+          <div id="hamper-candles"></div>
+          <h2 style="margin-top:1.4rem">5. Budget</h2>
+          <p class="fine-print">A guide for you and the studio. It does not set a charge.</p>
           <div class="choice-grid" id="budget-options"></div>
-          <h2 style="margin-top:1.4rem">3. Add products</h2>
-          <div id="hamper-groups"></div>
-          <h2 style="margin-top:1.4rem">4. Personal note</h2>
+          <h2 style="margin-top:1.4rem">6. Personalized message</h2>
           <label class="field">Recipient name
             <input name="recipient" type="text" maxlength="80" autocomplete="name" required>
           </label>
@@ -88,13 +103,17 @@
             <input id="hamper-photo" name="photo" type="file" accept="image/*">
           </label>
           <img id="hamper-photo-preview" class="photo-preview" alt="Preview of the reference photo on this device" hidden>
-          <p class="fine-print">The photo stays on your device. Attach it yourself in the WhatsApp chat. Choosing one asks AromaLuxe for a quote, because the studio needs to see it before naming a price.</p>
-          <label class="choice">
+          <p class="fine-print">The photo stays on your device. Attach it yourself in the WhatsApp chat. Choosing one asks AromaLuxe to confirm the gift before naming a price.</p>
+          <h2 style="margin-top:1.4rem">7. Packaging</h2>
+          <div class="choice-grid" id="pack-options"></div>
+          <label class="choice" style="margin-top:1rem">
             <input name="needsConfirm" type="checkbox">
             <span>This request needs confirmation (wording, colours, layout, or anything that is not a plain catalogue piece).</span>
           </label>
+          <h2 style="margin-top:1.4rem">8. Submit</h2>
+          <p class="fine-print">This sends your hamper summary. It does not take payment.</p>
           <div class="link-row">
-            <button class="btn btn-fill" id="hamper-submit" type="submit">Send hamper on WhatsApp</button>
+            <button class="btn btn-fill" id="hamper-submit" type="submit">Submit on WhatsApp</button>
             <button class="btn btn-line" id="hamper-clear" type="button">Clear selection</button>
           </div>
           <div id="hamper-status" class="status-box" hidden></div>
@@ -125,7 +144,7 @@
           <li><a href="index.html">Home</a></li>
           <li><a href="shop.html">Shop All Products</a></li>
           <li><a href="candles.html">Handmade Candles</a></li>
-          <li><a href="hamper.html">Customized Gifts</a></li>
+          <li><a href="hamper.html">Customize Gifting</a></li>
           <li><a href="bulk.html">Bulk Orders &amp; Reselling</a></li>
           <li><a href="about.html">About Us</a></li>
           <li><a href="gallery.html">Gallery</a></li>

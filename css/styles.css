@@ -323,7 +323,7 @@ a:hover { color: var(--burgundy); }
   display: grid;
   gap: 1rem;
 }
-.category-grid { grid-template-columns: repeat(3, 1fr); }
+.category-grid { grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
 .feature-grid, .service-grid { grid-template-columns: repeat(3, 1fr); }
 .review-grid { grid-template-columns: repeat(3, 1fr); }
 
@@ -368,6 +368,15 @@ a:hover { color: var(--burgundy); }
   border: 1px solid rgba(196, 139, 106, 0.45);
 }
 .category-icon img { width: 100%; height: 100%; object-fit: cover; }
+.category-icon-empty {
+  display: grid;
+  place-items: center;
+  background: #f3ebe6;
+  color: var(--gold-deep);
+  font-size: 0.62rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
 
 .product-grid {
   display: grid;
@@ -461,12 +470,29 @@ a:hover { color: var(--burgundy); }
 .tile span { position: relative; z-index: 1; font-family: var(--serif); font-size: 1.45rem; line-height: 1; }
 .tile { color: #fffdf9; background-size: cover; background-position: center; }
 .tile span { text-shadow: 0 1px 10px rgba(0, 0, 0, 0.35); }
+.tile img.tile-photo {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
 .tile::after {
   content: "";
   position: absolute;
   inset: auto 0 0 0;
   height: 58%;
   background: linear-gradient(transparent, rgba(28, 22, 20, 0.55));
+}
+.band .btn-line { color: var(--ivory); border-color: rgba(255, 247, 236, 0.7); }
+.band .btn-line:hover { color: var(--burgundy); background: var(--ivory); }
+.motif-empty {
+  display: block;
+  width: 58px;
+  height: 66px;
+  border-radius: 8px;
+  background: #f3ebe6;
+  border: 1px solid var(--line);
 }
 .ph-candle { background-image: url("../assets/photos/candle.jpg"); }
 .ph-hamper { background-image: url("../assets/photos/hamper.jpg"); }

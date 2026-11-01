@@ -1,5 +1,6 @@
 function renderProductDetail(product) {
   const category = getCategory(product.category);
+  const sub = typeof getSub === "function" ? getSub(product.category, product.sub) : null;
   const stock = UI.stockMeta(product.stock);
   const selections = UI.defaultSelections(product);
   const variantFields = (product.variants || []).map((group) => {
@@ -13,10 +14,10 @@ function renderProductDetail(product) {
   return `<nav aria-label="Breadcrumb"><ol class="breadcrumb"><li><a href="index.html">Home</a></li><li>/</li><li><a href="shop.html">Shop</a></li><li>/</li><li>${UI.esc(product.name)}</li></ol></nav>
     <div class="detail-layout">
       <div class="detail-visual">
-        ${UI.motif(product.motif, product.accent)}
+        ${UI.motif(product)}
       </div>
       <div>
-        <p class="kicker">${UI.esc(category ? category.name : "")}</p>
+        <p class="kicker">${UI.esc(category ? category.name : "")}${sub ? " · " + UI.esc(sub.name) : ""}</p>
         <h1>${UI.esc(product.name)}</h1>
         <div id="detail-price">${UI.priceBlock(product)}</div>
         <p class="pill ${stock.cls}">${UI.esc(stock.text)}</p>
