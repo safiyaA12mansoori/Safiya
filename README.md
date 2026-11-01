@@ -30,13 +30,13 @@ The contact form, the bulk form, and the hamper builder open WhatsApp or the vis
 
 Product names, prices, variants, and stock labels live in `js/catalog.js`. Prices are indicative labels for the conversation with AromaLuxe. They are not a charge.
 
-Sample reviews are written on the homepage and marked **Sample review**. Replace them when real customer words are ready. Gallery tiles are colour studies, not photographs.
+Sample reviews are written on the homepage and marked **Sample review**. Replace them when real customer words are ready. The look follows the rose-gold AromaLuxe logo. Photographs in `assets/photos/` are styled stand-ins and can be swapped for the studio’s own pictures.
 
 ## Still to be confirmed by AromaLuxe
 
 - Street address and map
 - Business hours
-- Final prices and real product photographs
+- Final prices and the studio’s own product photographs
 - Policy pages: delivery areas, production times, refunds, cancellation, and customization rules
 
 Those policy pages are placeholders on purpose. They do not promise a delivery window or a refund rule.

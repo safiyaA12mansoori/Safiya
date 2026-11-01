@@ -35,28 +35,28 @@ const UI = (() => {
     return "mailto:" + AROMALUXE.email + "?subject=" + encodeURIComponent(subject) + "&body=" + encodeURIComponent(body);
   }
 
-  function motif(name, accent) {
-    const wash = /^#[0-9A-Fa-f]{6}$/.test(accent || "") ? accent : "#D9A8B4";
-    const parts = {
-      jar: `<rect x="58" y="48" width="44" height="78" rx="8" fill="#FFF7EC" stroke="#493B36" stroke-width="2"/><rect x="63" y="82" width="34" height="38" rx="2" fill="${wash}"/><rect x="70" y="40" width="20" height="10" rx="2" fill="#641E32"/><path d="M80 40c7-18 0-28 0-28s-2 12-7 18c8 2 12 6 7 10z" fill="#C5A05A"/>`,
-      pillar: `<rect x="46" y="58" width="18" height="78" rx="8" fill="#FFF7EC" stroke="#493B36"/><rect x="71" y="40" width="18" height="96" rx="8" fill="${wash}" stroke="#493B36"/><rect x="96" y="68" width="18" height="68" rx="8" fill="#FFF7EC" stroke="#493B36"/><path d="M80 40c5-14 0-22 0-22s-1 9-5 14c6 1 9 5 5 8z" fill="#C5A05A"/>`,
-      flower: `<circle cx="80" cy="58" r="16" fill="${wash}"/><circle cx="62" cy="70" r="12" fill="#D9A8B4"/><circle cx="98" cy="70" r="12" fill="#C5A05A"/><circle cx="80" cy="74" r="7" fill="#641E32"/><rect x="76" y="88" width="8" height="42" fill="#493B36"/><path d="M80 130c-18 10-28 8-28 8s12-8 28-16c16 8 28 16 28 16s-10 2-28-8z" fill="#8A6A32"/>`,
-      bouquet: `<path d="M80 150c-8-28-6-48-6-48" stroke="#493B36" stroke-width="2"/><path d="M74 110c-16-8-24-28-18-36" stroke="#8A6A32" stroke-width="2"/><path d="M86 108c16-6 26-24 18-34" stroke="#8A6A32" stroke-width="2"/><circle cx="74" cy="62" r="14" fill="${wash}"/><circle cx="98" cy="70" r="12" fill="#D9A8B4"/><circle cx="58" cy="78" r="11" fill="#C5A05A"/><path d="M62 128h36c8 16-4 28-18 28s-26-12-18-28z" fill="#641E32"/>`,
-      laddu: `<circle cx="80" cy="58" r="18" fill="${wash}" stroke="#8A6A32"/><circle cx="58" cy="88" r="18" fill="#C5A05A" stroke="#8A6A32"/><circle cx="102" cy="90" r="18" fill="#D9A8B4" stroke="#8A6A32"/><circle cx="80" cy="112" r="18" fill="#FFF7EC" stroke="#8A6A32"/>`,
-      decorative: `<path d="M80 36l18 28H62z" fill="#C5A05A"/><rect x="68" y="64" width="24" height="54" fill="${wash}" stroke="#641E32"/><path d="M56 118h48l-8 18H64z" fill="#641E32"/>`,
-      hamper: `<path d="M48 78h64l-6 48H54z" fill="${wash}" stroke="#493B36"/><path d="M48 78c0-18 64-18 64 0" fill="none" stroke="#493B36" stroke-width="2"/><path d="M80 60c0-16 14-24 14-24s-2 14-14 18c12-4 16 6 14 6" fill="none" stroke="#C5A05A" stroke-width="2"/><rect x="46" y="96" width="68" height="8" fill="#641E32"/>`,
-      box: `<rect x="46" y="70" width="68" height="52" rx="4" fill="${wash}" stroke="#493B36"/><rect x="46" y="70" width="68" height="14" fill="#641E32"/><path d="M80 70v52" stroke="#C5A05A" stroke-width="3"/><path d="M80 70c-12-16-28-8-22 2 8 2 14 0 22-2z" fill="#C5A05A"/><path d="M80 70c12-16 28-8 22 2-8 2-14 0-22-2z" fill="#D9A8B4"/>`,
-      ribbon: `<path d="M80 78c-22-28-46-10-34 8 10 4 22-2 34-8z" fill="${wash}"/><path d="M80 78c22-28 46-10 34 8-10 4-22-2-34-8z" fill="#D9A8B4"/><circle cx="80" cy="80" r="8" fill="#641E32"/><path d="M72 86l-10 36h12l6-36" fill="#C5A05A"/><path d="M88 86l10 36H86l-6-36" fill="#641E32"/>`,
-      chocolate: `<rect x="50" y="58" width="60" height="70" rx="6" fill="#493B36"/><rect x="56" y="70" width="48" height="46" fill="${wash}"/><path d="M56 86h48M56 102h48M72 70v46M88 70v46" stroke="#493B36" stroke-width="1.4"/>`,
-      rose: `<circle cx="80" cy="70" r="20" fill="${wash}"/><circle cx="80" cy="70" r="10" fill="#641E32"/><path d="M80 90v42" stroke="#8A6A32" stroke-width="2"/><path d="M80 110c-16 8-18 16-10 16" fill="#D9A8B4"/>`,
-      perfume: `<rect x="70" y="40" width="20" height="16" rx="3" fill="#641E32"/><path d="M64 62h32l8 62H56z" fill="${wash}" stroke="#493B36"/><rect x="64" y="78" width="32" height="10" fill="#C5A05A"/>`,
-      jewellery: `<circle cx="62" cy="58" r="10" fill="none" stroke="#C5A05A" stroke-width="3"/><circle cx="98" cy="58" r="10" fill="none" stroke="#C5A05A" stroke-width="3"/><path d="M62 68c0 20 8 28 8 40" stroke="#641E32" stroke-width="2"/><path d="M98 68c0 20-8 28-8 40" stroke="#641E32" stroke-width="2"/><circle cx="70" cy="112" r="6" fill="${wash}"/><circle cx="90" cy="112" r="6" fill="${wash}"/>`,
-      diya: `<path d="M42 104c10 22 66 22 76 0-18 10-58 10-76 0z" fill="${wash}" stroke="#493B36"/><path d="M80 96c8-20 2-36 2-36s-4 16-10 24c10 2 14 8 8 12z" fill="#C5A05A"/><ellipse cx="80" cy="108" rx="18" ry="5" fill="#641E32" opacity="0.35"/>`,
-      tray: `<ellipse cx="80" cy="112" rx="46" ry="16" fill="#C5A05A"/><ellipse cx="80" cy="106" rx="40" ry="12" fill="${wash}" stroke="#493B36"/><rect x="70" y="70" width="16" height="28" rx="3" fill="#FFF7EC" stroke="#641E32"/>`,
-      dryfruit: `<path d="M48 88h64l-8 40H56z" fill="${wash}" stroke="#493B36"/><circle cx="68" cy="78" r="8" fill="#C5A05A"/><circle cx="86" cy="74" r="7" fill="#641E32"/><circle cx="100" cy="84" r="6" fill="#D9A8B4"/>`,
-      sweet: `<rect x="48" y="74" width="64" height="46" rx="8" fill="#FFF7EC" stroke="#493B36"/><circle cx="68" cy="96" r="10" fill="${wash}"/><circle cx="92" cy="96" r="10" fill="#C5A05A"/>`
+  function motif(name) {
+    const photos = {
+      jar: "assets/photos/candle.jpg",
+      pillar: "assets/photos/candle.jpg",
+      flower: "assets/photos/bouquet.jpg",
+      bouquet: "assets/photos/bouquet.jpg",
+      laddu: "assets/photos/chocolate.jpg",
+      decorative: "assets/photos/candle.jpg",
+      hamper: "assets/photos/hamper.jpg",
+      box: "assets/photos/hamper.jpg",
+      ribbon: "assets/photos/bouquet.jpg",
+      chocolate: "assets/photos/chocolate.jpg",
+      rose: "assets/photos/bouquet.jpg",
+      perfume: "assets/photos/perfume.jpg",
+      jewellery: "assets/photos/jewellery.jpg",
+      diya: "assets/photos/diya.jpg",
+      tray: "assets/photos/diya.jpg",
+      dryfruit: "assets/photos/hamper.jpg",
+      sweet: "assets/photos/chocolate.jpg"
     };
-    return `<svg class="motif" viewBox="0 0 160 180" aria-hidden="true">${parts[name] || parts.jar}</svg>`;
+    const src = photos[name] || photos.jar;
+    return `<img class="motif-photo" src="${src}" alt="">`;
   }
 
   function stockMeta(stock) {
@@ -140,7 +140,6 @@ const UI = (() => {
       : "";
     return `<article class="product-card">
       <a class="product-visual" href="product.html?id=${esc(product.id)}">
-        <span class="illus-tag">Illustration</span>
         ${discount}
         ${motif(product.motif, product.accent)}
       </a>

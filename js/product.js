@@ -13,7 +13,6 @@ function renderProductDetail(product) {
   return `<nav aria-label="Breadcrumb"><ol class="breadcrumb"><li><a href="index.html">Home</a></li><li>/</li><li><a href="shop.html">Shop</a></li><li>/</li><li>${UI.esc(product.name)}</li></ol></nav>
     <div class="detail-layout">
       <div class="detail-visual">
-        <span class="illus-tag">Illustration</span>
         ${UI.motif(product.motif, product.accent)}
       </div>
       <div>
