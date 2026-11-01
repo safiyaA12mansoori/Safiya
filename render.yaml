@@ -1,0 +1,9 @@
+# Static catalogue. Render runs the build command, then publishes ./public.
+# Pages are real HTML files, so there is no rewrite to index.html.
+services:
+  - type: web
+    name: aromaluxe
+    runtime: static
+    buildCommand: "mkdir -p public && cp index.html shop.html product.html candles.html hamper.html bulk.html about.html gallery.html contact.html privacy.html terms.html shipping.html returns.html cancellation.html payment.html public/ && cp -a css js assets public/"
+    staticPublishPath: ./public
+    autoDeployTrigger: commit
