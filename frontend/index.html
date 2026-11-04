@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Safiya Dental — Clinic ERP</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&family=Literata:opsz,wght@7..72,500;7..72,700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div class="backdrop" aria-hidden="true"></div>
+    <header class="topbar">
+      <div class="brand">
+        <span class="brand-mark" aria-hidden="true"></span>
+        <div>
+          <p class="brand-name">Safiya Dental</p>
+          <p class="brand-tag">Frontend clinic ERP</p>
+        </div>
+      </div>
+      <nav class="tabs" aria-label="Modules">
+        <button class="tab is-active" data-view="dashboard">Overview</button>
+        <button class="tab" data-view="patients">Patients</button>
+        <button class="tab" data-view="dentists">Dentists</button>
+        <button class="tab" data-view="medicines">Medicines</button>
+        <button class="tab" data-view="prescriptions">Prescriptions</button>
+        <button class="tab" data-view="appointments">Appointments</button>
+        <button class="tab" data-view="treatments">Treatments</button>
+        <button class="tab" data-view="billing">Billing</button>
+      </nav>
+    </header>
+
+    <main class="shell">
+      <section id="view-dashboard" class="view is-active">
+        <h1>Clinic overview</h1>
+        <p class="lede">
+          Frontend-only ERP — data stays in your browser (localStorage). No backend required.
+        </p>
+        <div class="stat-row" id="stats"></div>
+        <div class="split">
+          <div>
+            <h2>Upcoming appointments</h2>
+            <div id="upcoming" class="stack"></div>
+          </div>
+          <div>
+            <h2>Open balances &amp; active Rx</h2>
+            <div id="open-side" class="stack"></div>
+          </div>
+        </div>
+      </section>
+
+      <section id="view-patients" class="view">
+        <div class="section-head">
+          <h1>Patients</h1>
+          <p class="lede">Patient records with email and date-of-birth checks.</p>
+        </div>
+        <div class="panel-grid">
+          <form id="patient-form" class="form-panel">
+            <h2>Add patient</h2>
+            <label>First name <input name="firstName" required /></label>
+            <label>Last name <input name="lastName" required /></label>
+            <label>Email <input name="email" type="email" required /></label>
+            <label>Phone <input name="phone" required /></label>
+            <label>Date of birth <input name="dateOfBirth" type="date" required /></label>
+            <label>Notes <textarea name="notes" rows="2"></textarea></label>
+            <button type="submit">Save patient</button>
+          </form>
+          <div id="patients-list" class="list-panel"></div>
+        </div>
+      </section>
+
+      <section id="view-dentists" class="view">
+        <div class="section-head">
+          <h1>Dentists</h1>
+          <p class="lede">Provider roster.</p>
+        </div>
+        <div class="panel-grid">
+          <form id="dentist-form" class="form-panel">
+            <h2>Add dentist</h2>
+            <label>First name <input name="firstName" required /></label>
+            <label>Last name <input name="lastName" required /></label>
+            <label>Email <input name="email" type="email" required /></label>
+            <label>Phone <input name="phone" required /></label>
+            <label>Specialty <input name="specialty" required /></label>
+            <button type="submit">Save dentist</button>
+          </form>
+          <div id="dentists-list" class="list-panel"></div>
+        </div>
+      </section>
+
+      <section id="view-medicines" class="view">
+        <div class="section-head">
+          <h1>Medicines</h1>
+          <p class="lede">Formulary with dose and stock limits.</p>
+        </div>
+        <div class="panel-grid">
+          <form id="medicine-form" class="form-panel">
+            <h2>Add medicine</h2>
+            <label>Name <input name="name" required /></label>
+            <label>Form <input name="form" placeholder="capsule / tablet" required /></label>
+            <label>Strength <input name="strengthLabel" placeholder="500mg" required /></label>
+            <label
+              >Unit
+              <select name="unit">
+                <option value="capsule">capsule</option>
+                <option value="tablet">tablet</option>
+                <option value="mg">mg</option>
+                <option value="ml">ml</option>
+                <option value="drop">drop</option>
+                <option value="unit">unit</option>
+              </select>
+            </label>
+            <label>Min dose <input name="minDose" type="number" min="0.01" step="any" required /></label>
+            <label>Max dose <input name="maxDose" type="number" min="0.01" step="any" required /></label>
+            <label>Max daily dose <input name="maxDailyDose" type="number" min="0.01" step="any" required /></label>
+            <label>Stock <input name="stockQuantity" type="number" min="0" step="1" required /></label>
+            <label>Max dispense <input name="maxDispenseQuantity" type="number" min="1" step="1" required /></label>
+            <button type="submit">Save medicine</button>
+          </form>
+          <div id="medicines-list" class="list-panel"></div>
+        </div>
+      </section>
+
+      <section id="view-prescriptions" class="view">
+        <div class="section-head">
+          <h1>Prescriptions</h1>
+          <p class="lede">Dosage and quantity boundaries enforced in the browser.</p>
+        </div>
+        <div class="panel-grid">
+          <form id="prescription-form" class="form-panel">
+            <h2>New prescription</h2>
+            <label>Patient <select name="patientId" required></select></label>
+            <label>Dentist <select name="dentistId"><option value="">Optional</option></select></label>
+            <label>Medicine <select name="medicineId" required></select></label>
+            <label>Dose amount <input name="doseAmount" type="number" min="0.01" step="any" required /></label>
+            <label>Times / day <input name="frequencyPerDay" type="number" min="1" max="24" step="1" required /></label>
+            <label>Duration days <input name="durationDays" type="number" min="1" max="365" step="1" required /></label>
+            <label>Quantity <input name="quantity" type="number" min="1" step="1" required /></label>
+            <label>Instructions <input name="instructions" /></label>
+            <button type="submit">Create draft</button>
+          </form>
+          <div id="prescriptions-list" class="list-panel"></div>
+        </div>
+      </section>
+
+      <section id="view-appointments" class="view">
+        <div class="section-head">
+          <h1>Appointments</h1>
+          <p class="lede">Same dentist cannot have overlapping appointments.</p>
+        </div>
+        <div class="panel-grid">
+          <form id="appointment-form" class="form-panel">
+            <h2>Book appointment</h2>
+            <label>Patient <select name="patientId" required></select></label>
+            <label>Dentist <select name="dentistId" required></select></label>
+            <label>Treatment <select name="treatmentId"><option value="">Optional</option></select></label>
+            <label>Start <input name="startTime" type="datetime-local" required /></label>
+            <label>End <input name="endTime" type="datetime-local" required /></label>
+            <label>Reason <input name="reason" /></label>
+            <p id="conflict-hint" class="hint" hidden></p>
+            <button type="submit">Book</button>
+          </form>
+          <div id="appointments-list" class="list-panel"></div>
+        </div>
+      </section>
+
+      <section id="view-treatments" class="view">
+        <div class="section-head">
+          <h1>Treatments</h1>
+          <p class="lede">Billable procedure catalog.</p>
+        </div>
+        <div class="panel-grid">
+          <form id="treatment-form" class="form-panel">
+            <h2>Add treatment</h2>
+            <label>Name <input name="name" required /></label>
+            <label>Description <textarea name="description" rows="2"></textarea></label>
+            <label
+              >Category
+              <select name="category">
+                <option value="preventive">Preventive</option>
+                <option value="restorative">Restorative</option>
+                <option value="cosmetic">Cosmetic</option>
+                <option value="surgical">Surgical</option>
+                <option value="orthodontic">Orthodontic</option>
+                <option value="other">Other</option>
+              </select>
+            </label>
+            <label>Duration (min) <input name="durationMinutes" type="number" min="1" required /></label>
+            <label>Base price (USD) <input name="basePrice" type="number" min="0" step="0.01" required /></label>
+            <button type="submit">Save treatment</button>
+          </form>
+          <div id="treatments-list" class="list-panel"></div>
+        </div>
+      </section>
+
+      <section id="view-billing" class="view">
+        <div class="section-head">
+          <h1>Billing</h1>
+          <p class="lede">Draft → issue → pay / void.</p>
+        </div>
+        <div class="panel-grid">
+          <form id="bill-form" class="form-panel">
+            <h2>Create bill</h2>
+            <label>Patient <select name="patientId" required></select></label>
+            <label>Line description <input name="description" required placeholder="Cleaning" /></label>
+            <label>Amount (USD) <input name="amount" type="number" min="0" step="0.01" required /></label>
+            <button type="submit">Create draft</button>
+          </form>
+          <div id="bills-list" class="list-panel"></div>
+        </div>
+      </section>
+    </main>
+
+    <div id="toast" class="toast" hidden></div>
+    <script type="module" src="/main.js"></script>
+  </body>
+</html>
