@@ -1,0 +1,31 @@
+# Local PostgreSQL and Redis for Milk EPR. The API and web app run on the host.
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: milk
+      POSTGRES_PASSWORD: milk
+      POSTGRES_DB: milk_epr
+    ports:
+      - "5432:5432"
+    volumes:
+      - milk_epr_pg:/var/lib/postgresql/data
+      - ./postgres/init-databases.sh:/docker-entrypoint-initdb.d/init-databases.sh:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U milk -d milk_epr"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+volumes:
+  milk_epr_pg:
