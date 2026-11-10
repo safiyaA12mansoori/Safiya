@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Safiya Dental Clinic</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+      crossorigin="anonymous"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&family=Literata:opsz,wght@7..72,600;7..72,700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="css/styles.css" />
+  </head>
+  <body>
+    <div class="page-glow" aria-hidden="true"></div>
+
+    <!-- Role gate -->
+    <section id="role-gate" class="role-gate">
+      <div class="role-card anim-card">
+        <div class="d-flex align-items-center gap-2 mb-3">
+          <span class="brand-mark"></span>
+          <div>
+            <h1 class="brand-title mb-0">Safiya Dental</h1>
+            <p class="brand-sub mb-0">Choose your workspace</p>
+          </div>
+        </div>
+        <p class="text-secondary mb-4">Two users: Receptionist handles appointments &amp; daily follow-up. Owner manages patients, treatments, billing, and oversight.</p>
+        <div class="row g-3">
+          <div class="col-md-6">
+            <button class="role-btn receptionist" type="button" data-role="receptionist">
+              <strong>Receptionist</strong>
+              <span>Appointments · Daily follow-up · No-shows</span>
+            </button>
+          </div>
+          <div class="col-md-6">
+            <button class="role-btn owner" type="button" data-role="owner">
+              <strong>Owner</strong>
+              <span>Patients · Treatments · Billing · Reports</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div id="app-shell" class="d-none">
+      <nav class="navbar navbar-expand-lg clinic-nav sticky-top">
+        <div class="container">
+          <a class="navbar-brand d-flex align-items-center gap-2" href="#">
+            <span class="brand-mark"></span>
+            <span>
+              <strong class="brand-title">Safiya Dental</strong>
+              <small class="d-block brand-sub" id="role-label">Workspace</small>
+            </span>
+          </a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navTabs">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navTabs">
+            <ul class="navbar-nav ms-auto mb-2 mb-lg-0 flex-wrap" id="nav-links" role="tablist"></ul>
+            <button class="btn btn-sm btn-outline-secondary ms-lg-2" id="btn-switch-role" type="button">Switch user</button>
+          </div>
+        </div>
+      </nav>
+
+      <main class="container py-4">
+        <div class="tab-content">
+          <!-- Receptionist: Today -->
+          <div class="tab-pane fade anim-pane" id="tab-today" data-roles="receptionist">
+            <h1 class="page-title">Today’s appointments</h1>
+            <p class="text-secondary">Book visits and manage today’s schedule.</p>
+            <div class="row g-4">
+              <div class="col-lg-4">
+                <form id="appointment-form" class="card clinic-card card-body anim-card">
+                  <h2 class="h5">New appointment</h2>
+                  <div class="mb-2"><label class="form-label">Patient</label><select class="form-select" name="patientId" required></select></div>
+                  <div class="mb-2"><label class="form-label">Treatment</label><select class="form-select" name="treatmentId"><option value="">Optional</option></select></div>
+                  <div class="mb-2"><label class="form-label">Start</label><input class="form-control" type="datetime-local" name="startTime" required /></div>
+                  <div class="mb-2"><label class="form-label">End</label><input class="form-control" type="datetime-local" name="endTime" required /></div>
+                  <div class="mb-3"><label class="form-label">Reason</label><input class="form-control" name="reason" /></div>
+                  <div id="conflict-hint" class="alert alert-danger py-2 d-none" role="alert"></div>
+                  <button class="btn btn-clinic" type="submit">Book appointment</button>
+                </form>
+              </div>
+              <div class="col-lg-8">
+                <div class="card clinic-card anim-card mb-3">
+                  <div class="card-body">
+                    <h2 class="h5">Schedule for today</h2>
+                    <div id="today-list"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Receptionist: Daily follow-up -->
+          <div class="tab-pane fade anim-pane" id="tab-followup" data-roles="receptionist">
+            <h1 class="page-title">Daily follow-up</h1>
+            <p class="text-secondary">Mark each visit as <strong>Done</strong> or <strong>Did not come</strong>. Missed visits turn red and move to No-shows.</p>
+            <div class="card clinic-card anim-card">
+              <div class="card-body">
+                <div id="followup-list"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- No-shows (receptionist + owner) -->
+          <div class="tab-pane fade anim-pane" id="tab-noshows" data-roles="receptionist,owner">
+            <h1 class="page-title text-danger">No-show patients</h1>
+            <p class="text-secondary">Patients who had an appointment but did not come. Stored separately and highlighted in red.</p>
+            <div class="card clinic-card noshow-card anim-card">
+              <div class="card-body">
+                <div id="noshow-list"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Owner overview -->
+          <div class="tab-pane fade anim-pane" id="tab-overview" data-roles="owner">
+            <div class="d-flex flex-wrap justify-content-between align-items-end gap-2 mb-3">
+              <div>
+                <h1 class="page-title mb-1">Owner overview</h1>
+                <p class="text-secondary mb-0">Clinic summary, open balances, and no-show alerts.</p>
+              </div>
+              <button class="btn btn-outline-secondary btn-sm" id="btn-reset" type="button">Reset demo data</button>
+            </div>
+            <div class="row g-3 mb-4" id="stats"></div>
+            <div class="row g-3">
+              <div class="col-lg-6">
+                <div class="card clinic-card h-100 anim-card">
+                  <div class="card-body">
+                    <h2 class="h5">Upcoming appointments</h2>
+                    <div id="upcoming"></div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-lg-6">
+                <div class="card clinic-card noshow-card h-100 anim-card">
+                  <div class="card-body">
+                    <h2 class="h5 text-danger">Recent no-shows</h2>
+                    <div id="owner-noshows"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Patients (owner; receptionist can also add quickly via select — owner full CRUD + history) -->
+          <div class="tab-pane fade anim-pane" id="tab-patients" data-roles="owner,receptionist">
+            <h1 class="page-title">Patients</h1>
+            <p class="text-secondary">Click a patient to view previous appointments, prescriptions, bills, and no-shows.</p>
+            <div class="row g-4">
+              <div class="col-lg-4">
+                <form id="patient-form" class="card clinic-card card-body anim-card">
+                  <h2 class="h5">Add patient</h2>
+                  <div class="mb-2"><label class="form-label">First name</label><input class="form-control" name="firstName" required /></div>
+                  <div class="mb-2"><label class="form-label">Last name</label><input class="form-control" name="lastName" required /></div>
+                  <div class="mb-2"><label class="form-label">Email</label><input class="form-control" type="email" name="email" required /></div>
+                  <div class="mb-2"><label class="form-label">Phone</label><input class="form-control" name="phone" required /></div>
+                  <div class="mb-2"><label class="form-label">Date of birth</label><input class="form-control" type="date" name="dateOfBirth" required /></div>
+                  <div class="mb-3"><label class="form-label">Notes</label><textarea class="form-control" name="notes" rows="2"></textarea></div>
+                  <button class="btn btn-clinic" type="submit">Save patient</button>
+                </form>
+              </div>
+              <div class="col-lg-8">
+                <div id="patients-list" class="card clinic-card anim-card mb-3"></div>
+                <div id="patient-detail" class="card clinic-card anim-card d-none">
+                  <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-start gap-2 mb-3">
+                      <div>
+                        <h2 class="h4 mb-1" id="detail-name">Patient</h2>
+                        <p class="meta mb-0" id="detail-meta"></p>
+                      </div>
+                      <button class="btn btn-sm btn-outline-secondary" id="btn-close-detail" type="button">Close</button>
+                    </div>
+                    <p class="mb-3" id="detail-notes"></p>
+                    <div class="row g-3">
+                      <div class="col-md-3">
+                        <h3 class="h6 text-uppercase text-secondary">Appointments</h3>
+                        <div id="detail-appointments"></div>
+                      </div>
+                      <div class="col-md-3">
+                        <h3 class="h6 text-uppercase text-danger">No-shows</h3>
+                        <div id="detail-noshows"></div>
+                      </div>
+                      <div class="col-md-3">
+                        <h3 class="h6 text-uppercase text-secondary">Prescriptions</h3>
+                        <div id="detail-prescriptions"></div>
+                      </div>
+                      <div class="col-md-3">
+                        <h3 class="h6 text-uppercase text-secondary">Bills</h3>
+                        <div id="detail-bills"></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="tab-pane fade anim-pane" id="tab-treatments" data-roles="owner">
+            <h1 class="page-title">Treatments</h1>
+            <p class="text-secondary">Procedure catalog.</p>
+            <div class="row g-4">
+              <div class="col-lg-4">
+                <form id="treatment-form" class="card clinic-card card-body anim-card">
+                  <h2 class="h5">Add treatment</h2>
+                  <div class="mb-2"><label class="form-label">Name</label><input class="form-control" name="name" required /></div>
+                  <div class="mb-2"><label class="form-label">Description</label><textarea class="form-control" name="description" rows="2"></textarea></div>
+                  <div class="mb-2">
+                    <label class="form-label">Category</label>
+                    <select class="form-select" name="category">
+                      <option value="preventive">Preventive</option>
+                      <option value="restorative">Restorative</option>
+                      <option value="cosmetic">Cosmetic</option>
+                      <option value="surgical">Surgical</option>
+                      <option value="other">Other</option>
+                    </select>
+                  </div>
+                  <div class="mb-2"><label class="form-label">Duration (min)</label><input class="form-control" type="number" min="1" name="durationMinutes" required /></div>
+                  <div class="mb-3"><label class="form-label">Base price (USD)</label><input class="form-control" type="number" min="0" step="0.01" name="basePrice" required /></div>
+                  <button class="btn btn-clinic" type="submit">Save treatment</button>
+                </form>
+              </div>
+              <div class="col-lg-8"><div id="treatments-list" class="card clinic-card anim-card"></div></div>
+            </div>
+          </div>
+
+          <div class="tab-pane fade anim-pane" id="tab-prescriptions" data-roles="owner">
+            <h1 class="page-title">Prescriptions</h1>
+            <p class="text-secondary">Prescriptions linked to patients (visible in patient history).</p>
+            <div class="row g-4">
+              <div class="col-lg-4">
+                <form id="prescription-form" class="card clinic-card card-body anim-card">
+                  <h2 class="h5">New prescription</h2>
+                  <div class="mb-2"><label class="form-label">Patient</label><select class="form-select" name="patientId" required></select></div>
+                  <div class="mb-2"><label class="form-label">Medication</label><input class="form-control" name="medication" required /></div>
+                  <div class="mb-2"><label class="form-label">Dosage</label><input class="form-control" name="dosage" required /></div>
+                  <div class="mb-2"><label class="form-label">Duration</label><input class="form-control" name="duration" required /></div>
+                  <div class="mb-3"><label class="form-label">Instructions</label><input class="form-control" name="instructions" /></div>
+                  <button class="btn btn-clinic" type="submit">Save prescription</button>
+                </form>
+              </div>
+              <div class="col-lg-8"><div id="prescriptions-list" class="card clinic-card anim-card"></div></div>
+            </div>
+          </div>
+
+          <div class="tab-pane fade anim-pane" id="tab-billing" data-roles="owner">
+            <h1 class="page-title">Billing</h1>
+            <p class="text-secondary">Create and manage patient bills.</p>
+            <div class="row g-4">
+              <div class="col-lg-4">
+                <form id="bill-form" class="card clinic-card card-body anim-card">
+                  <h2 class="h5">Create bill</h2>
+                  <div class="mb-2"><label class="form-label">Patient</label><select class="form-select" name="patientId" required></select></div>
+                  <div class="mb-2"><label class="form-label">Description</label><input class="form-control" name="description" required /></div>
+                  <div class="mb-3"><label class="form-label">Amount (USD)</label><input class="form-control" type="number" min="0" step="0.01" name="amount" required /></div>
+                  <button class="btn btn-clinic" type="submit">Create draft</button>
+                </form>
+              </div>
+              <div class="col-lg-8"><div id="bills-list" class="card clinic-card anim-card"></div></div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <div class="toast-container position-fixed bottom-0 end-0 p-3">
+      <div id="toast" class="toast align-items-center text-bg-dark border-0" role="alert">
+        <div class="d-flex">
+          <div class="toast-body" id="toast-body"></div>
+          <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+        </div>
+      </div>
+    </div>
+
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+      crossorigin="anonymous"
+    ></script>
+    <script src="js/store.js"></script>
+    <script src="js/app.js"></script>
+  </body>
+</html>

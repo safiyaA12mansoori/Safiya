@@ -1,0 +1,36 @@
+{
+  "name": "dental-clinic-management",
+  "version": "1.0.0",
+  "description": "Dental Clinic Management — frontend-first ERP (patients, medicines, prescriptions, appointments, billing)",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "frontend": "vite",
+    "frontend:build": "vite build",
+    "frontend:preview": "vite preview",
+    "build": "tsc",
+    "start:api": "node dist/server.js",
+    "dev:api": "tsx watch src/server.ts",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "typecheck": "tsc --noEmit"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "express": "^4.21.2",
+    "uuid": "^11.1.0"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.21",
+    "@types/node": "^22.13.10",
+    "@types/supertest": "^6.0.2",
+    "supertest": "^7.0.0",
+    "tsx": "^4.19.3",
+    "typescript": "^5.8.2",
+    "vite": "^6.2.2",
+    "vitest": "^3.0.9"
+  }
+}
