@@ -11,7 +11,7 @@
     "typecheck": "pnpm --filter @milk-epr/validation build && prisma generate && tsc -p tsconfig.json --noEmit",
     "pretest": "pnpm --filter @milk-epr/validation build && prisma generate",
     "test": "jest --config ./test/jest.config.cjs --runInBand",
-    "db:migrate": "node ../../scripts/with-env.mjs prisma migrate deploy",
+    "db:migrate": "node ../../scripts/with-env.mjs node ../../scripts/migrate.mjs",
     "db:seed": "pnpm --filter @milk-epr/validation build && node ../../scripts/with-env.mjs tsx prisma/seed.ts"
   },
   "dependencies": {

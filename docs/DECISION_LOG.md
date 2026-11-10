@@ -49,3 +49,21 @@ NestJS 11.2.9 and `@nestjs/swagger` 11.4.8, not NestJS 12. NestJS 12 is ESM-only
 ## D-03 Code reuse after retire
 
 Unique constraints include retired rows. A retired code cannot be reused. Partial unique indexes were considered and not added.
+
+## D-04 Application database role
+
+The API connects as `milk_app`, which is not a superuser. Migrations on a local machine still use the bootstrap account in `MIGRATION_DATABASE_URL`, because Prisma has to create tables. That account stays out of `DATABASE_URL`. `milk_app` may delete link rows (`user_roles`, `role_permissions`) because those screens replace the set. It may not update or delete `audit_events`. No production database has been provisioned. The local password is only for a private development cluster.
+
+## D-05 Audit immutability
+
+A `BEFORE UPDATE OR DELETE` trigger rejects changes to `audit_events`, including changes by the table owner. The application role also lacks those privileges. The audit table and the insert-only API are unchanged. A superuser can disable the trigger. The API is not given that account.
+
+## D-06 Branch and company
+
+`branches (tenant_id, company_id)` references `companies (tenant_id, id)`. The service still checks that the company is active and in the session tenant. The foreign key is the database backstop.
+
+## D-07 Checks left for later
+
+Row-level security is not enabled. It needs a tenant variable on every transaction and a policy on every table, and the application predicates would stay. That is a separate design, not a grant or a foreign key.
+
+Login throttling still fails open when Redis errors. Closing it would make sign-in depend on Redis, which the current session design avoids: PostgreSQL remains the session authority when Redis is down. A process-local cap or a deliberate 503 is a behavior change and was not added. The counter is still per IP and email.

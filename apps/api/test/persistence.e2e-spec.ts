@@ -1,6 +1,6 @@
 import type { INestApplication } from "@nestjs/common";
 import request from "supertest";
-import { createTestApp, login, prisma, provisionTenant, sharedPasswordHash, truncate } from "./helpers";
+import { createTestApp, login, migrationPrisma, prisma, provisionTenant, sharedPasswordHash, truncate } from "./helpers";
 
 describe("persistence and tenant isolation", () => {
   let app: INestApplication;
@@ -92,6 +92,38 @@ describe("persistence and tenant isolation", () => {
     const otherAudit = await request(server).get("/api/v1/audit-events").set("authorization", `Bearer ${tokenB}`);
     const otherActions = (otherAudit.body.items as { action: string }[]).map((item) => item.action);
     expect(otherActions).not.toContain("company.created");
+
+    const sessionRole = await prisma.$queryRaw<Array<{ rolsuper: boolean }>>`
+      SELECT rolsuper FROM pg_roles WHERE rolname = current_user
+    `;
+    expect(sessionRole[0]?.rolsuper).toBe(false);
+
+    await expect(
+      prisma.branch.create({
+        data: {
+          tenantId: second.tenant.id,
+          companyId,
+          code: "NOPE",
+          name: "Wrong tenant",
+        },
+      }),
+    ).rejects.toThrow();
+
+    const event = await prisma.auditEvent.findFirst({
+      where: { tenantId: first.tenant.id, action: "company.created" },
+    });
+    if (!event) throw new Error("expected company.created audit row");
+    await expect(
+      prisma.auditEvent.update({ where: { id: event.id }, data: { action: "tampered" } }),
+    ).rejects.toThrow(/permission denied/i);
+    const admin = migrationPrisma();
+    try {
+      await expect(
+        admin.auditEvent.update({ where: { id: event.id }, data: { action: "tampered" } }),
+      ).rejects.toThrow(/append-only/);
+    } finally {
+      await admin.$disconnect();
+    }
   });
 
   it("reports live health for postgres and redis", async () => {

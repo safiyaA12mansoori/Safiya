@@ -64,6 +64,7 @@ model Company {
   updatedByUser User?  @relation("CompanyUpdatedBy", fields: [updatedBy], references: [id], onDelete: Restrict)
   branches      Branch[]
 
+  @@unique([tenantId, id])
   @@unique([tenantId, code])
   @@index([tenantId, status])
   @@map("companies")
@@ -84,7 +85,7 @@ model Branch {
   deletedAt DateTime?    @map("deleted_at") @db.Timestamptz(6)
 
   tenant        Tenant  @relation(fields: [tenantId], references: [id], onDelete: Restrict)
-  company       Company @relation(fields: [companyId], references: [id], onDelete: Restrict)
+  company       Company @relation(fields: [tenantId, companyId], references: [tenantId, id], onDelete: Restrict)
   createdByUser User?   @relation("BranchCreatedBy", fields: [createdBy], references: [id], onDelete: Restrict)
   updatedByUser User?   @relation("BranchUpdatedBy", fields: [updatedBy], references: [id], onDelete: Restrict)
 
@@ -263,7 +264,9 @@ model MasterRecord {
   @@map("master_records")
 }
 
-/// Append-only. Application code does not update or delete these rows.
+/// Append-only. The API only inserts. Migration `20261110130000_integrity`
+/// also revokes UPDATE and DELETE from the application role and rejects both
+/// with a trigger, including for the table owner.
 model AuditEvent {
   id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   tenantId    String   @map("tenant_id") @db.Uuid

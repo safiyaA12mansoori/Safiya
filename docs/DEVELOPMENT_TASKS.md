@@ -10,14 +10,16 @@
 - Jest unit tests and Supertest API tests, executed.
 - ESLint flat config, executed.
 - Architecture docs and the Phase 2 audit docs.
+- Migration `20261110130000_integrity`: composite branch foreign key, append-only audit trigger, grants for `milk_app`.
+- Last-administrator and company-branch checks moved into the write transaction, with row locks.
+- Bootstrap password removed from `.env.example`.
 
 ## Required before a shared deployment
 
-1. Replace the superuser database role with a role that can use the schema and cannot change ownership or read other databases. Add a privilege or trigger so `audit_events` cannot be updated or deleted by the application role.
-2. Remove any use of the example bootstrap password. Keep the production seed refusal.
-3. Decide fail-closed behavior for login throttling when Redis is unavailable, and throttle by source address as well as by account.
-4. Restrict `/api/docs` and `/api/docs-json` on any shared host.
-5. Add a composite foreign key or trigger so a branch cannot name a company in another tenant.
+1. Decide fail-closed behavior for login throttling when Redis is unavailable, and throttle by source address as well as by account. Left open on purpose (D-07).
+2. Restrict `/api/docs` and `/api/docs-json` on any shared host.
+3. Replace the local `milk_app` password and stop using the bootstrap superuser for migrations. No production host exists yet.
+4. Row-level security, if a shared deployment needs a database backstop in addition to the application `tenant_id` predicates (D-07).
 
 ## Required before the first business module
 

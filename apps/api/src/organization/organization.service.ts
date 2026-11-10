@@ -1,3 +1,4 @@
+import { Prisma } from "@prisma/client";
 import { BadRequestException, Injectable } from "@nestjs/common";
 import type {
   CreateBranchInput,
@@ -163,16 +164,22 @@ export class CompanyService {
 
   async retire(auth: AuthContext, id: string, meta: RequestMeta) {
     const existing = await this.findActive(auth.tenantId, id);
-    const branches = await this.prisma.branch.count({
-      where: { companyId: id, tenantId: auth.tenantId, deletedAt: null },
-    });
-    if (branches > 0) {
-      throw new BadRequestException({
-        code: "COMPANY_HAS_BRANCHES",
-        message: "Retire the company's branches before retiring the company",
-      });
-    }
     const company = await this.prisma.$transaction(async (tx) => {
+      const locked = await tx.$queryRaw<Array<{ id: string }>>(Prisma.sql`
+        SELECT id FROM companies
+        WHERE id = ${existing.id}::uuid AND tenant_id = ${auth.tenantId}::uuid
+        FOR UPDATE
+      `);
+      if (!locked[0]) notFound("Company not found");
+      const branches = await tx.branch.count({
+        where: { companyId: existing.id, tenantId: auth.tenantId, deletedAt: null },
+      });
+      if (branches > 0) {
+        throw new BadRequestException({
+          code: "COMPANY_HAS_BRANCHES",
+          message: "Retire the company's branches before retiring the company",
+        });
+      }
       const updated = await tx.company.update({
         where: { id: existing.id },
         data: { status: "INACTIVE", deletedAt: new Date(), updatedBy: auth.userId },
@@ -243,17 +250,24 @@ export class BranchService {
   }
 
   async create(auth: AuthContext, input: CreateBranchInput, meta: RequestMeta) {
-    const company = await this.prisma.company.findFirst({
-      where: { id: input.companyId, tenantId: auth.tenantId, deletedAt: null, status: "ACTIVE" },
-    });
-    if (!company) {
-      throw new BadRequestException({
-        code: "INVALID_COMPANY",
-        message: "Active company not found in this tenant",
-      });
-    }
     try {
       const branch = await this.prisma.$transaction(async (tx) => {
+        // Same row company retire locks, so a branch cannot appear after the retire check.
+        const locked = await tx.$queryRaw<Array<{ id: string }>>(Prisma.sql`
+          SELECT id FROM companies
+          WHERE id = ${input.companyId}::uuid
+            AND tenant_id = ${auth.tenantId}::uuid
+            AND deleted_at IS NULL
+            AND status::text = 'ACTIVE'
+          FOR UPDATE
+        `);
+        const company = locked[0];
+        if (!company) {
+          throw new BadRequestException({
+            code: "INVALID_COMPANY",
+            message: "Active company not found in this tenant",
+          });
+        }
         const created = await tx.branch.create({
           data: {
             tenantId: auth.tenantId,

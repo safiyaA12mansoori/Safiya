@@ -91,6 +91,11 @@ async function ensureRole(
 
 function required(name: string): string {
   const value = process.env[name];
+  if (!value && name === "BOOTSTRAP_ADMIN_PASSWORD") {
+    throw new Error(
+      "Missing BOOTSTRAP_ADMIN_PASSWORD. Set it in the gitignored .env (at least 12 characters). Do not commit it.",
+    );
+  }
   if (!value) throw new Error(`Missing ${name}`);
   return value;
 }

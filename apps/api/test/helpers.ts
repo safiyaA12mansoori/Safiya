@@ -12,6 +12,12 @@ import { ALL_PERMISSION_KEYS, PERMISSION_CATALOG } from "../src/rbac/catalogue";
 export const TEST_PASSWORD = "local-dev-password";
 export const prisma = new PrismaClient();
 
+export function migrationPrisma(): PrismaClient {
+  const url = process.env.MIGRATION_DATABASE_URL;
+  if (!url) throw new Error("MIGRATION_DATABASE_URL is required for test cleanup");
+  return new PrismaClient({ datasources: { db: { url } } });
+}
+
 export async function createTestApp(): Promise<INestApplication> {
   const moduleRef = await Test.createTestingModule({ imports: [AppModule] }).compile();
   const app = moduleRef.createNestApplication({ logger: ["error"] });
@@ -21,7 +27,9 @@ export async function createTestApp(): Promise<INestApplication> {
 }
 
 export async function truncate(): Promise<void> {
-  await prisma.$executeRawUnsafe(`
+  const admin = migrationPrisma();
+  try {
+    await admin.$executeRawUnsafe(`
     TRUNCATE TABLE
       audit_events,
       user_roles,
@@ -37,6 +45,9 @@ export async function truncate(): Promise<void> {
       permissions
     RESTART IDENTITY CASCADE
   `);
+  } finally {
+    await admin.$disconnect();
+  }
   const redis = new Redis(process.env.REDIS_URL ?? "redis://127.0.0.1:6379", {
     lazyConnect: true,
     maxRetriesPerRequest: 1,

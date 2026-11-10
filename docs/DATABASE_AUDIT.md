@@ -2,6 +2,8 @@
 
 Date: 2026-11-09. Schema: `apps/api/prisma/schema.prisma`. Migration: `apps/api/prisma/migrations/20261109140000_init`. Applied to `milk_epr` and `milk_epr_test` with `prisma migrate deploy` before the tests. No destructive checks were run.
 
+Remediation on 2026-11-10 is migration `20261110130000_integrity` and `infrastructure/postgres/app-role.sql`. The findings below are the audit as it was run. K-01, K-06, and K-08 are addressed there; K-05 (row-level security) is unchanged. See `docs/DATABASE_DESIGN.md` and `docs/DECISION_LOG.md`.
+
 ## Relations — PASSED
 
 Every structural foreign key is present: company and branch to tenant, branch to company, user to tenant, session to tenant and user, role to tenant, role-permission and user-role links, unit and master record and audit event to tenant, audit actor to user. `created_by` and `updated_by` are real nullable foreign keys to `users`, `ON DELETE RESTRICT`. Link rows cascade when a role or user is deleted. Other foreign keys restrict.

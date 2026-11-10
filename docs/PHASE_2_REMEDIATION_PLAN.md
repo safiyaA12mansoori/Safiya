@@ -2,20 +2,24 @@
 
 Ordered by what would matter if this left a single private machine. None of these items require replacing the working controllers.
 
+## Done on 2026-11-10
+
+1. **K-01 HIGH.** `DATABASE_URL` is `milk_app` (`NOSUPERUSER`). `MIGRATION_DATABASE_URL` is the local bootstrap account, used only by `scripts/migrate.mjs`. Role script: `infrastructure/postgres/app-role.sql`. Grants are in migration `20261110130000_integrity`. `milk_app` also has `DELETE` on business tables because role and user assignment replaces link rows. It does not have `UPDATE` or `DELETE` on `audit_events`.
+2. **K-02 HIGH.** `.env.example` no longer contains `BOOTSTRAP_ADMIN_PASSWORD`. The seed still refuses `NODE_ENV=production` unless `ALLOW_BOOTSTRAP=true`, and it tells the operator to set the password in the gitignored `.env`.
+3. **K-06 MEDIUM.** Both the revoke and a `BEFORE UPDATE OR DELETE` trigger. The trigger also blocks the table owner. A superuser can disable it. The API role cannot.
+4. **K-08 MEDIUM.** Unique `(tenant_id, id)` on `companies`. `branches (tenant_id, company_id)` references it. The old single-column company foreign key was dropped.
+5. **K-07 MEDIUM.** The last-administrator check locks the system Administrator role and runs inside the user update or role-replacement transaction. Company retire locks the company, counts branches, and retires in that same transaction. Branch create locks the same company row before insert, because a soft-deleted company still satisfies a foreign key.
+
 ## Before any shared deployment
 
-1. **K-01 HIGH.** Stop using a superuser for the application. Add a migration role and an application role. Grants: `SELECT/INSERT/UPDATE` on the business tables, `INSERT` only on `audit_events`, no `UPDATE` or `DELETE` on `audit_events`. Keep the superuser out of `DATABASE_URL`.
-2. **K-02 HIGH.** Treat `.env.example` as a template with a placeholder, not a password that is also the seed default in a shared environment. The production refusal stays. Document that the first password is supplied at seed time and rotated immediately. Do not print it.
-3. **K-06 MEDIUM.** Same grant as K-01, or a trigger that rejects `UPDATE` and `DELETE` on `audit_events`. Prefer the grant so a trigger is not the only control.
-4. **K-08 MEDIUM.** Composite foreign key `(tenant_id, id)` on companies, referenced by branches `(tenant_id, company_id)`. Requires a unique `(tenant_id, id)` on companies. Application code can stay.
-5. **K-09 LOW, promoted for a shared host.** Serve OpenAPI only to authenticated administrators, or do not expose it.
+1. **K-09 LOW, promoted for a shared host.** Serve OpenAPI only to authenticated administrators, or do not expose it.
+2. Replace the local database passwords. Do not reuse the bootstrap superuser. No production host has been provisioned.
 
 ## Next, still before a business module
 
-6. **K-03, K-04 MEDIUM.** When Redis is down, either fail login with 503 or use a process-local cap. Add a per-IP ceiling so one client cannot walk the user list. Keep the existing per-account counter.
-7. **K-07 MEDIUM.** Move the last-administrator check and the branch-count check inside the write transaction at `SERIALIZABLE`, or take a row lock on the tenant or company first.
-8. **K-05 MEDIUM.** Add row-level security using a session variable set per transaction to `tenant_id`, as a backstop. Do not remove the application predicates. This is the larger change and should land with tests that connect as the application role and try a cross-tenant select.
-9. Dashboard test: a user without `company.read` receives `"companies": null` and still receives counts they may see.
+3. **K-03, K-04 MEDIUM.** Left open. See D-07. When Redis is down, either fail login with 503 or use a process-local cap. Add a per-IP ceiling. Keep the existing per-account counter.
+4. **K-05 MEDIUM.** Left open. See D-07. Row-level security is a session variable and a policy per table. Application predicates stay.
+5. Dashboard test: a user without `company.read` receives `"companies": null` and still receives counts they may see.
 
 ## Later
 

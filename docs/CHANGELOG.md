@@ -21,6 +21,14 @@ Core platform and the Phase 2 audit, in one branch.
 - API responses no longer include `X-Powered-By`. The platform behavior is otherwise unchanged.
 - NestJS 11 is used instead of NestJS 12 so the test runner can load the framework. Recorded as D-01.
 
+### Remediated 2026-11-10
+
+- The API uses `milk_app` instead of the local bootstrap superuser.
+- `.env.example` no longer contains a bootstrap password.
+- Branches reference `(tenant_id, id)` on companies.
+- `audit_events` rejects updates and deletes in the database.
+- Last-administrator and company-branch checks run inside the write transaction.
+
 ### Not in this version
 
 Business modules, SSO, mobile, desktop, and a production deployment topology.

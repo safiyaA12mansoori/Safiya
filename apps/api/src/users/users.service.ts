@@ -1,3 +1,4 @@
+import { Prisma } from "@prisma/client";
 import { BadRequestException, Injectable } from "@nestjs/common";
 import type { CreateUserInput, ListQuery, ReplaceUserRolesInput, UpdateUserInput } from "@milk-epr/validation";
 import { AuditService } from "../audit/audit.service";
@@ -101,9 +102,11 @@ export class UsersService {
     if (input.status === "INACTIVE" && id === auth.userId) {
       throw new BadRequestException({ code: "CANNOT_DISABLE_SELF", message: "You cannot disable your own account" });
     }
-    if (input.status) await this.assertAdministratorRemains(auth.tenantId, id, null, input.status);
     const passwordHash = input.newPassword ? await hashPassword(input.newPassword) : null;
     const user = await this.prisma.$transaction(async (tx) => {
+      if (input.status) {
+        await this.assertAdministratorRemains(tx, auth.tenantId, id, null, input.status);
+      }
       const updated = await tx.user.update({
         where: { id: existing.id },
         data: {
@@ -140,9 +143,9 @@ export class UsersService {
     const existing = await this.findUser(auth.tenantId, id);
     const roleIds = [...new Set(input.roleIds)];
     await this.rbac.assertCanAssign(auth, roleIds);
-    await this.assertAdministratorRemains(auth.tenantId, id, roleIds, existing.status);
     const before = existing.userRoles.map((row) => row.role.id);
     await this.prisma.$transaction(async (tx) => {
+      await this.assertAdministratorRemains(tx, auth.tenantId, id, roleIds, existing.status);
       await tx.userRole.deleteMany({ where: { userId: id } });
       if (roleIds.length > 0) {
         await tx.userRole.createMany({
@@ -182,28 +185,34 @@ export class UsersService {
   }
 
   private async assertAdministratorRemains(
+    tx: Prisma.TransactionClient,
     tenantId: string,
     userId: string,
     nextRoleIds: string[] | null,
     nextStatus: "ACTIVE" | "INACTIVE",
   ) {
-    const adminRole = await this.prisma.role.findFirst({
-      where: { tenantId, name: ADMINISTRATOR_ROLE, isSystem: true },
-    });
-    if (!adminRole) return;
-    const admins = await this.prisma.user.findMany({
+    const locked = await tx.$queryRaw<Array<{ id: string }>>(Prisma.sql`
+      SELECT id FROM roles
+      WHERE tenant_id = ${tenantId}::uuid
+        AND name = ${ADMINISTRATOR_ROLE}
+        AND is_system = true
+      FOR UPDATE
+    `);
+    const adminRoleId = locked[0]?.id;
+    if (!adminRoleId) return;
+    const admins = await tx.user.findMany({
       where: {
         tenantId,
         status: "ACTIVE",
         deletedAt: null,
-        userRoles: { some: { roleId: adminRole.id } },
+        userRoles: { some: { roleId: adminRoleId } },
       },
       select: { id: true },
     });
     const surviving = admins.filter((admin) => {
       if (admin.id !== userId) return true;
       if (nextStatus !== "ACTIVE") return false;
-      if (nextRoleIds && !nextRoleIds.includes(adminRole.id)) return false;
+      if (nextRoleIds && !nextRoleIds.includes(adminRoleId)) return false;
       return true;
     });
     if (surviving.length === 0) {
