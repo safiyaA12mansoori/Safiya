@@ -268,6 +268,87 @@ main {
   background-color: #9f2d2d !important;
 }
 
+.role-gate {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: 1.5rem;
+  position: relative;
+  z-index: 1;
+}
+
+.role-card {
+  width: min(720px, 100%);
+  border: 1px solid rgba(20, 35, 31, 0.12);
+  border-radius: 1.25rem;
+  background: rgba(255, 255, 255, 0.92);
+  box-shadow: 0 24px 60px rgba(15, 40, 34, 0.12);
+  padding: 1.5rem;
+}
+
+.role-btn {
+  width: 100%;
+  text-align: left;
+  border: 1px solid rgba(20, 35, 31, 0.12);
+  border-radius: 1rem;
+  padding: 1.1rem 1.15rem;
+  background: #fff;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.role-btn strong {
+  display: block;
+  font-family: "Literata", Georgia, serif;
+  font-size: 1.2rem;
+  margin-bottom: 0.25rem;
+}
+
+.role-btn span {
+  color: var(--muted);
+  font-size: 0.92rem;
+}
+
+.role-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 16px 40px rgba(15, 40, 34, 0.1);
+}
+
+.role-btn.receptionist:hover {
+  border-color: rgba(15, 118, 110, 0.45);
+}
+
+.role-btn.owner:hover {
+  border-color: rgba(11, 79, 74, 0.55);
+}
+
+.noshow-card {
+  border-color: rgba(159, 45, 45, 0.28) !important;
+  box-shadow: 0 18px 50px rgba(159, 45, 45, 0.08);
+}
+
+.noshow-row,
+.list-row.noshow-row {
+  background: rgba(159, 45, 45, 0.08);
+  border-left: 4px solid #9f2d2d;
+  color: #7a1f1f;
+}
+
+.noshow-row .meta {
+  color: #9f2d2d;
+}
+
+.badge-noshow {
+  background: rgba(159, 45, 45, 0.15);
+  color: #9f2d2d;
+  font-weight: 700;
+}
+
+.followup-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

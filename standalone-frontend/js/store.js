@@ -1,6 +1,6 @@
 /* Safiya Dental — patient-focused browser store (localStorage). */
 (function (global) {
-  const STORAGE_KEY = "safiya-bootstrap-clinic-v2";
+  const STORAGE_KEY = "safiya-bootstrap-clinic-v3";
 
   class ClinicError extends Error {
     constructor(message, code) {
@@ -85,15 +85,28 @@
       createdAt: now(),
     };
 
-    const start = new Date();
-    start.setDate(start.getDate() + 1);
-    start.setHours(14, 0, 0, 0);
-    const end = new Date(start.getTime() + 45 * 60 * 1000);
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    tomorrow.setHours(14, 0, 0, 0);
+    const tomorrowEnd = new Date(tomorrow.getTime() + 45 * 60 * 1000);
+
+    const todayMorning = new Date();
+    todayMorning.setHours(9, 0, 0, 0);
+    const todayMorningEnd = new Date(todayMorning.getTime() + 45 * 60 * 1000);
+
+    const todayNoon = new Date();
+    todayNoon.setHours(11, 30, 0, 0);
+    const todayNoonEnd = new Date(todayNoon.getTime() + 45 * 60 * 1000);
 
     const pastStart = new Date();
-    pastStart.setDate(pastStart.getDate() - 30);
+    pastStart.setDate(pastStart.getDate() - 7);
     pastStart.setHours(10, 0, 0, 0);
     const pastEnd = new Date(pastStart.getTime() + 45 * 60 * 1000);
+
+    const noShowStart = new Date();
+    noShowStart.setDate(noShowStart.getDate() - 2);
+    noShowStart.setHours(16, 0, 0, 0);
+    const noShowEnd = new Date(noShowStart.getTime() + 45 * 60 * 1000);
 
     const appointments = [
       {
@@ -108,10 +121,42 @@
       },
       {
         id: id(),
+        patientId: brian.id,
+        treatmentId: filling.id,
+        startTime: noShowStart.toISOString(),
+        endTime: noShowEnd.toISOString(),
+        status: "no_show",
+        reason: "Filling",
+        followUpNote: "Patient did not come",
+        markedAt: now(),
+        createdAt: now(),
+      },
+      {
+        id: id(),
         patientId: alice.id,
         treatmentId: cleaning.id,
-        startTime: start.toISOString(),
-        endTime: end.toISOString(),
+        startTime: todayMorning.toISOString(),
+        endTime: todayMorningEnd.toISOString(),
+        status: "scheduled",
+        reason: "Morning cleaning",
+        createdAt: now(),
+      },
+      {
+        id: id(),
+        patientId: brian.id,
+        treatmentId: cleaning.id,
+        startTime: todayNoon.toISOString(),
+        endTime: todayNoonEnd.toISOString(),
+        status: "scheduled",
+        reason: "Follow-up visit",
+        createdAt: now(),
+      },
+      {
+        id: id(),
+        patientId: alice.id,
+        treatmentId: cleaning.id,
+        startTime: tomorrow.toISOString(),
+        endTime: tomorrowEnd.toISOString(),
         status: "scheduled",
         reason: "Six-month checkup",
         createdAt: now(),
@@ -240,19 +285,64 @@
       resetDemo: function () {
         localStorage.removeItem(STORAGE_KEY);
         localStorage.removeItem("safiya-bootstrap-clinic-v1");
+        localStorage.removeItem("safiya-bootstrap-clinic-v2");
         state = seedIfEmpty(emptyState());
+        emit();
+      },
+      listNoShows: function () {
+        return state.appointments
+          .filter(function (a) {
+            return a.status === "no_show";
+          })
+          .sort(function (a, b) {
+            return b.startTime.localeCompare(a.startTime);
+          });
+      },
+      listTodayAppointments: function () {
+        var today = new Date().toDateString();
+        return state.appointments
+          .filter(function (a) {
+            return new Date(a.startTime).toDateString() === today;
+          })
+          .sort(function (a, b) {
+            return a.startTime.localeCompare(b.startTime);
+          });
+      },
+      markCompleted: function (appointmentId) {
+        var a = find("appointments", appointmentId, "Appointment");
+        if (a.status === "cancelled") {
+          throw new ClinicError("Cancelled appointments cannot be completed");
+        }
+        a.status = "completed";
+        a.markedAt = now();
+        emit();
+      },
+      markNoShow: function (appointmentId, note) {
+        var a = find("appointments", appointmentId, "Appointment");
+        if (a.status === "cancelled") {
+          throw new ClinicError("Cancelled appointments cannot be marked no-show");
+        }
+        a.status = "no_show";
+        a.followUpNote = note ? String(note).trim() : "Patient did not come";
+        a.markedAt = now();
         emit();
       },
       getPatientHistory: function (patientId) {
         find("patients", patientId, "Patient");
+        var all = state.appointments
+          .filter(function (a) {
+            return a.patientId === patientId;
+          })
+          .sort(function (a, b) {
+            return b.startTime.localeCompare(a.startTime);
+          });
         return {
-          appointments: state.appointments
-            .filter(function (a) {
-              return a.patientId === patientId;
-            })
-            .sort(function (a, b) {
-              return b.startTime.localeCompare(a.startTime);
-            }),
+          appointments: all.filter(function (a) {
+            return a.status !== "no_show";
+          }),
+          noShows: all.filter(function (a) {
+            return a.status === "no_show";
+          }),
           prescriptions: state.prescriptions
             .filter(function (p) {
               return p.patientId === patientId;
