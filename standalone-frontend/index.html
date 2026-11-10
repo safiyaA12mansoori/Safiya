@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Safiya Dental Clinic ERP</title>
+    <title>Safiya Dental Clinic</title>
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
       rel="stylesheet"
@@ -17,32 +17,26 @@
     <link rel="stylesheet" href="css/styles.css" />
   </head>
   <body>
+    <div class="page-glow" aria-hidden="true"></div>
     <nav class="navbar navbar-expand-lg clinic-nav sticky-top">
       <div class="container">
         <a class="navbar-brand d-flex align-items-center gap-2" href="#">
           <span class="brand-mark"></span>
           <span>
             <strong class="brand-title">Safiya Dental</strong>
-            <small class="d-block brand-sub">Clinic ERP (Bootstrap)</small>
+            <small class="d-block brand-sub">Patient-first clinic</small>
           </span>
         </a>
-        <button
-          class="navbar-toggler"
-          type="button"
-          data-bs-toggle="collapse"
-          data-bs-target="#navTabs"
-        >
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navTabs">
           <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navTabs">
-          <ul class="navbar-nav ms-auto mb-2 mb-lg-0 flex-wrap" id="moduleTabs" role="tablist">
+          <ul class="navbar-nav ms-auto mb-2 mb-lg-0 flex-wrap" role="tablist">
             <li class="nav-item"><button class="nav-link active" data-bs-toggle="tab" data-bs-target="#tab-overview" type="button">Overview</button></li>
             <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab-patients" type="button">Patients</button></li>
-            <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab-dentists" type="button">Dentists</button></li>
-            <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab-medicines" type="button">Medicines</button></li>
-            <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab-prescriptions" type="button">Prescriptions</button></li>
             <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab-appointments" type="button">Appointments</button></li>
             <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab-treatments" type="button">Treatments</button></li>
+            <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab-prescriptions" type="button">Prescriptions</button></li>
             <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab-billing" type="button">Billing</button></li>
           </ul>
         </div>
@@ -51,19 +45,18 @@
 
     <main class="container py-4">
       <div class="tab-content">
-        <!-- Overview -->
-        <div class="tab-pane fade show active" id="tab-overview">
+        <div class="tab-pane fade show active anim-pane" id="tab-overview">
           <div class="d-flex flex-wrap justify-content-between align-items-end gap-2 mb-3">
             <div>
               <h1 class="page-title mb-1">Clinic overview</h1>
-              <p class="text-secondary mb-0">Fully working frontend — HTML, CSS, JavaScript &amp; Bootstrap. Data saved in your browser.</p>
+              <p class="text-secondary mb-0">Animated patient clinic — click any patient to see their full history.</p>
             </div>
             <button class="btn btn-outline-secondary btn-sm" id="btn-reset" type="button">Reset demo data</button>
           </div>
           <div class="row g-3 mb-4" id="stats"></div>
           <div class="row g-3">
             <div class="col-lg-6">
-              <div class="card clinic-card h-100">
+              <div class="card clinic-card h-100 anim-card">
                 <div class="card-body">
                   <h2 class="h5">Upcoming appointments</h2>
                   <div id="upcoming"></div>
@@ -71,23 +64,22 @@
               </div>
             </div>
             <div class="col-lg-6">
-              <div class="card clinic-card h-100">
+              <div class="card clinic-card h-100 anim-card">
                 <div class="card-body">
-                  <h2 class="h5">Open balances &amp; active Rx</h2>
-                  <div id="open-side"></div>
+                  <h2 class="h5">Recent patients</h2>
+                  <div id="recent-patients"></div>
                 </div>
               </div>
             </div>
           </div>
         </div>
 
-        <!-- Patients -->
-        <div class="tab-pane fade" id="tab-patients">
+        <div class="tab-pane fade anim-pane" id="tab-patients">
           <h1 class="page-title">Patients</h1>
-          <p class="text-secondary">Create patient records with email and date-of-birth validation.</p>
+          <p class="text-secondary">Save patients, then click a name to view previous appointments, prescriptions, and bills.</p>
           <div class="row g-4">
             <div class="col-lg-4">
-              <form id="patient-form" class="card clinic-card card-body">
+              <form id="patient-form" class="card clinic-card card-body anim-card">
                 <h2 class="h5">Add patient</h2>
                 <div class="mb-2"><label class="form-label">First name</label><input class="form-control" name="firstName" required /></div>
                 <div class="mb-2"><label class="form-label">Last name</label><input class="form-control" name="lastName" required /></div>
@@ -98,118 +90,64 @@
                 <button class="btn btn-clinic" type="submit">Save patient</button>
               </form>
             </div>
-            <div class="col-lg-8"><div id="patients-list" class="card clinic-card"></div></div>
-          </div>
-        </div>
-
-        <!-- Dentists -->
-        <div class="tab-pane fade" id="tab-dentists">
-          <h1 class="page-title">Dentists</h1>
-          <p class="text-secondary">Provider roster.</p>
-          <div class="row g-4">
-            <div class="col-lg-4">
-              <form id="dentist-form" class="card clinic-card card-body">
-                <h2 class="h5">Add dentist</h2>
-                <div class="mb-2"><label class="form-label">First name</label><input class="form-control" name="firstName" required /></div>
-                <div class="mb-2"><label class="form-label">Last name</label><input class="form-control" name="lastName" required /></div>
-                <div class="mb-2"><label class="form-label">Email</label><input class="form-control" type="email" name="email" required /></div>
-                <div class="mb-2"><label class="form-label">Phone</label><input class="form-control" name="phone" required /></div>
-                <div class="mb-3"><label class="form-label">Specialty</label><input class="form-control" name="specialty" required /></div>
-                <button class="btn btn-clinic" type="submit">Save dentist</button>
-              </form>
-            </div>
-            <div class="col-lg-8"><div id="dentists-list" class="card clinic-card"></div></div>
-          </div>
-        </div>
-
-        <!-- Medicines -->
-        <div class="tab-pane fade" id="tab-medicines">
-          <h1 class="page-title">Medicines</h1>
-          <p class="text-secondary">Formulary with dose and stock limits.</p>
-          <div class="row g-4">
-            <div class="col-lg-4">
-              <form id="medicine-form" class="card clinic-card card-body">
-                <h2 class="h5">Add medicine</h2>
-                <div class="mb-2"><label class="form-label">Name</label><input class="form-control" name="name" required /></div>
-                <div class="mb-2"><label class="form-label">Form</label><input class="form-control" name="form" placeholder="capsule / tablet" required /></div>
-                <div class="mb-2"><label class="form-label">Strength</label><input class="form-control" name="strengthLabel" placeholder="500mg" required /></div>
-                <div class="mb-2">
-                  <label class="form-label">Unit</label>
-                  <select class="form-select" name="unit">
-                    <option value="capsule">capsule</option>
-                    <option value="tablet">tablet</option>
-                    <option value="mg">mg</option>
-                    <option value="ml">ml</option>
-                    <option value="drop">drop</option>
-                    <option value="unit">unit</option>
-                  </select>
+            <div class="col-lg-8">
+              <div id="patients-list" class="card clinic-card anim-card mb-3"></div>
+              <div id="patient-detail" class="card clinic-card anim-card d-none">
+                <div class="card-body">
+                  <div class="d-flex justify-content-between align-items-start gap-2 mb-3">
+                    <div>
+                      <h2 class="h4 mb-1" id="detail-name">Patient</h2>
+                      <p class="meta mb-0" id="detail-meta"></p>
+                    </div>
+                    <button class="btn btn-sm btn-outline-secondary" id="btn-close-detail" type="button">Close</button>
+                  </div>
+                  <p class="mb-3" id="detail-notes"></p>
+                  <div class="row g-3">
+                    <div class="col-md-4">
+                      <h3 class="h6 text-uppercase text-secondary">Appointments</h3>
+                      <div id="detail-appointments"></div>
+                    </div>
+                    <div class="col-md-4">
+                      <h3 class="h6 text-uppercase text-secondary">Prescriptions</h3>
+                      <div id="detail-prescriptions"></div>
+                    </div>
+                    <div class="col-md-4">
+                      <h3 class="h6 text-uppercase text-secondary">Bills</h3>
+                      <div id="detail-bills"></div>
+                    </div>
+                  </div>
                 </div>
-                <div class="row g-2">
-                  <div class="col-6 mb-2"><label class="form-label">Min dose</label><input class="form-control" type="number" min="0.01" step="any" name="minDose" required /></div>
-                  <div class="col-6 mb-2"><label class="form-label">Max dose</label><input class="form-control" type="number" min="0.01" step="any" name="maxDose" required /></div>
-                  <div class="col-12 mb-2"><label class="form-label">Max daily dose</label><input class="form-control" type="number" min="0.01" step="any" name="maxDailyDose" required /></div>
-                  <div class="col-6 mb-2"><label class="form-label">Stock</label><input class="form-control" type="number" min="0" step="1" name="stockQuantity" required /></div>
-                  <div class="col-6 mb-3"><label class="form-label">Max dispense</label><input class="form-control" type="number" min="1" step="1" name="maxDispenseQuantity" required /></div>
-                </div>
-                <button class="btn btn-clinic" type="submit">Save medicine</button>
-              </form>
+              </div>
             </div>
-            <div class="col-lg-8"><div id="medicines-list" class="card clinic-card"></div></div>
           </div>
         </div>
 
-        <!-- Prescriptions -->
-        <div class="tab-pane fade" id="tab-prescriptions">
-          <h1 class="page-title">Prescriptions</h1>
-          <p class="text-secondary">Dosage and quantity boundaries enforced in JavaScript.</p>
-          <div class="row g-4">
-            <div class="col-lg-4">
-              <form id="prescription-form" class="card clinic-card card-body">
-                <h2 class="h5">New prescription</h2>
-                <div class="mb-2"><label class="form-label">Patient</label><select class="form-select" name="patientId" required></select></div>
-                <div class="mb-2"><label class="form-label">Dentist</label><select class="form-select" name="dentistId"><option value="">Optional</option></select></div>
-                <div class="mb-2"><label class="form-label">Medicine</label><select class="form-select" name="medicineId" required></select></div>
-                <div class="mb-2"><label class="form-label">Dose amount</label><input class="form-control" type="number" min="0.01" step="any" name="doseAmount" required /></div>
-                <div class="mb-2"><label class="form-label">Times / day</label><input class="form-control" type="number" min="1" max="24" step="1" name="frequencyPerDay" required /></div>
-                <div class="mb-2"><label class="form-label">Duration (days)</label><input class="form-control" type="number" min="1" max="365" step="1" name="durationDays" required /></div>
-                <div class="mb-2"><label class="form-label">Quantity</label><input class="form-control" type="number" min="1" step="1" name="quantity" required /></div>
-                <div class="mb-3"><label class="form-label">Instructions</label><input class="form-control" name="instructions" /></div>
-                <button class="btn btn-clinic" type="submit">Create draft</button>
-              </form>
-            </div>
-            <div class="col-lg-8"><div id="prescriptions-list" class="card clinic-card"></div></div>
-          </div>
-        </div>
-
-        <!-- Appointments -->
-        <div class="tab-pane fade" id="tab-appointments">
+        <div class="tab-pane fade anim-pane" id="tab-appointments">
           <h1 class="page-title">Appointments</h1>
-          <p class="text-secondary">Same dentist cannot have overlapping appointments.</p>
+          <p class="text-secondary">Book visits for patients (no overlapping times for the same patient).</p>
           <div class="row g-4">
             <div class="col-lg-4">
-              <form id="appointment-form" class="card clinic-card card-body">
+              <form id="appointment-form" class="card clinic-card card-body anim-card">
                 <h2 class="h5">Book appointment</h2>
                 <div class="mb-2"><label class="form-label">Patient</label><select class="form-select" name="patientId" required></select></div>
-                <div class="mb-2"><label class="form-label">Dentist</label><select class="form-select" name="dentistId" required></select></div>
                 <div class="mb-2"><label class="form-label">Treatment</label><select class="form-select" name="treatmentId"><option value="">Optional</option></select></div>
                 <div class="mb-2"><label class="form-label">Start</label><input class="form-control" type="datetime-local" name="startTime" required /></div>
                 <div class="mb-2"><label class="form-label">End</label><input class="form-control" type="datetime-local" name="endTime" required /></div>
-                <div class="mb-2"><label class="form-label">Reason</label><input class="form-control" name="reason" /></div>
+                <div class="mb-3"><label class="form-label">Reason</label><input class="form-control" name="reason" /></div>
                 <div id="conflict-hint" class="alert alert-danger py-2 d-none" role="alert"></div>
                 <button class="btn btn-clinic" type="submit">Book</button>
               </form>
             </div>
-            <div class="col-lg-8"><div id="appointments-list" class="card clinic-card"></div></div>
+            <div class="col-lg-8"><div id="appointments-list" class="card clinic-card anim-card"></div></div>
           </div>
         </div>
 
-        <!-- Treatments -->
-        <div class="tab-pane fade" id="tab-treatments">
+        <div class="tab-pane fade anim-pane" id="tab-treatments">
           <h1 class="page-title">Treatments</h1>
-          <p class="text-secondary">Billable procedure catalog.</p>
+          <p class="text-secondary">Procedure catalog used in appointments and billing.</p>
           <div class="row g-4">
             <div class="col-lg-4">
-              <form id="treatment-form" class="card clinic-card card-body">
+              <form id="treatment-form" class="card clinic-card card-body anim-card">
                 <h2 class="h5">Add treatment</h2>
                 <div class="mb-2"><label class="form-label">Name</label><input class="form-control" name="name" required /></div>
                 <div class="mb-2"><label class="form-label">Description</label><textarea class="form-control" name="description" rows="2"></textarea></div>
@@ -220,7 +158,6 @@
                     <option value="restorative">Restorative</option>
                     <option value="cosmetic">Cosmetic</option>
                     <option value="surgical">Surgical</option>
-                    <option value="orthodontic">Orthodontic</option>
                     <option value="other">Other</option>
                   </select>
                 </div>
@@ -229,25 +166,43 @@
                 <button class="btn btn-clinic" type="submit">Save treatment</button>
               </form>
             </div>
-            <div class="col-lg-8"><div id="treatments-list" class="card clinic-card"></div></div>
+            <div class="col-lg-8"><div id="treatments-list" class="card clinic-card anim-card"></div></div>
           </div>
         </div>
 
-        <!-- Billing -->
-        <div class="tab-pane fade" id="tab-billing">
-          <h1 class="page-title">Billing</h1>
-          <p class="text-secondary">Draft → issue → pay / void.</p>
+        <div class="tab-pane fade anim-pane" id="tab-prescriptions">
+          <h1 class="page-title">Prescriptions</h1>
+          <p class="text-secondary">Write simple prescriptions linked to a patient (shown in their history).</p>
           <div class="row g-4">
             <div class="col-lg-4">
-              <form id="bill-form" class="card clinic-card card-body">
+              <form id="prescription-form" class="card clinic-card card-body anim-card">
+                <h2 class="h5">New prescription</h2>
+                <div class="mb-2"><label class="form-label">Patient</label><select class="form-select" name="patientId" required></select></div>
+                <div class="mb-2"><label class="form-label">Medication</label><input class="form-control" name="medication" required placeholder="e.g. Amoxicillin 500mg" /></div>
+                <div class="mb-2"><label class="form-label">Dosage</label><input class="form-control" name="dosage" required placeholder="e.g. 1 capsule 3x daily" /></div>
+                <div class="mb-2"><label class="form-label">Duration</label><input class="form-control" name="duration" required placeholder="e.g. 7 days" /></div>
+                <div class="mb-3"><label class="form-label">Instructions</label><input class="form-control" name="instructions" /></div>
+                <button class="btn btn-clinic" type="submit">Save prescription</button>
+              </form>
+            </div>
+            <div class="col-lg-8"><div id="prescriptions-list" class="card clinic-card anim-card"></div></div>
+          </div>
+        </div>
+
+        <div class="tab-pane fade anim-pane" id="tab-billing">
+          <h1 class="page-title">Billing</h1>
+          <p class="text-secondary">Create bills for patients — also visible in patient history.</p>
+          <div class="row g-4">
+            <div class="col-lg-4">
+              <form id="bill-form" class="card clinic-card card-body anim-card">
                 <h2 class="h5">Create bill</h2>
                 <div class="mb-2"><label class="form-label">Patient</label><select class="form-select" name="patientId" required></select></div>
-                <div class="mb-2"><label class="form-label">Line description</label><input class="form-control" name="description" required /></div>
+                <div class="mb-2"><label class="form-label">Description</label><input class="form-control" name="description" required /></div>
                 <div class="mb-3"><label class="form-label">Amount (USD)</label><input class="form-control" type="number" min="0" step="0.01" name="amount" required /></div>
                 <button class="btn btn-clinic" type="submit">Create draft</button>
               </form>
             </div>
-            <div class="col-lg-8"><div id="bills-list" class="card clinic-card"></div></div>
+            <div class="col-lg-8"><div id="bills-list" class="card clinic-card anim-card"></div></div>
           </div>
         </div>
       </div>
