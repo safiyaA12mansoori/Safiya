@@ -1,0 +1,33 @@
+@import "@fontsource/ibm-plex-sans/400.css";
+@import "@fontsource/ibm-plex-sans/500.css";
+@import "@fontsource/ibm-plex-sans/600.css";
+@import "@fontsource/ibm-plex-serif/500.css";
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "IBM Plex Sans", "Segoe UI", sans-serif;
+  --font-serif: "IBM Plex Serif", Georgia, serif;
+  --color-ink: #1c1915;
+  --color-paper: #f3efe6;
+  --color-panel: #fffdf8;
+  --color-line: #e2d7c6;
+  --color-sidebar: #1b242e;
+  --color-copper: #8d4b24;
+  --color-good: #1f6b45;
+  --color-bad: #8d2c2c;
+}
+
+body {
+  background: var(--color-paper);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+}
+
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 2px solid var(--color-copper);
+  outline-offset: 2px;
+}

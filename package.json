@@ -1,0 +1,33 @@
+{
+  "name": "milk-epr",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Milk EPR core enterprise platform",
+  "packageManager": "pnpm@10.33.4",
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "@prisma/client",
+      "@prisma/engines",
+      "argon2",
+      "esbuild",
+      "prisma"
+    ]
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "dev": "pnpm --parallel --filter @milk-epr/api --filter @milk-epr/web dev",
+    "build": "pnpm --filter @milk-epr/validation build && pnpm --filter @milk-epr/api build && pnpm --filter @milk-epr/web build",
+    "typecheck": "pnpm -r --filter @milk-epr/validation --filter @milk-epr/api --filter @milk-epr/web typecheck",
+    "lint": "eslint .",
+    "test": "pnpm --filter @milk-epr/api test",
+    "db:migrate": "pnpm --filter @milk-epr/api db:migrate",
+    "db:seed": "pnpm --filter @milk-epr/api db:seed"
+  },
+  "devDependencies": {
+    "@eslint/js": "10.0.1",
+    "eslint": "10.14.0",
+    "typescript-eslint": "8.72.1"
+  }
+}

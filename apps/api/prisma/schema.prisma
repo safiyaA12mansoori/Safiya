@@ -1,0 +1,289 @@
+// Tenant, company, and branch are different records. See docs/DECISION_LOG.md.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum RecordStatus {
+  ACTIVE
+  INACTIVE
+
+  @@map("record_status")
+}
+
+/// Isolation boundary. Not a company and not a branch.
+model Tenant {
+  id        String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name      String
+  slug      String       @unique
+  status    RecordStatus @default(ACTIVE)
+  createdAt DateTime     @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt DateTime     @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
+  createdBy String?      @map("created_by") @db.Uuid
+  updatedBy String?      @map("updated_by") @db.Uuid
+  deletedAt DateTime?    @map("deleted_at") @db.Timestamptz(6)
+
+  createdByUser User? @relation("TenantCreatedBy", fields: [createdBy], references: [id], onDelete: Restrict)
+  updatedByUser User? @relation("TenantUpdatedBy", fields: [updatedBy], references: [id], onDelete: Restrict)
+
+  companies     Company[]
+  branches      Branch[]
+  users         User[]
+  roles         Role[]
+  sessions      Session[]
+  units         UnitOfMeasure[]
+  masterRecords MasterRecord[]
+  auditEvents   AuditEvent[]
+  userRoles     UserRole[]
+
+  @@index([status])
+  @@map("tenants")
+}
+
+/// Legal entity inside one tenant. Not a tenant and not a branch.
+model Company {
+  id        String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  tenantId  String       @map("tenant_id") @db.Uuid
+  code      String
+  name      String
+  legalName String?      @map("legal_name")
+  status    RecordStatus @default(ACTIVE)
+  createdAt DateTime     @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt DateTime     @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
+  createdBy String?      @map("created_by") @db.Uuid
+  updatedBy String?      @map("updated_by") @db.Uuid
+  deletedAt DateTime?    @map("deleted_at") @db.Timestamptz(6)
+
+  tenant        Tenant @relation(fields: [tenantId], references: [id], onDelete: Restrict)
+  createdByUser User?  @relation("CompanyCreatedBy", fields: [createdBy], references: [id], onDelete: Restrict)
+  updatedByUser User?  @relation("CompanyUpdatedBy", fields: [updatedBy], references: [id], onDelete: Restrict)
+  branches      Branch[]
+
+  @@unique([tenantId, id])
+  @@unique([tenantId, code])
+  @@index([tenantId, status])
+  @@map("companies")
+}
+
+/// Operating location inside one company. Not a company and not a tenant.
+model Branch {
+  id        String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  tenantId  String       @map("tenant_id") @db.Uuid
+  companyId String       @map("company_id") @db.Uuid
+  code      String
+  name      String
+  status    RecordStatus @default(ACTIVE)
+  createdAt DateTime     @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt DateTime     @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
+  createdBy String?      @map("created_by") @db.Uuid
+  updatedBy String?      @map("updated_by") @db.Uuid
+  deletedAt DateTime?    @map("deleted_at") @db.Timestamptz(6)
+
+  tenant        Tenant  @relation(fields: [tenantId], references: [id], onDelete: Restrict)
+  company       Company @relation(fields: [tenantId, companyId], references: [tenantId, id], onDelete: Restrict)
+  createdByUser User?   @relation("BranchCreatedBy", fields: [createdBy], references: [id], onDelete: Restrict)
+  updatedByUser User?   @relation("BranchUpdatedBy", fields: [updatedBy], references: [id], onDelete: Restrict)
+
+  @@unique([companyId, code])
+  @@index([tenantId, companyId])
+  @@map("branches")
+}
+
+model User {
+  id           String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  tenantId     String       @map("tenant_id") @db.Uuid
+  email        String
+  name         String
+  passwordHash String       @map("password_hash")
+  status       RecordStatus @default(ACTIVE)
+  createdAt    DateTime     @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt    DateTime     @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
+  createdBy    String?      @map("created_by") @db.Uuid
+  updatedBy    String?      @map("updated_by") @db.Uuid
+  deletedAt    DateTime?    @map("deleted_at") @db.Timestamptz(6)
+
+  tenant        Tenant @relation(fields: [tenantId], references: [id], onDelete: Restrict)
+  createdByUser User?  @relation("UserCreatedBy", fields: [createdBy], references: [id], onDelete: Restrict)
+  updatedByUser User?  @relation("UserUpdatedBy", fields: [updatedBy], references: [id], onDelete: Restrict)
+
+  createdUsers User[] @relation("UserCreatedBy")
+  updatedUsers User[] @relation("UserUpdatedBy")
+
+  tenantsCreated  Tenant[]       @relation("TenantCreatedBy")
+  tenantsUpdated  Tenant[]       @relation("TenantUpdatedBy")
+  companiesCreated Company[]     @relation("CompanyCreatedBy")
+  companiesUpdated Company[]     @relation("CompanyUpdatedBy")
+  branchesCreated Branch[]       @relation("BranchCreatedBy")
+  branchesUpdated Branch[]       @relation("BranchUpdatedBy")
+  rolesCreated    Role[]         @relation("RoleCreatedBy")
+  rolesUpdated    Role[]         @relation("RoleUpdatedBy")
+  userRolesCreated UserRole[]    @relation("UserRoleCreatedBy")
+  unitsCreated    UnitOfMeasure[] @relation("UnitCreatedBy")
+  unitsUpdated    UnitOfMeasure[] @relation("UnitUpdatedBy")
+  mastersCreated  MasterRecord[] @relation("MasterCreatedBy")
+  mastersUpdated  MasterRecord[] @relation("MasterUpdatedBy")
+  auditEvents     AuditEvent[]
+
+  sessions  Session[]
+  userRoles UserRole[]
+
+  @@unique([tenantId, email])
+  @@index([tenantId, status])
+  @@map("users")
+}
+
+model Session {
+  id        String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  tenantId  String    @map("tenant_id") @db.Uuid
+  userId    String    @map("user_id") @db.Uuid
+  tokenHash String    @unique @map("token_hash")
+  expiresAt DateTime  @map("expires_at") @db.Timestamptz(6)
+  revokedAt DateTime? @map("revoked_at") @db.Timestamptz(6)
+  createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
+  ip        String?
+  userAgent String?   @map("user_agent")
+
+  tenant Tenant @relation(fields: [tenantId], references: [id], onDelete: Restrict)
+  user   User   @relation(fields: [userId], references: [id], onDelete: Restrict)
+
+  @@index([tenantId])
+  @@index([userId, revokedAt])
+  @@map("sessions")
+}
+
+model Permission {
+  id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  key         String   @unique
+  description String
+  createdAt   DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+
+  rolePermissions RolePermission[]
+
+  @@map("permissions")
+}
+
+model Role {
+  id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  tenantId    String   @map("tenant_id") @db.Uuid
+  name        String
+  description String   @default("")
+  isSystem    Boolean  @default(false) @map("is_system")
+  createdAt   DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt   DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
+  createdBy   String?  @map("created_by") @db.Uuid
+  updatedBy   String?  @map("updated_by") @db.Uuid
+
+  tenant        Tenant @relation(fields: [tenantId], references: [id], onDelete: Restrict)
+  createdByUser User?  @relation("RoleCreatedBy", fields: [createdBy], references: [id], onDelete: Restrict)
+  updatedByUser User?  @relation("RoleUpdatedBy", fields: [updatedBy], references: [id], onDelete: Restrict)
+
+  rolePermissions RolePermission[]
+  userRoles       UserRole[]
+
+  @@unique([tenantId, name])
+  @@map("roles")
+}
+
+model RolePermission {
+  roleId       String @map("role_id") @db.Uuid
+  permissionId String @map("permission_id") @db.Uuid
+
+  role       Role       @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  permission Permission @relation(fields: [permissionId], references: [id], onDelete: Restrict)
+
+  @@id([roleId, permissionId])
+  @@index([permissionId])
+  @@map("role_permissions")
+}
+
+model UserRole {
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  tenantId  String   @map("tenant_id") @db.Uuid
+  userId    String   @map("user_id") @db.Uuid
+  roleId    String   @map("role_id") @db.Uuid
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  createdBy String?  @map("created_by") @db.Uuid
+
+  tenant        Tenant @relation(fields: [tenantId], references: [id], onDelete: Restrict)
+  user          User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  role          Role   @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  createdByUser User?  @relation("UserRoleCreatedBy", fields: [createdBy], references: [id], onDelete: Restrict)
+
+  @@unique([userId, roleId])
+  @@index([tenantId])
+  @@index([roleId])
+  @@map("user_roles")
+}
+
+model UnitOfMeasure {
+  id        String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  tenantId  String       @map("tenant_id") @db.Uuid
+  code      String
+  name      String
+  status    RecordStatus @default(ACTIVE)
+  createdAt DateTime     @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt DateTime     @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
+  createdBy String?      @map("created_by") @db.Uuid
+  updatedBy String?      @map("updated_by") @db.Uuid
+  deletedAt DateTime?    @map("deleted_at") @db.Timestamptz(6)
+
+  tenant        Tenant @relation(fields: [tenantId], references: [id], onDelete: Restrict)
+  createdByUser User?  @relation("UnitCreatedBy", fields: [createdBy], references: [id], onDelete: Restrict)
+  updatedByUser User?  @relation("UnitUpdatedBy", fields: [updatedBy], references: [id], onDelete: Restrict)
+
+  @@unique([tenantId, code])
+  @@map("units_of_measure")
+}
+
+/// Generic master-data row. The type code is defined by the tenant, not by a product catalogue.
+model MasterRecord {
+  id          String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  tenantId    String       @map("tenant_id") @db.Uuid
+  recordType  String       @map("record_type")
+  code        String
+  name        String
+  description String?
+  status      RecordStatus @default(ACTIVE)
+  createdAt   DateTime     @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt   DateTime     @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
+  createdBy   String?      @map("created_by") @db.Uuid
+  updatedBy   String?      @map("updated_by") @db.Uuid
+  deletedAt   DateTime?    @map("deleted_at") @db.Timestamptz(6)
+
+  tenant        Tenant @relation(fields: [tenantId], references: [id], onDelete: Restrict)
+  createdByUser User?  @relation("MasterCreatedBy", fields: [createdBy], references: [id], onDelete: Restrict)
+  updatedByUser User?  @relation("MasterUpdatedBy", fields: [updatedBy], references: [id], onDelete: Restrict)
+
+  @@unique([tenantId, recordType, code])
+  @@index([tenantId, recordType])
+  @@map("master_records")
+}
+
+/// Append-only. The API only inserts. Migration `20261110130000_integrity`
+/// also revokes UPDATE and DELETE from the application role and rejects both
+/// with a trigger, including for the table owner.
+model AuditEvent {
+  id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  tenantId    String   @map("tenant_id") @db.Uuid
+  actorUserId String?  @map("actor_user_id") @db.Uuid
+  action      String
+  entityType  String   @map("entity_type")
+  entityId    String?  @map("entity_id")
+  requestId   String?  @map("request_id")
+  ip          String?
+  before      Json?
+  after       Json?
+  createdAt   DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+
+  tenant Tenant @relation(fields: [tenantId], references: [id], onDelete: Restrict)
+  actor  User?  @relation(fields: [actorUserId], references: [id], onDelete: Restrict)
+
+  @@index([tenantId, createdAt])
+  @@index([tenantId, entityType, entityId])
+  @@map("audit_events")
+}
