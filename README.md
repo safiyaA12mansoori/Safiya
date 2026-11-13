@@ -44,6 +44,12 @@ python manage.py runserver
 
 `create_dev_users` creates one user for each role, a current academic year (2026-2027 if none is current), Primary 1 division A, Mathematics, and sample links between them. It prints random passwords once. It runs only when `DJANGO_DEBUG=true`. Run it again with `--reset` to rotate those passwords. The command does not write passwords into the repository.
 
+```bash
+python manage.py seed_class_students
+```
+
+That command fills classes 1 to 10, division A, until each class has 20 students in the current academic year. Students already in a class are kept. These roster logins have no password until a principal resets one.
+
 ## Sign in
 
 Open http://127.0.0.1:8000/login/
