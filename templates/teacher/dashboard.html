@@ -8,6 +8,9 @@
       <p class="eyebrow eyebrow-light">Teacher</p>
       <h1>{{ teacher.user.get_full_name }}</h1>
       <p>{{ teacher.teacher_id }}{% if current_academic_year %} · {{ current_academic_year.name }}{% endif %}</p>
+      {% if class_teacher_of %}
+        <p>Class teacher of {% for room in class_teacher_of %}{{ room.label }}{% if not forloop.last %}, {% endif %}{% endfor %}</p>
+      {% endif %}
     </section>
     <h2 class="h4 mt-4">My classes and subjects</h2>
     {% if not current_academic_year %}

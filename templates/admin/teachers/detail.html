@@ -22,6 +22,12 @@
         <dt>School phone</dt><dd>{{ teacher.phone }}</dd>
         <dt>Qualification</dt><dd>{{ teacher.qualification|default:"—" }}</dd>
         <dt>Joined on</dt><dd>{{ teacher.joined_on|date:"j M Y" }}</dd>
+        <dt>Class teacher of</dt>
+        <dd>
+          {% for room in class_teacher_of %}
+            <a href="{% url 'class-detail' room.pk %}">{{ room.label }}</a>{% if not forloop.last %}, {% endif %}
+          {% empty %}—{% endfor %}
+        </dd>
       </dl>
       <h2 class="h5 mt-4">Allocations</h2>
       <div class="table-wrap">

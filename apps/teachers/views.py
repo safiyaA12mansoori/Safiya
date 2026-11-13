@@ -90,10 +90,11 @@ def teacher_detail(request, pk):
     assignments = teacher.assignments.select_related(
         'classroom__grade_level', 'classroom__academic_year', 'subject', 'academic_year'
     )
+    class_teacher_of = teacher.class_teacher_of.select_related('grade_level', 'academic_year')
     return render(
         request,
         'admin/teachers/detail.html',
-        {'teacher': teacher, 'assignments': assignments},
+        {'teacher': teacher, 'assignments': assignments, 'class_teacher_of': class_teacher_of},
     )
 
 
@@ -192,25 +193,37 @@ def _portal_teacher(user):
     try:
         teacher = user.teacher
     except ObjectDoesNotExist:
-        return None, []
+        return None, [], []
     current = AcademicYear.objects.filter(is_current=True).first()
     assignments = []
+    class_teacher_of = []
     if current is not None:
         assignments = list(
             teacher.assignments.filter(academic_year=current)
             .select_related('classroom__grade_level', 'subject', 'academic_year')
             .order_by('classroom__grade_level__number', 'classroom__division', 'subject__name')
         )
-    return teacher, assignments
+        class_teacher_of = list(
+            teacher.class_teacher_of.filter(academic_year=current).select_related('grade_level')
+        )
+    return teacher, assignments, class_teacher_of
 
 
 @role_required(CustomUser.Role.TEACHER)
 def teacher_dashboard(request):
-    teacher, assignments = _portal_teacher(request.user)
-    return render(request, 'teacher/dashboard.html', {'teacher': teacher, 'assignments': assignments})
+    teacher, assignments, class_teacher_of = _portal_teacher(request.user)
+    return render(
+        request,
+        'teacher/dashboard.html',
+        {'teacher': teacher, 'assignments': assignments, 'class_teacher_of': class_teacher_of},
+    )
 
 
 @role_required(CustomUser.Role.TEACHER)
 def teacher_profile(request):
-    teacher, assignments = _portal_teacher(request.user)
-    return render(request, 'teacher/profile.html', {'teacher': teacher, 'assignments': assignments})
+    teacher, assignments, class_teacher_of = _portal_teacher(request.user)
+    return render(
+        request,
+        'teacher/profile.html',
+        {'teacher': teacher, 'assignments': assignments, 'class_teacher_of': class_teacher_of},
+    )

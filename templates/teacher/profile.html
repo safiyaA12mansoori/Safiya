@@ -21,6 +21,10 @@
           <dt>Qualification</dt><dd>{{ teacher.qualification|default:"—" }}</dd>
           <dt>Joined on</dt><dd>{{ teacher.joined_on|date:"j M Y" }}</dd>
           <dt>Academic year</dt><dd>{{ current_academic_year.name|default:"No current year" }}</dd>
+          <dt>Class teacher of</dt>
+          <dd>
+            {% for room in class_teacher_of %}{{ room.label }}{% if not forloop.last %}, {% endif %}{% empty %}—{% endfor %}
+          </dd>
         </dl>
         <h2 class="h5 mt-4">Assigned this year</h2>
         <ul class="plain-list">

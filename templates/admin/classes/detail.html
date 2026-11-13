@@ -5,7 +5,13 @@
   <div class="page-head">
     <div>
       <h1>{{ room.label }}</h1>
-      <p class="text-muted mb-0">{{ room.academic_year.name }} · {{ room.grade_level.get_stage_display }}</p>
+      <p class="text-muted mb-0">
+        {{ room.academic_year.name }} · {{ room.grade_level.get_stage_display }}
+        {% if room.class_teacher %}
+          · Class teacher
+          <a href="{% url 'teacher-detail' room.class_teacher.pk %}">{{ room.class_teacher.user.get_full_name }}</a>
+        {% endif %}
+      </p>
     </div>
     <div class="d-flex gap-2">
       <a class="btn btn-outline-secondary" href="{% url 'class-edit' room.pk %}">Edit</a>

@@ -131,6 +131,7 @@ def class_list(request):
     query = search_term(request)
     rooms = (
         ClassRoom.objects.select_related('grade_level', 'academic_year')
+        .select_related('class_teacher__user')
         .annotate(student_count=Count('enrollments'))
         .order_by('-academic_year__start_date', 'grade_level__number', 'division')
     )
@@ -162,7 +163,10 @@ def class_create(request):
 
 @role_required(CustomUser.Role.PRINCIPAL)
 def class_detail(request, pk):
-    room = get_object_or_404(ClassRoom.objects.select_related('grade_level', 'academic_year'), pk=pk)
+    room = get_object_or_404(
+        ClassRoom.objects.select_related('grade_level', 'academic_year', 'class_teacher__user'),
+        pk=pk,
+    )
     return render(
         request,
         'admin/classes/detail.html',

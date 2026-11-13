@@ -61,6 +61,13 @@ class ClassRoom(models.Model):
     academic_year = models.ForeignKey(AcademicYear, on_delete=models.PROTECT, related_name='classrooms')
     grade_level = models.ForeignKey(GradeLevel, on_delete=models.PROTECT, related_name='classrooms')
     division = models.CharField(max_length=3)
+    class_teacher = models.ForeignKey(
+        'teachers.Teacher',
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='class_teacher_of',
+    )
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

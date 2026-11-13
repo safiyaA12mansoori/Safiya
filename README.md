@@ -50,6 +50,12 @@ python manage.py seed_class_students
 
 That command fills classes 1 to 10, division A, until each class has 20 students in the current academic year. Students already in a class are kept. These roster logins have no password until a principal resets one.
 
+```bash
+python manage.py seed_class_teachers
+```
+
+That command adds 10 class teachers, one for each class from 1 to 10. English, Hindi, Mathematics, Science, Social Science, and Computer are offered in every class, and the class teacher is allocated to all of them. These teacher logins have no password until a principal resets one.
+
 ## Sign in
 
 Open http://127.0.0.1:8000/login/
