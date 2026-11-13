@@ -1,0 +1,16 @@
+{% extends "admin/base_principal.html" %}
+{% block page_title %}{{ title }}{% endblock %}
+{% block heading %}{{ title }}{% endblock %}
+{% block content %}
+  <div class="card form-card">
+    <div class="card-body">
+      <h1>{{ title }}</h1>
+      <p>{{ message }}</p>
+      <form method="post" class="d-flex gap-2">
+        {% csrf_token %}
+        <button class="btn btn-{{ tone|default:'danger' }}" type="submit">{{ confirm_label|default:"Delete" }}</button>
+        <a class="btn btn-outline-secondary" href="{{ cancel_url }}">Cancel</a>
+      </form>
+    </div>
+  </div>
+{% endblock %}

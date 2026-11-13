@@ -1,0 +1,32 @@
+{% extends "student/base_student.html" %}
+{% block page_title %}My dashboard{% endblock %}
+{% block heading %}My dashboard{% endblock %}
+{% block content %}
+  {% if not student %}
+    <div class="alert alert-warning">This login is not linked to a student record. Ask the principal to check the account.</div>
+  {% else %}
+    <section class="hero">
+      <p class="eyebrow eyebrow-light">Student</p>
+      <h1>{{ student.user.get_full_name }}</h1>
+      <p>{{ student.student_id }}</p>
+    </section>
+    <div class="tile-grid">
+      <article class="tile">
+        <span>Admission number</span>
+        <strong>{{ student.admission_number }}</strong>
+      </article>
+      <article class="tile">
+        <span>Class and division</span>
+        <strong>{% if enrollment %}{{ enrollment.classroom.label }}{% else %}Not enrolled{% endif %}</strong>
+      </article>
+      <article class="tile">
+        <span>Academic year</span>
+        <strong>{% if enrollment %}{{ enrollment.academic_year.name }}{% elif current_academic_year %}{{ current_academic_year.name }}{% else %}Not set{% endif %}</strong>
+      </article>
+    </div>
+    {% if not enrollment %}
+      <p class="text-muted">You are not enrolled in a class for the current academic year.</p>
+    {% endif %}
+    <p><a class="btn btn-primary" href="{% url 'student-profile' %}">View my profile</a></p>
+  {% endif %}
+{% endblock %}

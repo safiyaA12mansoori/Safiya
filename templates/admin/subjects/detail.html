@@ -1,0 +1,36 @@
+{% extends "admin/base_principal.html" %}
+{% block page_title %}{{ subject.name }}{% endblock %}
+{% block heading %}Subject{% endblock %}
+{% block content %}
+  <div class="page-head">
+    <div>
+      <h1>{{ subject.name }}</h1>
+      <p class="text-muted mb-0">{{ subject.code }}</p>
+    </div>
+    <div class="d-flex gap-2">
+      <a class="btn btn-outline-secondary" href="{% url 'subject-edit' subject.pk %}">Edit</a>
+      <a class="btn btn-outline-danger" href="{% url 'subject-delete' subject.pk %}">Delete</a>
+    </div>
+  </div>
+  <div class="card data-card">
+    <div class="card-body">
+      <p>{{ subject.description|default:"No description." }}</p>
+      <h2 class="h5">Offered in</h2>
+      <ul class="plain-list">
+        {% for link in links %}
+          <li><a href="{% url 'class-detail' link.classroom.pk %}">{{ link.classroom }}</a></li>
+        {% empty %}
+          <li>Not offered in a class yet.</li>
+        {% endfor %}
+      </ul>
+      <h2 class="h5 mt-4">Teacher allocations</h2>
+      <ul class="plain-list">
+        {% for assignment in assignments %}
+          <li><a href="{% url 'allocation-edit' assignment.pk %}">{{ assignment.teacher.user.get_full_name }} · {{ assignment.classroom.label }}</a></li>
+        {% empty %}
+          <li>No teacher allocated.</li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+{% endblock %}

@@ -1,0 +1,40 @@
+{% extends "admin/base_principal.html" %}
+{% block page_title %}Teachers{% endblock %}
+{% block heading %}Teachers{% endblock %}
+{% block content %}
+  <div class="page-head">
+    <div>
+      <h1>Teachers</h1>
+      <p class="text-muted mb-0">Each teacher gets one login. Allocate them to classes from Teacher allocation.</p>
+    </div>
+    <a class="btn btn-primary" href="{% url 'teacher-create' %}">Add teacher</a>
+  </div>
+  {% include "includes/search.html" %}
+  <div class="card data-card">
+    <div class="table-wrap">
+      <table class="table align-middle mb-0">
+        <thead>
+          <tr><th>Teacher ID</th><th>Name</th><th>Phone</th><th>Allocations</th><th>Actions</th></tr>
+        </thead>
+        <tbody>
+          {% for teacher in page %}
+            <tr>
+              <td><a href="{% url 'teacher-detail' teacher.pk %}">{{ teacher.teacher_id }}</a></td>
+              <td>{{ teacher.user.get_full_name }}</td>
+              <td>{{ teacher.phone }}</td>
+              <td>{{ teacher.assignment_count }}</td>
+              <td class="text-nowrap">
+                <a class="btn btn-sm btn-outline-primary" href="{% url 'teacher-detail' teacher.pk %}">View</a>
+                <a class="btn btn-sm btn-outline-secondary" href="{% url 'teacher-edit' teacher.pk %}">Edit</a>
+                <a class="btn btn-sm btn-outline-danger" href="{% url 'teacher-delete' teacher.pk %}">Delete</a>
+              </td>
+            </tr>
+          {% empty %}
+            <tr><td colspan="5">No teachers match this list. <a href="{% url 'teacher-create' %}">Add a teacher</a>.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+  {% include "includes/pagination.html" %}
+{% endblock %}

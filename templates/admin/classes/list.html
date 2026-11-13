@@ -1,0 +1,43 @@
+{% extends "admin/base_principal.html" %}
+{% block page_title %}Classes and divisions{% endblock %}
+{% block heading %}Classes{% endblock %}
+{% block content %}
+  <div class="page-head">
+    <div>
+      <h1>Classes and divisions</h1>
+      <p class="text-muted mb-0">Primary 1–5 and Secondary 6–10, with a division such as A or B.</p>
+    </div>
+    <a class="btn btn-primary" href="{% url 'class-create' %}">Add class</a>
+  </div>
+  {% include "includes/search.html" %}
+  <div class="card data-card">
+    <div class="table-wrap">
+      <table class="table align-middle mb-0">
+        <thead><tr><th>Class</th><th>Division</th><th>Class teacher</th><th>Academic year</th><th>Students</th><th>Actions</th></tr></thead>
+        <tbody>
+          {% for room in page %}
+            <tr>
+              <td><a href="{% url 'class-detail' room.pk %}">{{ room.grade_level.name }}</a></td>
+              <td>{{ room.division }}</td>
+              <td>
+                {% if room.class_teacher %}
+                  <a href="{% url 'teacher-detail' room.class_teacher.pk %}">{{ room.class_teacher.user.get_full_name }}</a>
+                {% else %}—{% endif %}
+              </td>
+              <td>{{ room.academic_year.name }}{% if room.academic_year.is_current %} <span class="badge text-bg-success">Current</span>{% endif %}</td>
+              <td>{{ room.student_count }}</td>
+              <td class="text-nowrap">
+                <a class="btn btn-sm btn-outline-primary" href="{% url 'class-detail' room.pk %}">View</a>
+                <a class="btn btn-sm btn-outline-secondary" href="{% url 'class-edit' room.pk %}">Edit</a>
+                <a class="btn btn-sm btn-outline-danger" href="{% url 'class-delete' room.pk %}">Delete</a>
+              </td>
+            </tr>
+          {% empty %}
+            <tr><td colspan="6">No classes yet. <a href="{% url 'class-create' %}">Add a class</a>.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+  {% include "includes/pagination.html" %}
+{% endblock %}

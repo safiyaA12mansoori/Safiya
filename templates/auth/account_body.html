@@ -1,0 +1,30 @@
+<div class="page-head">
+  <div>
+    <h1>Account</h1>
+    <p class="text-muted mb-0">Update your own contact details and password. This does not change official school records.</p>
+  </div>
+</div>
+<div class="form-grid">
+  <form method="post" class="card form-card">
+    {% csrf_token %}
+    <input type="hidden" name="form" value="profile">
+    <div class="card-body">
+      <h2>Personal contact</h2>
+      {% include "includes/form_fields.html" with form=profile_form %}
+    </div>
+    <div class="card-footer">
+      <button class="btn btn-primary" type="submit">Save contact details</button>
+    </div>
+  </form>
+  <form method="post" class="card form-card">
+    {% csrf_token %}
+    <input type="hidden" name="form" value="password">
+    <div class="card-body">
+      <h2>Change password</h2>
+      {% include "includes/form_fields.html" with form=password_form %}
+    </div>
+    <div class="card-footer">
+      <button class="btn btn-primary" type="submit">Change password</button>
+    </div>
+  </form>
+</div>

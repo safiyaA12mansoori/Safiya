@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}{% block page_title %}Dashboard{% endblock %} · {{ school_name }}{% endblock %}
+{% block body %}
+<div class="shell shell-side">
+  <div class="nav-backdrop" id="nav-backdrop" hidden></div>
+  <aside class="nav-panel" id="nav-panel">
+    <a class="brand" href="{% url 'principal-dashboard' %}">
+      <img src="{% static 'images/mark.svg' %}" alt="" width="28" height="28">
+      <span>
+        <strong>{{ school_name }}</strong>
+        <small>Principal</small>
+      </span>
+    </a>
+    <nav class="side-nav" aria-label="Principal">
+      <a class="{% if request.path == '/principal/' %}active{% endif %}" {% if request.path == '/principal/' %}aria-current="page"{% endif %} href="{% url 'principal-dashboard' %}"><i class="bi bi-grid-1x2"></i> Dashboard</a>
+      <a class="{% if '/principal/students/' in request.path %}active{% endif %}" {% if '/principal/students/' in request.path %}aria-current="page"{% endif %} href="{% url 'student-list' %}"><i class="bi bi-people"></i> Students</a>
+      <a class="{% if '/principal/teachers/' in request.path %}active{% endif %}" {% if '/principal/teachers/' in request.path %}aria-current="page"{% endif %} href="{% url 'teacher-list' %}"><i class="bi bi-person-workspace"></i> Teachers</a>
+      <a class="{% if '/principal/classes/' in request.path %}active{% endif %}" {% if '/principal/classes/' in request.path %}aria-current="page"{% endif %} href="{% url 'class-list' %}"><i class="bi bi-diagram-3"></i> Classes and divisions</a>
+      <a class="{% if '/principal/subjects/' in request.path %}active{% endif %}" {% if '/principal/subjects/' in request.path %}aria-current="page"{% endif %} href="{% url 'subject-list' %}"><i class="bi bi-journal-bookmark"></i> Subjects</a>
+      <a class="{% if '/principal/allocations/' in request.path %}active{% endif %}" {% if '/principal/allocations/' in request.path %}aria-current="page"{% endif %} href="{% url 'allocation-list' %}"><i class="bi bi-person-check"></i> Teacher allocation</a>
+      <a class="{% if '/principal/academic-years/' in request.path %}active{% endif %}" {% if '/principal/academic-years/' in request.path %}aria-current="page"{% endif %} href="{% url 'year-list' %}"><i class="bi bi-calendar3"></i> Academic years</a>
+      <a class="{% if request.path == '/account/' %}active{% endif %}" {% if request.path == '/account/' %}aria-current="page"{% endif %} href="{% url 'account' %}"><i class="bi bi-key"></i> Account</a>
+    </nav>
+    <form method="post" action="{% url 'logout' %}" class="logout-form">
+      {% csrf_token %}
+      <button type="submit"><i class="bi bi-box-arrow-right"></i> Log out</button>
+    </form>
+  </aside>
+  <div class="content">
+    <header class="topbar">
+      <button type="button" class="btn btn-outline-secondary d-lg-none" id="nav-toggle" aria-controls="nav-panel" aria-expanded="false">Menu</button>
+      <div>
+        <p class="eyebrow">Principal office</p>
+        <strong>{% block heading %}Overview{% endblock %}</strong>
+      </div>
+      <div class="who d-flex">
+        <span class="role-pill">Principal</span>
+        <span>{{ user.get_full_name|default:user.username }}</span>
+      </div>
+    </header>
+    <main id="main" class="page">
+      {% block content %}{% endblock %}
+    </main>
+  </div>
+</div>
+{% endblock %}

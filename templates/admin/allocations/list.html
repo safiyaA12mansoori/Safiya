@@ -1,0 +1,37 @@
+{% extends "admin/base_principal.html" %}
+{% block page_title %}Teacher allocation{% endblock %}
+{% block heading %}Allocation{% endblock %}
+{% block content %}
+  <div class="page-head">
+    <div>
+      <h1>Teacher allocation</h1>
+      <p class="text-muted mb-0">Assign a teacher to a subject in a class for an academic year.</p>
+    </div>
+    <a class="btn btn-primary" href="{% url 'allocation-create' %}">Add allocation</a>
+  </div>
+  {% include "includes/search.html" %}
+  <div class="card data-card">
+    <div class="table-wrap">
+      <table class="table align-middle mb-0">
+        <thead><tr><th>Teacher</th><th>Class</th><th>Subject</th><th>Year</th><th>Actions</th></tr></thead>
+        <tbody>
+          {% for allocation in page %}
+            <tr>
+              <td><a href="{% url 'teacher-detail' allocation.teacher.pk %}">{{ allocation.teacher }}</a></td>
+              <td><a href="{% url 'class-detail' allocation.classroom.pk %}">{{ allocation.classroom.label }}</a></td>
+              <td>{{ allocation.subject.name }}</td>
+              <td>{{ allocation.academic_year.name }}</td>
+              <td class="text-nowrap">
+                <a class="btn btn-sm btn-outline-secondary" href="{% url 'allocation-edit' allocation.pk %}">Edit</a>
+                <a class="btn btn-sm btn-outline-danger" href="{% url 'allocation-delete' allocation.pk %}">Remove</a>
+              </td>
+            </tr>
+          {% empty %}
+            <tr><td colspan="5">No allocations yet. <a href="{% url 'allocation-create' %}">Add an allocation</a>.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+  {% include "includes/pagination.html" %}
+{% endblock %}

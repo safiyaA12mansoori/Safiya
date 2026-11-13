@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Log in · {{ school_name }}{% endblock %}
+{% block body %}
+  <main id="main" class="auth-screen">
+    <section class="auth-card">
+      <div class="brand-mark">
+        <img src="{% static 'images/mark.svg' %}" alt="" width="40" height="40">
+        <div>
+          <strong>{{ school_name }}</strong>
+          <span>Smart School ERP</span>
+        </div>
+      </div>
+      <h1>Log in</h1>
+      <p class="text-muted">Use the username issued by the school. There is no parent login.</p>
+      <form method="post">
+        {% csrf_token %}
+        {% include "includes/form_fields.html" %}
+        <button class="btn btn-primary w-100" type="submit">Log in</button>
+      </form>
+    </section>
+  </main>
+{% endblock %}

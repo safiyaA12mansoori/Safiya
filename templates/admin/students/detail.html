@@ -1,0 +1,45 @@
+{% extends "admin/base_principal.html" %}
+{% block page_title %}{{ student.user.get_full_name }}{% endblock %}
+{% block heading %}Student{% endblock %}
+{% block content %}
+  <div class="page-head">
+    <div>
+      <h1>{{ student.user.get_full_name }}</h1>
+      <p class="text-muted mb-0">{{ student.student_id }} · {{ student.admission_number }}</p>
+    </div>
+    <div class="d-flex gap-2 flex-wrap">
+      <a class="btn btn-outline-secondary" href="{% url 'student-edit' student.pk %}">Edit</a>
+      <a class="btn btn-outline-primary" href="{% url 'student-reset-password' student.pk %}">Reset password</a>
+      <a class="btn btn-outline-danger" href="{% url 'student-delete' student.pk %}">Delete</a>
+    </div>
+  </div>
+  <div class="card data-card">
+    <div class="card-body">
+      <dl class="detail-grid">
+        <dt>Login</dt><dd>{{ student.user.username }}</dd>
+        <dt>Login status</dt><dd>{% if student.user.is_active %}Active{% else %}Inactive{% endif %}</dd>
+        <dt>Date of birth</dt><dd>{{ student.date_of_birth|date:"j M Y" }}</dd>
+        <dt>Gender</dt><dd>{{ student.get_gender_display }}</dd>
+        <dt>Address</dt><dd>{{ student.address|default:"—" }}</dd>
+        <dt>Parent or guardian</dt><dd>{{ student.parent_name }}</dd>
+        <dt>Parent phone</dt><dd>{{ student.parent_phone }}</dd>
+      </dl>
+      <h2 class="h5 mt-4">Enrollment</h2>
+      <div class="table-wrap">
+        <table class="table mb-0">
+          <thead><tr><th>Academic year</th><th>Class</th></tr></thead>
+          <tbody>
+            {% for enrollment in student.enrollments.all %}
+              <tr>
+                <td>{{ enrollment.academic_year.name }}{% if enrollment.academic_year.is_current %} <span class="badge text-bg-success">Current</span>{% endif %}</td>
+                <td><a href="{% url 'class-detail' enrollment.classroom.pk %}">{{ enrollment.classroom.label }}</a></td>
+              </tr>
+            {% empty %}
+              <tr><td colspan="2">No enrollment yet.</td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+{% endblock %}

@@ -1,0 +1,40 @@
+{% extends "teacher/base_teacher.html" %}
+{% block page_title %}My profile{% endblock %}
+{% block content %}
+  {% if not teacher %}
+    <div class="alert alert-warning">This login is not linked to a teacher record.</div>
+  {% else %}
+    <div class="page-head">
+      <div>
+        <h1>{{ teacher.user.get_full_name }}</h1>
+        <p class="text-muted mb-0">School record. To change your password, open Account.</p>
+      </div>
+      <a class="btn btn-outline-primary" href="{% url 'account' %}">Account</a>
+    </div>
+    <div class="card data-card">
+      <div class="card-body">
+        <dl class="detail-grid">
+          <dt>Teacher ID</dt><dd>{{ teacher.teacher_id }}</dd>
+          <dt>Login</dt><dd>{{ teacher.user.username }}</dd>
+          <dt>Email</dt><dd>{{ teacher.user.email|default:"—" }}</dd>
+          <dt>School phone</dt><dd>{{ teacher.phone }}</dd>
+          <dt>Qualification</dt><dd>{{ teacher.qualification|default:"—" }}</dd>
+          <dt>Joined on</dt><dd>{{ teacher.joined_on|date:"j M Y" }}</dd>
+          <dt>Academic year</dt><dd>{{ current_academic_year.name|default:"No current year" }}</dd>
+          <dt>Class teacher of</dt>
+          <dd>
+            {% for room in class_teacher_of %}{{ room.label }}{% if not forloop.last %}, {% endif %}{% empty %}—{% endfor %}
+          </dd>
+        </dl>
+        <h2 class="h5 mt-4">Assigned this year</h2>
+        <ul class="plain-list">
+          {% for assignment in assignments %}
+            <li>{{ assignment.subject.name }} · {{ assignment.classroom.label }}</li>
+          {% empty %}
+            <li>No assignments for the current academic year.</li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+  {% endif %}
+{% endblock %}

@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}{% block page_title %}My dashboard{% endblock %} · {{ school_name }}{% endblock %}
+{% block body %}
+<div class="shell shell-top">
+  <header class="topnav">
+    <div class="topnav-row">
+      <button type="button" class="btn btn-outline-light d-lg-none" id="nav-toggle" aria-controls="nav-panel" aria-expanded="false">Menu</button>
+      <a class="brand brand-light" href="{% url 'teacher-dashboard' %}">
+        <img src="{% static 'images/mark.svg' %}" alt="" width="28" height="28">
+        <span>
+          <strong>{{ school_name }}</strong>
+          <small>Teacher</small>
+        </span>
+      </a>
+      <nav class="topnav-links" id="nav-panel" aria-label="Teacher">
+        <a class="{% if request.path == '/teacher/' %}active{% endif %}" {% if request.path == '/teacher/' %}aria-current="page"{% endif %} href="{% url 'teacher-dashboard' %}">My dashboard</a>
+        <a class="{% if request.path == '/teacher/profile/' %}active{% endif %}" {% if request.path == '/teacher/profile/' %}aria-current="page"{% endif %} href="{% url 'teacher-profile' %}">My profile</a>
+        <a class="{% if request.path == '/account/' %}active{% endif %}" {% if request.path == '/account/' %}aria-current="page"{% endif %} href="{% url 'account' %}">Account</a>
+        <form method="post" action="{% url 'logout' %}" class="d-lg-none">
+          {% csrf_token %}
+          <button class="btn btn-link text-white" type="submit">Log out</button>
+        </form>
+      </nav>
+      <div class="who d-none d-lg-flex">
+        <span>{{ user.get_full_name|default:user.username }}</span>
+        <form method="post" action="{% url 'logout' %}">
+          {% csrf_token %}
+          <button class="btn btn-outline-light btn-sm" type="submit">Log out</button>
+        </form>
+      </div>
+    </div>
+  </header>
+  <main id="main" class="page page-top">
+    {% block content %}{% endblock %}
+  </main>
+</div>
+{% endblock %}

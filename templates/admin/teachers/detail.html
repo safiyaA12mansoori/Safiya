@@ -1,0 +1,51 @@
+{% extends "admin/base_principal.html" %}
+{% block page_title %}{{ teacher.user.get_full_name }}{% endblock %}
+{% block heading %}Teacher{% endblock %}
+{% block content %}
+  <div class="page-head">
+    <div>
+      <h1>{{ teacher.user.get_full_name }}</h1>
+      <p class="text-muted mb-0">{{ teacher.teacher_id }}</p>
+    </div>
+    <div class="d-flex gap-2 flex-wrap">
+      <a class="btn btn-outline-secondary" href="{% url 'teacher-edit' teacher.pk %}">Edit</a>
+      <a class="btn btn-outline-primary" href="{% url 'teacher-reset-password' teacher.pk %}">Reset password</a>
+      <a class="btn btn-outline-danger" href="{% url 'teacher-delete' teacher.pk %}">Delete</a>
+    </div>
+  </div>
+  <div class="card data-card">
+    <div class="card-body">
+      <dl class="detail-grid">
+        <dt>Login</dt><dd>{{ teacher.user.username }}</dd>
+        <dt>Login status</dt><dd>{% if teacher.user.is_active %}Active{% else %}Inactive{% endif %}</dd>
+        <dt>Email</dt><dd>{{ teacher.user.email|default:"—" }}</dd>
+        <dt>School phone</dt><dd>{{ teacher.phone }}</dd>
+        <dt>Qualification</dt><dd>{{ teacher.qualification|default:"—" }}</dd>
+        <dt>Joined on</dt><dd>{{ teacher.joined_on|date:"j M Y" }}</dd>
+        <dt>Class teacher of</dt>
+        <dd>
+          {% for room in class_teacher_of %}
+            <a href="{% url 'class-detail' room.pk %}">{{ room.label }}</a>{% if not forloop.last %}, {% endif %}
+          {% empty %}—{% endfor %}
+        </dd>
+      </dl>
+      <h2 class="h5 mt-4">Allocations</h2>
+      <div class="table-wrap">
+        <table class="table mb-0">
+          <thead><tr><th>Year</th><th>Class</th><th>Subject</th></tr></thead>
+          <tbody>
+            {% for assignment in assignments %}
+              <tr>
+                <td>{{ assignment.academic_year.name }}</td>
+                <td><a href="{% url 'class-detail' assignment.classroom.pk %}">{{ assignment.classroom.label }}</a></td>
+                <td><a href="{% url 'allocation-edit' assignment.pk %}">{{ assignment.subject.name }}</a></td>
+              </tr>
+            {% empty %}
+              <tr><td colspan="3">No allocations yet. <a href="{% url 'allocation-create' %}">Allocate this teacher</a>.</td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+{% endblock %}
