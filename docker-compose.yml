@@ -1,0 +1,66 @@
+services:
+  db:
+    image: mysql:8.4
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-medicore}
+      MYSQL_USER: ${MYSQL_USER:-medicore}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-medicore}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-rootsecret}
+    ports:
+      - "${MYSQL_PORT:-3306}:3306"
+    volumes:
+      - medicore_mysql:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "-uroot", "-p${MYSQL_ROOT_PASSWORD:-rootsecret}"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    ports:
+      - "${REDIS_PORT:-6379}:6379"
+    volumes:
+      - medicore_redis:/data
+
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      USE_SQLITE: "0"
+      USE_REDIS: "1"
+      MYSQL_HOST: db
+      REDIS_URL: redis://redis:6379/0
+      DJANGO_DEBUG: ${DJANGO_DEBUG:-0}
+    ports:
+      - "${API_PORT:-8000}:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_started
+    volumes:
+      - medicore_media:/app/medicore/media
+      - medicore_static:/app/medicore/staticfiles
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    ports:
+      - "${FRONTEND_PORT:-5173}:80"
+    depends_on:
+      - api
+
+volumes:
+  medicore_mysql:
+  medicore_redis:
+  medicore_media:
+  medicore_static:

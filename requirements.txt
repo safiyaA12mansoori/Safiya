@@ -1,0 +1,3 @@
+# Install backend deps from the Django project:
+#   pip install -r medicore/requirements.txt
+-r medicore/requirements.txt
