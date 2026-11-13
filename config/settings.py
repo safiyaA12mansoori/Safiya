@@ -25,6 +25,14 @@ ALLOWED_HOSTS = [
     for host in env('DJANGO_ALLOWED_HOSTS', 'localhost,127.0.0.1').split(',')
     if host.strip()
 ]
+CSRF_TRUSTED_ORIGINS = [
+    origin.strip()
+    for origin in env('DJANGO_CSRF_TRUSTED_ORIGINS', '').split(',')
+    if origin.strip()
+]
+if env('DJANGO_BEHIND_HTTPS_PROXY', 'false').lower() in {'1', 'true', 'yes', 'on'}:
+    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+    USE_X_FORWARDED_HOST = True
 
 INSTALLED_APPS = [
     'django.contrib.auth',
