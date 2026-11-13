@@ -1,0 +1,168 @@
+:root {
+  --mc-ink: #0f2a2e;
+  --mc-teal: #0d7377;
+  --mc-teal-deep: #095456;
+  --mc-mint: #e8f6f5;
+  --mc-sand: #f3efe6;
+  --mc-coral: #c45c26;
+  --mc-line: rgba(15, 42, 46, 0.12);
+  --mc-radius: 14px;
+  --mc-shadow: 0 18px 40px rgba(15, 42, 46, 0.08);
+  font-family: "DM Sans", system-ui, sans-serif;
+  color: var(--mc-ink);
+  background: radial-gradient(1200px 600px at 10% -10%, #d9f2ef 0%, transparent 55%),
+    radial-gradient(900px 500px at 100% 0%, #f7e7d6 0%, transparent 50%),
+    linear-gradient(180deg, #f7faf9 0%, #eef3f2 100%);
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: transparent;
+}
+
+h1,
+h2,
+.h-brand {
+  font-family: "Source Serif 4", Georgia, serif;
+  letter-spacing: -0.02em;
+}
+
+.app-shell {
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: 260px 1fr;
+}
+
+.sidebar {
+  background: linear-gradient(180deg, var(--mc-teal-deep), var(--mc-teal));
+  color: #f4fffe;
+  padding: 1.4rem 1rem;
+  box-shadow: inset -1px 0 0 rgba(255, 255, 255, 0.08);
+}
+
+.sidebar a {
+  color: rgba(255, 255, 255, 0.86);
+  text-decoration: none;
+  display: flex;
+  gap: 0.6rem;
+  align-items: center;
+  padding: 0.55rem 0.75rem;
+  border-radius: 10px;
+  margin-bottom: 0.25rem;
+}
+
+.sidebar a.active,
+.sidebar a:hover {
+  background: rgba(255, 255, 255, 0.14);
+  color: #fff;
+}
+
+.brand-mark {
+  font-family: "Source Serif 4", Georgia, serif;
+  font-size: 1.65rem;
+  font-weight: 700;
+  margin-bottom: 0.25rem;
+}
+
+.main-panel {
+  padding: 1.25rem 1.5rem 2rem;
+}
+
+.topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.25rem;
+  gap: 1rem;
+}
+
+.panel {
+  background: rgba(255, 255, 255, 0.78);
+  border: 1px solid var(--mc-line);
+  border-radius: var(--mc-radius);
+  box-shadow: var(--mc-shadow);
+  padding: 1rem 1.1rem;
+  backdrop-filter: blur(8px);
+}
+
+.stat-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 0.85rem;
+}
+
+.stat {
+  padding: 1rem;
+  border-radius: 12px;
+  background: linear-gradient(160deg, #ffffff, var(--mc-mint));
+  border: 1px solid var(--mc-line);
+}
+
+.stat .label {
+  font-size: 0.82rem;
+  opacity: 0.7;
+}
+
+.stat .value {
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--mc-teal-deep);
+}
+
+.login-wrap {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: 1.5rem;
+  background: linear-gradient(135deg, #0d7377 0%, #0f2a2e 55%, #c45c26 140%);
+}
+
+.login-card {
+  width: min(440px, 100%);
+  background: #fffaf3;
+  border-radius: 20px;
+  padding: 2rem;
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.25);
+}
+
+.table thead th {
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #5b6b6d;
+}
+
+.empty-state,
+.loading-state {
+  padding: 2rem 1rem;
+  text-align: center;
+  color: #5b6b6d;
+}
+
+.tv-board {
+  min-height: 100vh;
+  background: #07191b;
+  color: #e8fffb;
+  padding: 2rem;
+}
+
+.tv-now {
+  font-size: clamp(2.5rem, 8vw, 5rem);
+  font-weight: 700;
+}
+
+.badge-emergency {
+  background: var(--mc-coral) !important;
+}
+
+@media (max-width: 900px) {
+  .app-shell {
+    grid-template-columns: 1fr;
+  }
+  .sidebar {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+}
