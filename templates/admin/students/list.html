@@ -1,0 +1,45 @@
+{% extends "admin/base_principal.html" %}
+{% block page_title %}Students{% endblock %}
+{% block heading %}Students{% endblock %}
+{% block content %}
+  <div class="page-head">
+    <div>
+      <h1>Students</h1>
+      <p class="text-muted mb-0">Parent contact is stored on the student record. Parents do not get a login.</p>
+    </div>
+    <a class="btn btn-primary" href="{% url 'student-create' %}">Add student</a>
+  </div>
+  {% include "includes/search.html" %}
+  <div class="card data-card">
+    <div class="table-wrap">
+      <table class="table align-middle mb-0">
+        <thead>
+          <tr><th>Student ID</th><th>Admission</th><th>Name</th><th>Class</th><th>Parent phone</th><th>Actions</th></tr>
+        </thead>
+        <tbody>
+          {% for student in page %}
+            <tr>
+              <td><a href="{% url 'student-detail' student.pk %}">{{ student.student_id }}</a></td>
+              <td>{{ student.admission_number }}</td>
+              <td>{{ student.user.get_full_name }}</td>
+              <td>
+                {% with enrollment=student.current_enrollment %}
+                  {% if enrollment %}{{ enrollment.classroom.label }}{% else %}—{% endif %}
+                {% endwith %}
+              </td>
+              <td>{{ student.parent_phone }}</td>
+              <td class="text-nowrap">
+                <a class="btn btn-sm btn-outline-primary" href="{% url 'student-detail' student.pk %}">View</a>
+                <a class="btn btn-sm btn-outline-secondary" href="{% url 'student-edit' student.pk %}">Edit</a>
+                <a class="btn btn-sm btn-outline-danger" href="{% url 'student-delete' student.pk %}">Delete</a>
+              </td>
+            </tr>
+          {% empty %}
+            <tr><td colspan="6">No students match this list. <a href="{% url 'student-create' %}">Add a student</a>.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+  {% include "includes/pagination.html" %}
+{% endblock %}

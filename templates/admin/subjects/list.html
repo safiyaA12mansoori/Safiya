@@ -1,0 +1,37 @@
+{% extends "admin/base_principal.html" %}
+{% block page_title %}Subjects{% endblock %}
+{% block heading %}Subjects{% endblock %}
+{% block content %}
+  <div class="page-head">
+    <div>
+      <h1>Subjects</h1>
+      <p class="text-muted mb-0">Create a subject, then offer it in a class or allocate a teacher.</p>
+    </div>
+    <a class="btn btn-primary" href="{% url 'subject-create' %}">Add subject</a>
+  </div>
+  {% include "includes/search.html" %}
+  <div class="card data-card">
+    <div class="table-wrap">
+      <table class="table align-middle mb-0">
+        <thead><tr><th>Code</th><th>Name</th><th>Classes</th><th>Actions</th></tr></thead>
+        <tbody>
+          {% for subject in page %}
+            <tr>
+              <td><a href="{% url 'subject-detail' subject.pk %}">{{ subject.code }}</a></td>
+              <td>{{ subject.name }}</td>
+              <td>{{ subject.class_count }}</td>
+              <td class="text-nowrap">
+                <a class="btn btn-sm btn-outline-primary" href="{% url 'subject-detail' subject.pk %}">View</a>
+                <a class="btn btn-sm btn-outline-secondary" href="{% url 'subject-edit' subject.pk %}">Edit</a>
+                <a class="btn btn-sm btn-outline-danger" href="{% url 'subject-delete' subject.pk %}">Delete</a>
+              </td>
+            </tr>
+          {% empty %}
+            <tr><td colspan="4">No subjects yet. <a href="{% url 'subject-create' %}">Add a subject</a>.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+  {% include "includes/pagination.html" %}
+{% endblock %}

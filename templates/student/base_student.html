@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}{% block page_title %}My dashboard{% endblock %} · {{ school_name }}{% endblock %}
+{% block body %}
+<div class="shell shell-side shell-student">
+  <div class="nav-backdrop" id="nav-backdrop" hidden></div>
+  <aside class="nav-panel" id="nav-panel">
+    <a class="brand" href="{% url 'student-dashboard' %}">
+      <img src="{% static 'images/mark.svg' %}" alt="" width="28" height="28">
+      <span>
+        <strong>{{ school_name }}</strong>
+        <small>Student</small>
+      </span>
+    </a>
+    <nav class="side-nav" aria-label="Student">
+      <a class="{% if request.path == '/student/' %}active{% endif %}" {% if request.path == '/student/' %}aria-current="page"{% endif %} href="{% url 'student-dashboard' %}"><i class="bi bi-house"></i> My dashboard</a>
+      <a class="{% if request.path == '/student/profile/' %}active{% endif %}" {% if request.path == '/student/profile/' %}aria-current="page"{% endif %} href="{% url 'student-profile' %}"><i class="bi bi-person"></i> My profile</a>
+      <a class="{% if request.path == '/account/' %}active{% endif %}" {% if request.path == '/account/' %}aria-current="page"{% endif %} href="{% url 'account' %}"><i class="bi bi-key"></i> Account</a>
+    </nav>
+    <form method="post" action="{% url 'logout' %}" class="logout-form">
+      {% csrf_token %}
+      <button type="submit"><i class="bi bi-box-arrow-right"></i> Log out</button>
+    </form>
+  </aside>
+  <div class="content">
+    <header class="topbar topbar-quiet">
+      <button type="button" class="btn btn-outline-secondary d-lg-none" id="nav-toggle" aria-controls="nav-panel" aria-expanded="false">Menu</button>
+      <div>
+        <p class="eyebrow">Student record</p>
+        <strong>{% block heading %}My school{% endblock %}</strong>
+      </div>
+      <div class="who d-flex">
+        <span class="role-pill role-pill-student">Student</span>
+        <span>{{ user.get_full_name|default:user.username }}</span>
+      </div>
+    </header>
+    <main id="main" class="page">
+      {% block content %}{% endblock %}
+    </main>
+  </div>
+</div>
+{% endblock %}

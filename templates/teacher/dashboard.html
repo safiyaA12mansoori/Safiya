@@ -1,0 +1,31 @@
+{% extends "teacher/base_teacher.html" %}
+{% block page_title %}My dashboard{% endblock %}
+{% block content %}
+  {% if not teacher %}
+    <div class="alert alert-warning">This login is not linked to a teacher record. Ask the principal to check the account.</div>
+  {% else %}
+    <section class="identity-band">
+      <p class="eyebrow eyebrow-light">Teacher</p>
+      <h1>{{ teacher.user.get_full_name }}</h1>
+      <p>{{ teacher.teacher_id }}{% if current_academic_year %} · {{ current_academic_year.name }}{% endif %}</p>
+    </section>
+    <h2 class="h4 mt-4">My classes and subjects</h2>
+    {% if not current_academic_year %}
+      <p>No current academic year is set.</p>
+    {% elif not assignments %}
+      <p>You have no allocations for the current academic year.</p>
+    {% else %}
+      <div class="assignment-grid">
+        {% for assignment in assignments %}
+          <article class="assignment-card">
+            <p class="eyebrow">{{ assignment.subject.code }}</p>
+            <h3>{{ assignment.subject.name }}</h3>
+            <p>{{ assignment.classroom.label }}</p>
+            <p class="text-muted mb-0">{{ assignment.academic_year.name }}</p>
+          </article>
+        {% endfor %}
+      </div>
+    {% endif %}
+    <p class="mt-4"><a class="btn btn-primary" href="{% url 'teacher-profile' %}">View my profile</a></p>
+  {% endif %}
+{% endblock %}

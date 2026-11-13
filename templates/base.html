@@ -1,0 +1,38 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}{{ school_name }}{% endblock %}</title>
+  <link rel="icon" href="{% static 'images/mark.svg' %}" type="image/svg+xml">
+  <link rel="stylesheet" href="{% static 'vendor/bootstrap/css/bootstrap.min.css' %}">
+  <link rel="stylesheet" href="{% static 'vendor/bootstrap-icons/bootstrap-icons.min.css' %}">
+  <link rel="stylesheet" href="{% static 'css/app.css' %}">
+</head>
+<body data-role="{% if user.is_authenticated %}{{ user.role }}{% endif %}">
+  <a class="skip-link" href="#main">Skip to content</a>
+  {% if credential_reveal %}
+    <section class="credential-banner" role="status" aria-live="polite">
+      <div class="credential-banner-inner">
+        <h2>{{ credential_reveal.title }}</h2>
+        <p>{{ credential_reveal.note }}</p>
+        <div class="row g-3">
+          <div class="col-md-6">
+            <label for="reveal-username">Username</label>
+            <input id="reveal-username" class="form-control font-monospace" readonly value="{{ credential_reveal.username }}" autocomplete="off" spellcheck="false">
+          </div>
+          <div class="col-md-6">
+            <label for="temporary-password">Temporary password</label>
+            <input id="temporary-password" class="form-control font-monospace" readonly value="{{ credential_reveal.password }}" autocomplete="off" spellcheck="false">
+          </div>
+        </div>
+      </div>
+    </section>
+  {% endif %}
+  {% include "includes/messages.html" %}
+  {% block body %}{% endblock %}
+  <script src="{% static 'vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+  <script src="{% static 'js/app.js' %}"></script>
+</body>
+</html>
