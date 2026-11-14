@@ -3,6 +3,8 @@
   const nav = document.querySelector("[data-nav]");
   const toggle = document.querySelector("[data-nav-toggle]");
   const year = document.querySelector("[data-year]");
+  const heroMedia = document.querySelector(".hero-media");
+  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
   if (year) {
     year.textContent = String(new Date().getFullYear());
@@ -11,6 +13,11 @@
   const onScroll = () => {
     if (!header) return;
     header.classList.toggle("is-scrolled", window.scrollY > 24);
+
+    if (!reduceMotion && heroMedia) {
+      const shift = Math.min(window.scrollY * 0.22, 140);
+      heroMedia.style.transform = `translate3d(0, ${shift}px, 0)`;
+    }
   };
 
   onScroll();
@@ -41,23 +48,39 @@
   }
 
   const revealItems = document.querySelectorAll("[data-reveal]");
-  if (!revealItems.length) return;
-
-  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-    revealItems.forEach((el) => el.classList.add("is-visible"));
-    return;
+  if (revealItems.length) {
+    if (reduceMotion) {
+      revealItems.forEach((el) => el.classList.add("is-visible"));
+    } else {
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (!entry.isIntersecting) return;
+            entry.target.classList.add("is-visible");
+            observer.unobserve(entry.target);
+          });
+        },
+        { threshold: 0.14, rootMargin: "0px 0px -6% 0px" }
+      );
+      revealItems.forEach((el) => observer.observe(el));
+    }
   }
 
-  const observer = new IntersectionObserver(
-    (entries) => {
-      entries.forEach((entry) => {
-        if (!entry.isIntersecting) return;
-        entry.target.classList.add("is-visible");
-        observer.unobserve(entry.target);
-      });
-    },
-    { threshold: 0.16, rootMargin: "0px 0px -8% 0px" }
-  );
+  if (reduceMotion) return;
 
-  revealItems.forEach((el) => observer.observe(el));
+  document.querySelectorAll(".photo-tile, .about-portrait").forEach((tile) => {
+    const img = tile.querySelector("img");
+    if (!img) return;
+
+    tile.addEventListener("pointermove", (event) => {
+      const rect = tile.getBoundingClientRect();
+      const x = (event.clientX - rect.left) / rect.width - 0.5;
+      const y = (event.clientY - rect.top) / rect.height - 0.5;
+      img.style.transform = `scale(1.1) translate(${x * -10}px, ${y * -10}px)`;
+    });
+
+    tile.addEventListener("pointerleave", () => {
+      img.style.transform = "";
+    });
+  });
 })();

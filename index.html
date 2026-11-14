@@ -34,6 +34,7 @@
         </button>
         <nav class="site-nav" id="site-nav" data-nav>
           <a href="#about">About</a>
+          <a href="#gallery">Photos</a>
           <a href="#experience">Experience</a>
           <a href="#work">Work</a>
           <a href="#skills">Skills</a>
@@ -46,11 +47,11 @@
       <section class="hero" id="top" aria-label="Introduction">
         <div class="hero-media" aria-hidden="true">
           <img
-            src="assets/hero-bg.jpg"
+            src="assets/photos/portrait-face.jpg"
             alt=""
             class="hero-image"
-            width="2400"
-            height="1500"
+            width="1012"
+            height="1800"
             fetchpriority="high"
           />
           <div class="hero-veil"></div>
@@ -67,13 +68,23 @@
           </p>
           <div class="hero-actions reveal" data-reveal>
             <a class="btn btn-primary" href="#contact">Let’s connect</a>
-            <a class="btn btn-ghost" href="#work">See selected work</a>
+            <a class="btn btn-ghost" href="#gallery">See my photos</a>
           </div>
         </div>
       </section>
 
       <section class="section about" id="about">
-        <div class="section-inner">
+        <div class="section-inner about-grid">
+          <figure class="about-portrait reveal" data-reveal>
+            <img
+              src="assets/photos/portrait-face.jpg"
+              alt="Safiya Mansoori smiling in a yellow outfit and pink hijab"
+              width="1012"
+              height="1800"
+              loading="lazy"
+              class="photo-zoom"
+            />
+          </figure>
           <div class="section-copy reveal" data-reveal>
             <p class="eyebrow">About</p>
             <h2>A multi-skilled builder with an operator’s eye.</h2>
@@ -88,9 +99,7 @@
               Open to internships, freelance projects, and collaborations that
               turn strategy into clear, useful digital outcomes.
             </p>
-          </div>
-          <aside class="about-aside reveal" data-reveal>
-            <dl class="facts">
+            <dl class="facts inline-facts">
               <div>
                 <dt>Based in</dt>
                 <dd>Pune, Maharashtra</dd>
@@ -104,7 +113,79 @@
                 <dd>Data analytics · Marketing</dd>
               </div>
             </dl>
-          </aside>
+          </div>
+        </div>
+      </section>
+
+      <section class="section gallery" id="gallery">
+        <div class="section-inner stacked">
+          <header class="section-header reveal" data-reveal>
+            <p class="eyebrow">Photos</p>
+            <h2>Moments that shape the brand behind the work.</h2>
+          </header>
+
+          <div class="photo-mosaic" data-photo-mosaic>
+            <figure class="photo-tile tall reveal" data-reveal style="--d:0">
+              <img
+                class="photo-zoom"
+                src="assets/photos/portrait-elevator.jpg"
+                alt="Safiya in black abaya with embroidered sleeves"
+                width="900"
+                height="1600"
+                loading="lazy"
+              />
+            </figure>
+            <figure class="photo-tile reveal" data-reveal style="--d:1">
+              <img
+                class="photo-zoom"
+                src="assets/photos/portrait-niqab.jpg"
+                alt="Close-up portrait of Safiya"
+                width="1200"
+                height="675"
+                loading="lazy"
+              />
+            </figure>
+            <figure class="photo-tile reveal" data-reveal style="--d:2">
+              <img
+                class="photo-zoom"
+                src="assets/photos/portrait-lavender.jpg"
+                alt="Safiya in a lavender hijab"
+                width="900"
+                height="1600"
+                loading="lazy"
+              />
+            </figure>
+            <figure class="photo-tile wide reveal" data-reveal style="--d:3">
+              <img
+                class="photo-zoom"
+                src="assets/photos/portrait-henna.jpg"
+                alt="Safiya with henna on her hand"
+                width="900"
+                height="1600"
+                loading="lazy"
+              />
+            </figure>
+            <figure class="photo-tile reveal" data-reveal style="--d:4">
+              <img
+                class="photo-zoom"
+                src="assets/photos/portrait-bw-1.jpg"
+                alt="Black and white portrait of Safiya"
+                width="900"
+                height="1600"
+                loading="lazy"
+              />
+            </figure>
+            <figure class="photo-tile tall reveal" data-reveal style="--d:5">
+              <img
+                class="photo-zoom"
+                src="assets/photos/portrait-bw-2.jpg"
+                alt="Artistic black and white mirror portrait"
+                width="900"
+                height="1600"
+                loading="lazy"
+              />
+            </figure>
+          </div>
         </div>
       </section>
 
@@ -206,6 +287,7 @@
           <div class="work-feature reveal" data-reveal>
             <figure class="work-visual">
               <img
+                class="photo-zoom"
                 src="assets/hero.jpg"
                 alt="Handcrafted candles in warm ambient light"
                 width="800"
@@ -234,6 +316,7 @@
             <article class="work-item reveal" data-reveal>
               <figure>
                 <img
+                  class="photo-zoom"
                   src="assets/workspace.jpg"
                   alt="Laptop with analytics charts on screen"
                   width="1600"
@@ -254,6 +337,7 @@
             <article class="work-item reveal" data-reveal>
               <figure>
                 <img
+                  class="photo-zoom"
                   src="assets/teaching.jpg"
                   alt="Instructor presenting to a classroom"
                   width="1600"
@@ -275,6 +359,7 @@
             <article class="work-item reveal" data-reveal>
               <figure>
                 <img
+                  class="photo-zoom"
                   src="assets/analytics.jpg"
                   alt="Data dashboard visualization on a monitor"
                   width="1600"
