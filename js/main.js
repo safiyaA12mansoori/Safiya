@@ -3,7 +3,6 @@
   const nav = document.querySelector("[data-nav]");
   const toggle = document.querySelector("[data-nav-toggle]");
   const year = document.querySelector("[data-year]");
-  const heroMedia = document.querySelector(".hero-media");
   const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
   if (year) {
@@ -13,11 +12,6 @@
   const onScroll = () => {
     if (!header) return;
     header.classList.toggle("is-scrolled", window.scrollY > 24);
-
-    if (!reduceMotion && heroMedia) {
-      const shift = Math.min(window.scrollY * 0.22, 140);
-      heroMedia.style.transform = `translate3d(0, ${shift}px, 0)`;
-    }
   };
 
   onScroll();
@@ -68,7 +62,9 @@
 
   if (reduceMotion) return;
 
-  document.querySelectorAll(".photo-tile, .about-portrait").forEach((tile) => {
+  document
+    .querySelectorAll(".photo-tile, .about-portrait, .hero-portrait, .contact-portrait")
+    .forEach((tile) => {
     const img = tile.querySelector("img");
     if (!img) return;
 

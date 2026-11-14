@@ -45,31 +45,32 @@
 
     <main id="main">
       <section class="hero" id="top" aria-label="Introduction">
-        <div class="hero-media" aria-hidden="true">
-          <img
-            src="assets/photos/portrait-face.jpg"
-            alt=""
-            class="hero-image"
-            width="1012"
-            height="1800"
-            fetchpriority="high"
-          />
-          <div class="hero-veil"></div>
-        </div>
-        <div class="hero-content">
-          <p class="hero-brand reveal" data-reveal>Safiya Mansoori</p>
-          <h1 class="hero-title reveal" data-reveal>
-            Data analytics &amp; marketing that drive growth.
-          </h1>
-          <p class="hero-lede reveal" data-reveal>
-            Operations Manager at Atenar Tech and founder of AromaLuxe —
-            a Pune-based professional focused on data analytics, digital
-            marketing, and building brands that grow.
-          </p>
-          <div class="hero-actions reveal" data-reveal>
-            <a class="btn btn-primary" href="#contact">Let’s connect</a>
-            <a class="btn btn-ghost" href="#gallery">See my photos</a>
+        <div class="hero-layout">
+          <div class="hero-copy">
+            <p class="hero-brand reveal" data-reveal>Safiya Mansoori</p>
+            <h1 class="hero-title reveal" data-reveal>
+              Data analytics &amp; marketing that drive growth.
+            </h1>
+            <p class="hero-lede reveal" data-reveal>
+              Operations Manager at Atenar Tech and founder of AromaLuxe —
+              a Pune-based professional focused on data analytics, digital
+              marketing, and building brands that grow.
+            </p>
+            <div class="hero-actions reveal" data-reveal>
+              <a class="btn btn-primary" href="#contact">Let’s connect</a>
+              <a class="btn btn-ghost" href="#gallery">See my photos</a>
+            </div>
           </div>
+          <figure class="hero-portrait reveal" data-reveal>
+            <img
+              src="assets/photos/hero-face.jpg"
+              alt="Safiya Mansoori"
+              width="900"
+              height="1200"
+              fetchpriority="high"
+              class="photo-zoom"
+            />
+          </figure>
         </div>
       </section>
 
@@ -77,10 +78,10 @@
         <div class="section-inner about-grid">
           <figure class="about-portrait reveal" data-reveal>
             <img
-              src="assets/photos/portrait-face.jpg"
+              src="assets/photos/about-face.jpg"
               alt="Safiya Mansoori smiling in a yellow outfit and pink hijab"
-              width="1012"
-              height="1800"
+              width="900"
+              height="1120"
               loading="lazy"
               class="photo-zoom"
             />
@@ -124,64 +125,64 @@
             <h2>Moments that shape the brand behind the work.</h2>
           </header>
 
-          <div class="photo-mosaic" data-photo-mosaic>
-            <figure class="photo-tile tall reveal" data-reveal style="--d:0">
+          <div class="photo-grid" data-photo-mosaic>
+            <figure class="photo-tile reveal" data-reveal style="--d:0">
               <img
                 class="photo-zoom"
-                src="assets/photos/portrait-elevator.jpg"
-                alt="Safiya in black abaya with embroidered sleeves"
+                src="assets/photos/gal-01.jpg"
+                alt="Safiya Mansoori portrait"
                 width="900"
-                height="1600"
+                height="1125"
                 loading="lazy"
               />
             </figure>
             <figure class="photo-tile reveal" data-reveal style="--d:1">
               <img
                 class="photo-zoom"
-                src="assets/photos/portrait-niqab.jpg"
-                alt="Close-up portrait of Safiya"
-                width="1200"
-                height="675"
+                src="assets/photos/gal-02.jpg"
+                alt="Safiya in black abaya with embroidered sleeves"
+                width="900"
+                height="1125"
                 loading="lazy"
               />
             </figure>
             <figure class="photo-tile reveal" data-reveal style="--d:2">
               <img
                 class="photo-zoom"
-                src="assets/photos/portrait-lavender.jpg"
+                src="assets/photos/gal-03.jpg"
                 alt="Safiya in a lavender hijab"
                 width="900"
-                height="1600"
+                height="1125"
                 loading="lazy"
               />
             </figure>
-            <figure class="photo-tile wide reveal" data-reveal style="--d:3">
+            <figure class="photo-tile reveal" data-reveal style="--d:3">
               <img
                 class="photo-zoom"
-                src="assets/photos/portrait-henna.jpg"
+                src="assets/photos/gal-04.jpg"
                 alt="Safiya with henna on her hand"
                 width="900"
-                height="1600"
+                height="1125"
                 loading="lazy"
               />
             </figure>
             <figure class="photo-tile reveal" data-reveal style="--d:4">
               <img
                 class="photo-zoom"
-                src="assets/photos/portrait-bw-1.jpg"
+                src="assets/photos/gal-05.jpg"
                 alt="Black and white portrait of Safiya"
                 width="900"
-                height="1600"
+                height="1125"
                 loading="lazy"
               />
             </figure>
-            <figure class="photo-tile tall reveal" data-reveal style="--d:5">
+            <figure class="photo-tile reveal" data-reveal style="--d:5">
               <img
                 class="photo-zoom"
-                src="assets/photos/portrait-bw-2.jpg"
-                alt="Artistic black and white mirror portrait"
+                src="assets/photos/gal-06.jpg"
+                alt="Close-up portrait of Safiya"
                 width="900"
-                height="1600"
+                height="1125"
                 loading="lazy"
               />
             </figure>
@@ -428,25 +429,39 @@
       </section>
 
       <section class="section contact" id="contact">
-        <div class="section-inner stacked contact-inner reveal" data-reveal>
-          <p class="eyebrow">Contact</p>
-          <h2>Let’s grow something together.</h2>
-          <p class="contact-lede">
-            Reach out for internships, freelance work, or collaboration—happy to
-            talk analytics, marketing, web, or brand building.
-          </p>
-          <div class="contact-actions">
-            <a class="btn btn-primary" href="mailto:safiyamansoori7@gmail.com"
-              >safiyamansoori7@gmail.com</a
-            >
-            <a
-              class="btn btn-ghost"
-              href="https://www.linkedin.com/in/safiya-mansoori-485931289"
-              target="_blank"
-              rel="noopener noreferrer"
-              >LinkedIn profile</a
-            >
-            <a class="btn btn-ghost" href="tel:+917620068321">+91 76200 68321</a>
+        <div class="section-inner contact-grid reveal" data-reveal>
+          <figure class="contact-portrait">
+            <img
+              src="assets/photos/contact-face.jpg"
+              alt="Safiya Mansoori"
+              width="700"
+              height="700"
+              loading="lazy"
+              class="photo-zoom"
+            />
+          </figure>
+          <div class="contact-inner">
+            <p class="eyebrow">Contact</p>
+            <h2>Let’s grow something together.</h2>
+            <p class="contact-lede">
+              Reach out for internships, freelance work, or collaboration—happy
+              to talk analytics, marketing, web, or brand building.
+            </p>
+            <div class="contact-actions">
+              <a class="btn btn-primary" href="mailto:safiyamansoori7@gmail.com"
+                >safiyamansoori7@gmail.com</a
+              >
+              <a
+                class="btn btn-ghost"
+                href="https://www.linkedin.com/in/safiya-mansoori-485931289"
+                target="_blank"
+                rel="noopener noreferrer"
+                >LinkedIn profile</a
+              >
+              <a class="btn btn-ghost" href="tel:+917620068321"
+                >+91 76200 68321</a
+              >
+            </div>
           </div>
         </div>
       </section>
