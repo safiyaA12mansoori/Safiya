@@ -62,9 +62,7 @@
 
   if (reduceMotion) return;
 
-  document
-    .querySelectorAll(".photo-tile, .about-portrait, .hero-portrait, .contact-portrait")
-    .forEach((tile) => {
+  document.querySelectorAll(".work-visual, .work-item figure").forEach((tile) => {
     const img = tile.querySelector("img");
     if (!img) return;
 
@@ -72,7 +70,7 @@
       const rect = tile.getBoundingClientRect();
       const x = (event.clientX - rect.left) / rect.width - 0.5;
       const y = (event.clientY - rect.top) / rect.height - 0.5;
-      img.style.transform = `scale(1.1) translate(${x * -10}px, ${y * -10}px)`;
+      img.style.transform = `scale(1.08) translate(${x * -8}px, ${y * -8}px)`;
     });
 
     tile.addEventListener("pointerleave", () => {

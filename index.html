@@ -34,7 +34,6 @@
         </button>
         <nav class="site-nav" id="site-nav" data-nav>
           <a href="#about">About</a>
-          <a href="#gallery">Photos</a>
           <a href="#experience">Experience</a>
           <a href="#work">Work</a>
           <a href="#skills">Skills</a>
@@ -45,7 +44,7 @@
 
     <main id="main">
       <section class="hero" id="top" aria-label="Introduction">
-        <div class="hero-layout">
+        <div class="hero-layout hero-layout-text">
           <div class="hero-copy">
             <p class="hero-brand reveal" data-reveal>Safiya Mansoori</p>
             <h1 class="hero-title reveal" data-reveal>
@@ -58,135 +57,41 @@
             </p>
             <div class="hero-actions reveal" data-reveal>
               <a class="btn btn-primary" href="#contact">Let’s connect</a>
-              <a class="btn btn-ghost" href="#gallery">See my photos</a>
+              <a class="btn btn-ghost" href="#work">See selected work</a>
             </div>
           </div>
-          <figure class="hero-portrait reveal" data-reveal>
-            <img
-              src="assets/photos/hero-face.jpg"
-              alt="Safiya Mansoori"
-              width="900"
-              height="1200"
-              fetchpriority="high"
-              class="photo-zoom"
-            />
-          </figure>
         </div>
       </section>
 
       <section class="section about" id="about">
-        <div class="section-inner about-grid">
-          <figure class="about-portrait reveal" data-reveal>
-            <img
-              src="assets/photos/about-face.jpg"
-              alt="Safiya Mansoori smiling in a yellow outfit and pink hijab"
-              width="900"
-              height="1120"
-              loading="lazy"
-              class="photo-zoom"
-            />
-          </figure>
-          <div class="section-copy reveal" data-reveal>
-            <p class="eyebrow">About</p>
-            <h2>A multi-skilled builder with an operator’s eye.</h2>
-            <p>
-              I’m passionate about data analytics, digital marketing, and
-              personal branding. While pursuing my B.Sc. Computer Science at
-              Vishwakarma University, I work on real-world projects in
-              analytics, marketing, and business development—and run my own
-              candle brand alongside tech operations.
-            </p>
-            <p>
-              Open to internships, freelance projects, and collaborations that
-              turn strategy into clear, useful digital outcomes.
-            </p>
-            <dl class="facts inline-facts">
-              <div>
-                <dt>Based in</dt>
-                <dd>Pune, Maharashtra</dd>
-              </div>
-              <div>
-                <dt>Studying</dt>
-                <dd>B.Sc. CS · Vishwakarma University</dd>
-              </div>
-              <div>
-                <dt>Focus</dt>
-                <dd>Data analytics · Marketing</dd>
-              </div>
-            </dl>
-          </div>
-        </div>
-      </section>
-
-      <section class="section gallery" id="gallery">
-        <div class="section-inner stacked">
-          <header class="section-header reveal" data-reveal>
-            <p class="eyebrow">Photos</p>
-            <h2>Moments that shape the brand behind the work.</h2>
-          </header>
-
-          <div class="photo-grid" data-photo-mosaic>
-            <figure class="photo-tile reveal" data-reveal style="--d:0">
-              <img
-                class="photo-zoom"
-                src="assets/photos/gal-01.jpg"
-                alt="Safiya Mansoori portrait"
-                width="900"
-                height="1125"
-                loading="lazy"
-              />
-            </figure>
-            <figure class="photo-tile reveal" data-reveal style="--d:1">
-              <img
-                class="photo-zoom"
-                src="assets/photos/gal-02.jpg"
-                alt="Safiya in black abaya with embroidered sleeves"
-                width="900"
-                height="1125"
-                loading="lazy"
-              />
-            </figure>
-            <figure class="photo-tile reveal" data-reveal style="--d:2">
-              <img
-                class="photo-zoom"
-                src="assets/photos/gal-03.jpg"
-                alt="Safiya in a lavender hijab"
-                width="900"
-                height="1125"
-                loading="lazy"
-              />
-            </figure>
-            <figure class="photo-tile reveal" data-reveal style="--d:3">
-              <img
-                class="photo-zoom"
-                src="assets/photos/gal-04.jpg"
-                alt="Safiya with henna on her hand"
-                width="900"
-                height="1125"
-                loading="lazy"
-              />
-            </figure>
-            <figure class="photo-tile reveal" data-reveal style="--d:4">
-              <img
-                class="photo-zoom"
-                src="assets/photos/gal-05.jpg"
-                alt="Black and white portrait of Safiya"
-                width="900"
-                height="1125"
-                loading="lazy"
-              />
-            </figure>
-            <figure class="photo-tile reveal" data-reveal style="--d:5">
-              <img
-                class="photo-zoom"
-                src="assets/photos/gal-06.jpg"
-                alt="Close-up portrait of Safiya"
-                width="900"
-                height="1125"
-                loading="lazy"
-              />
-            </figure>
-          </div>
+        <div class="section-inner stacked about-copy reveal" data-reveal>
+          <p class="eyebrow">About</p>
+          <h2>A multi-skilled builder with an operator’s eye.</h2>
+          <p>
+            I’m passionate about data analytics, digital marketing, and personal
+            branding. While pursuing my B.Sc. Computer Science at Vishwakarma
+            University, I work on real-world projects in analytics, marketing,
+            and business development—and run my own candle brand alongside tech
+            operations.
+          </p>
+          <p>
+            Open to internships, freelance projects, and collaborations that
+            turn strategy into clear, useful digital outcomes.
+          </p>
+          <dl class="facts inline-facts">
+            <div>
+              <dt>Based in</dt>
+              <dd>Pune, Maharashtra</dd>
+            </div>
+            <div>
+              <dt>Studying</dt>
+              <dd>B.Sc. CS · Vishwakarma University</dd>
+            </div>
+            <div>
+              <dt>Focus</dt>
+              <dd>Data analytics · Marketing</dd>
+            </div>
+          </dl>
         </div>
       </section>
 
@@ -429,39 +334,25 @@
       </section>
 
       <section class="section contact" id="contact">
-        <div class="section-inner contact-grid reveal" data-reveal>
-          <figure class="contact-portrait">
-            <img
-              src="assets/photos/contact-face.jpg"
-              alt="Safiya Mansoori"
-              width="700"
-              height="700"
-              loading="lazy"
-              class="photo-zoom"
-            />
-          </figure>
-          <div class="contact-inner">
-            <p class="eyebrow">Contact</p>
-            <h2>Let’s grow something together.</h2>
-            <p class="contact-lede">
-              Reach out for internships, freelance work, or collaboration—happy
-              to talk analytics, marketing, web, or brand building.
-            </p>
-            <div class="contact-actions">
-              <a class="btn btn-primary" href="mailto:safiyamansoori7@gmail.com"
-                >safiyamansoori7@gmail.com</a
-              >
-              <a
-                class="btn btn-ghost"
-                href="https://www.linkedin.com/in/safiya-mansoori-485931289"
-                target="_blank"
-                rel="noopener noreferrer"
-                >LinkedIn profile</a
-              >
-              <a class="btn btn-ghost" href="tel:+917620068321"
-                >+91 76200 68321</a
-              >
-            </div>
+        <div class="section-inner stacked contact-inner reveal" data-reveal>
+          <p class="eyebrow">Contact</p>
+          <h2>Let’s grow something together.</h2>
+          <p class="contact-lede">
+            Reach out for internships, freelance work, or collaboration—happy to
+            talk analytics, marketing, web, or brand building.
+          </p>
+          <div class="contact-actions">
+            <a class="btn btn-primary" href="mailto:safiyamansoori7@gmail.com"
+              >safiyamansoori7@gmail.com</a
+            >
+            <a
+              class="btn btn-ghost"
+              href="https://www.linkedin.com/in/safiya-mansoori-485931289"
+              target="_blank"
+              rel="noopener noreferrer"
+              >LinkedIn profile</a
+            >
+            <a class="btn btn-ghost" href="tel:+917620068321">+91 76200 68321</a>
           </div>
         </div>
       </section>
