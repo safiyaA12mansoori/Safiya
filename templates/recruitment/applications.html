@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% block title %}Applications · Safiya RMS{% endblock %}
+{% block content %}
+<h1 class="page-title h3 mb-3">Applications &amp; screening</h1>
+<div class="row g-4">
+  <div class="col-lg-4">
+    <div class="panel">
+      <h2 class="h5 mb-3">Apply to a job</h2>
+      <form method="post" class="vstack gap-2">
+        {% csrf_token %}
+        {% for field in form %}
+          <div>
+            <label class="form-label small mb-1" for="{{ field.id_for_label }}">{{ field.label }}</label>
+            {{ field.errors }}
+            {{ field.as_widget|safe }}
+          </div>
+        {% endfor %}
+        <button class="btn btn-teal mt-2" type="submit">Submit application</button>
+      </form>
+    </div>
+  </div>
+  <div class="col-lg-8">
+    <div class="panel">
+      <h2 class="h5 mb-3">Pipeline</h2>
+      <div class="table-responsive">
+        <table class="table align-middle">
+          <thead><tr><th>Applicant</th><th>Job</th><th>Status</th><th>Reasons</th><th></th></tr></thead>
+          <tbody>
+            {% for app in applications %}
+            <tr>
+              <td>{{ app.applicant.full_name }}</td>
+              <td>{{ app.job.title }}</td>
+              <td><span class="badge text-bg-light">{{ app.get_status_display }}</span></td>
+              <td class="small text-secondary">{{ app.screening_reasons|linebreaksbr|default:"—" }}</td>
+              <td>
+                {% if app.status == "APPLIED" or app.status == "FAILED" or app.status == "PASSED" or app.status == "SCREENING" %}
+                <form method="post" action="{% url 'screen_one' app.pk %}">
+                  {% csrf_token %}
+                  <button class="btn btn-sm btn-outline-secondary" type="submit">Screen</button>
+                </form>
+                {% endif %}
+              </td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="5" class="text-secondary">No applications yet.</td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+<style>
+  form input, form select, form textarea { width: 100%; padding: .45rem .65rem; border: 1px solid #ced4da; border-radius: .4rem; }
+</style>
+{% endblock %}

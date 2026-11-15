@@ -1,0 +1,66 @@
+:root {
+  --navy: #0f2c4c;
+  --teal: #1f7a6c;
+  --sand: #eef3f0;
+  --ink: #1a2430;
+}
+
+body {
+  background:
+    radial-gradient(circle at top left, rgba(31, 122, 108, 0.12), transparent 40%),
+    linear-gradient(180deg, #f7faf8 0%, var(--sand) 100%);
+  color: var(--ink);
+  min-height: 100vh;
+}
+
+.bg-navy {
+  background: var(--navy) !important;
+}
+
+.page-title {
+  font-family: Georgia, "Times New Roman", serif;
+  letter-spacing: -0.02em;
+}
+
+.stat {
+  background: rgba(255, 255, 255, 0.85);
+  border: 1px solid rgba(15, 44, 76, 0.08);
+  border-radius: 0.75rem;
+  padding: 1rem 1.1rem;
+}
+
+.stat .value {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--navy);
+}
+
+.panel {
+  background: rgba(255, 255, 255, 0.92);
+  border: 1px solid rgba(15, 44, 76, 0.08);
+  border-radius: 0.85rem;
+  padding: 1.25rem;
+}
+
+.btn-teal {
+  background: var(--teal);
+  border-color: var(--teal);
+  color: #fff;
+}
+
+.btn-teal:hover {
+  background: #176358;
+  border-color: #176358;
+  color: #fff;
+}
+
+.table thead th {
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #5b6b7c;
+}
+
+.badge-status {
+  font-weight: 600;
+}

@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block title %}Edit job · Safiya RMS{% endblock %}
+{% block content %}
+<div class="mb-3">
+  <a href="{% url 'job_list' %}">&larr; Jobs</a>
+  <h1 class="page-title h3 mt-2">Edit {{ job.title }}</h1>
+</div>
+<div class="panel col-lg-7">
+  <form method="post" class="vstack gap-2">
+    {% csrf_token %}
+    {% for field in form %}
+      <div>
+        <label class="form-label small mb-1" for="{{ field.id_for_label }}">{{ field.label }}</label>
+        {{ field.errors }}
+        {{ field.as_widget|safe }}
+      </div>
+    {% endfor %}
+    <button class="btn btn-teal mt-2" type="submit">Update job</button>
+  </form>
+</div>
+<style>
+  form input, form select, form textarea { width: 100%; padding: .45rem .65rem; border: 1px solid #ced4da; border-radius: .4rem; }
+</style>
+{% endblock %}

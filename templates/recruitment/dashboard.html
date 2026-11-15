@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% block title %}Dashboard · Safiya RMS{% endblock %}
+{% block content %}
+<div class="mb-4">
+  <h1 class="page-title h2 mb-1">Recruitment Management</h1>
+  <p class="text-secondary mb-0">Post jobs, register applicants, screen against eligibility rules, and schedule interviews.</p>
+</div>
+
+<div class="row g-3 mb-4">
+  <div class="col-6 col-md"><div class="stat"><div class="text-secondary small">Open jobs</div><div class="value">{{ jobs_open }}</div></div></div>
+  <div class="col-6 col-md"><div class="stat"><div class="text-secondary small">Applicants</div><div class="value">{{ applicants }}</div></div></div>
+  <div class="col-6 col-md"><div class="stat"><div class="text-secondary small">Applications</div><div class="value">{{ applications }}</div></div></div>
+  <div class="col-6 col-md"><div class="stat"><div class="text-secondary small">Passed screening</div><div class="value">{{ passed }}</div></div></div>
+  <div class="col-6 col-md"><div class="stat"><div class="text-secondary small">Interviews</div><div class="value">{{ interviews }}</div></div></div>
+</div>
+
+<div class="row g-4">
+  <div class="col-lg-7">
+    <div class="panel">
+      <h2 class="h5 mb-3">Recent applications</h2>
+      <div class="table-responsive">
+        <table class="table align-middle mb-0">
+          <thead><tr><th>Applicant</th><th>Job</th><th>Status</th></tr></thead>
+          <tbody>
+            {% for app in recent_applications %}
+            <tr>
+              <td>{{ app.applicant.full_name }}</td>
+              <td>{{ app.job.title }}</td>
+              <td><span class="badge text-bg-light badge-status">{{ app.get_status_display }}</span></td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="3" class="text-secondary">No applications yet.</td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-5">
+    <div class="panel">
+      <h2 class="h5 mb-3">Upcoming interviews</h2>
+      <ul class="list-unstyled mb-0">
+        {% for interview in upcoming_interviews %}
+        <li class="mb-3 pb-3 border-bottom">
+          <div class="fw-semibold">{{ interview.application.applicant.full_name }}</div>
+          <div class="small text-secondary">{{ interview.application.job.title }} · {{ interview.scheduled_at }}</div>
+          <div class="small">Interviewer: {{ interview.interviewer_name }}</div>
+        </li>
+        {% empty %}
+        <li class="text-secondary">No interviews scheduled.</li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+</div>
+{% endblock %}
