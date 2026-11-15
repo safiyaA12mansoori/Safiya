@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% load ui_tags %}
+{% block page_title %}Timetable{% endblock %}
+{% block page_actions %}{% if request.user.role != "STUDENT" %}<a class="btn btn-primary" href="{% url 'timetable:create' %}">Add period</a>{% endif %}{% endblock %}
+{% block body %}
+<div class="panel mb-3">{% if classes %}<form class="row g-2"><div class="col-md-4"><select class="form-select" name="classroom" onchange="this.form.submit()"><option value="">All visible classes</option>{% for row in classes %}<option value="{{ row.pk }}" {% if classroom_id == row.pk|stringformat:"s" %}selected{% endif %}>{{ row }}</option>{% endfor %}</select></div></form>{% endif %}</div>
+<div class="panel table-responsive"><table class="table tt-grid"><thead><tr><th>Day</th>{% for period in periods %}<th>P{{ period }}</th>{% endfor %}</tr></thead><tbody>
+{% for value, label in days %}<tr><th>{{ label }}</th>{% for period in periods %}<td>{% with slot=matrix|get_item:value %}{% with cell=slot|get_item:period %}{% if cell %}{{ cell.subject.code }}<div class="muted">{{ cell.room }} · {{ cell.start_time|time:"H:i" }}</div>{% if request.user.role != "STUDENT" %}<form method="post" action="{% url 'timetable:delete' cell.pk %}" data-confirm="Remove this period?">{% csrf_token %}<button class="btn btn-sm btn-link text-danger">Remove</button></form>{% endif %}{% else %}—{% endif %}{% endwith %}{% endwith %}</td>{% endfor %}</tr>{% endfor %}
+</tbody></table></div>
+{% endblock %}

@@ -1,0 +1,3 @@
+{% extends "base.html" %}
+{% block page_title %}Results history{% endblock %}
+{% block body %}<div class="panel">{% for row in attempts %}<div class="py-2 border-bottom">{% if row.examination %}{{ row.examination.title }} · {{ row.student }} · {{ row.score }}/{{ row.max_score }} <span class="muted">{{ row.status }}</span>{% else %}{{ row.title }}{% endif %}</div>{% empty %}{% include "includes/empty.html" with empty_message="No attempts yet." %}{% endfor %}</div>{% endblock %}

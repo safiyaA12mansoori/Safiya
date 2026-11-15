@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block page_title %}New programming test{% endblock %}
+{% block body %}
+<div class="panel" style="max-width:860px"><form method="post">{% csrf_token %}{% include "includes/form_fields.html" %}
+  <h2>Test cases</h2>
+  {% for index in "123" %}
+    <div class="border rounded p-2 mb-2"><b>Case {{ index }}</b>
+      <textarea class="form-control code mt-2" name="stdin_{{ index }}" placeholder="stdin"></textarea>
+      <textarea class="form-control code mt-2" name="expected_{{ index }}" placeholder="expected stdout"></textarea>
+      <input class="form-control mt-2" name="marks_{{ index }}" placeholder="marks" value="1">
+      <label class="mt-2"><input type="checkbox" name="sample_{{ index }}" {% if index == "1" %}checked{% endif %}> Show as sample</label>
+    </div>
+  {% endfor %}
+  <button class="btn btn-primary">Save problem</button>
+</form></div>
+{% endblock %}

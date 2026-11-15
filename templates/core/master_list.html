@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block breadcrumb %}<li class="breadcrumb-item active">{{ page_title }}</li>{% endblock %}
+{% block page_title %}{{ page_title }}{% endblock %}
+{% block page_subtitle %}{{ page_subtitle }}{% endblock %}
+{% block page_actions %}{% if create_url %}<a class="btn btn-primary" href="{{ create_url }}">Add</a>{% endif %}{% endblock %}
+{% block body %}
+<div class="panel">
+  <form class="row g-2 mb-3" method="get">
+    <div class="col-md-6"><input class="form-control" name="q" value="{{ request.GET.q }}" placeholder="Search"></div>
+    <div class="col-auto"><button class="btn btn-navy" type="submit">Filter</button></div>
+  </form>
+  {% if rows %}
+  <div class="table-responsive">
+    <table class="table align-middle">
+      <thead><tr>{% for header in headers %}<th>{{ header }}</th>{% endfor %}<th></th></tr></thead>
+      <tbody>
+        {% for row in rows %}
+          <tr>
+            {% for cell in row.cells %}<td>{{ cell }}</td>{% endfor %}
+            <td class="text-end text-nowrap">
+              {% if row.open_url %}<a class="btn btn-sm btn-accent" href="{{ row.open_url }}">{{ open_label }}</a>{% endif %}
+              {% if row.edit_url %}<a class="btn btn-sm btn-light" href="{{ row.edit_url }}">Edit</a>{% endif %}
+              {% if row.delete_url %}
+                <form class="d-inline" method="post" action="{{ row.delete_url }}" data-confirm="Delete this record?">{% csrf_token %}
+                  <button class="btn btn-sm btn-outline-danger" type="submit">Delete</button>
+                </form>
+              {% endif %}
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% include "includes/pagination.html" %}
+  {% else %}
+    {% include "includes/empty.html" with empty_message="No records match this view." empty_url=create_url empty_label="Add the first one" %}
+  {% endif %}
+</div>
+{% endblock %}

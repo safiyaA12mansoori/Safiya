@@ -1,0 +1,6 @@
+{% extends "base.html" %}
+{% block page_title %}{{ exam.title }} results{% endblock %}
+{% block body %}
+{% if attempt %}<div class="panel mb-3"><h2>{{ attempt.score }} / {{ attempt.max_score }}</h2>{% for row in rows %}<div class="mb-3"><b>{{ row.text }}</b><div>Your answer: {{ row.selected }} {% if row.is_correct %}<span class="text-success">Correct</span>{% else %}<span class="text-danger">Incorrect</span>{% endif %}</div><div class="muted">Key: {{ row.correct }}</div><div>{{ row.explanation }}</div></div>{% endfor %}</div>{% endif %}
+{% if classmates %}<div class="panel"><h2>Class results</h2>{% for row in classmates %}<div class="py-1">{{ row.student }} · {{ row.score }}/{{ row.max_score }}</div>{% empty %}<p class="muted">No submissions yet.</p>{% endfor %}</div>{% endif %}
+{% endblock %}

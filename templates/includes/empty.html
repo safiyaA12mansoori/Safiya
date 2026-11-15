@@ -1,0 +1,5 @@
+<div class="empty">
+  <i class="bi bi-inbox"></i>
+  <p class="mb-2">{{ empty_message|default:"Nothing here yet." }}</p>
+  {% if empty_url %}<a class="btn btn-primary" href="{{ empty_url }}">{{ empty_label|default:"Add one" }}</a>{% endif %}
+</div>

@@ -1,0 +1,3 @@
+{% extends "base.html" %}
+{% block page_title %}Question · {{ quiz.title }}{% endblock %}
+{% block body %}<div class="panel" style="max-width:760px"><form method="post">{% csrf_token %}{% include "includes/form_fields.html" %}<button class="btn btn-primary">Save question</button></form></div>{% endblock %}

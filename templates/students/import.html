@@ -1,0 +1,8 @@
+{% extends "base.html" %}
+{% block page_title %}Import students{% endblock %}
+{% block page_subtitle %}New accounts receive the temporary password Student@12345. Ask them to change it.{% endblock %}
+{% block page_actions %}<a class="btn btn-light" href="{% url 'students:import_template' %}">Download template</a>{% endblock %}
+{% block body %}
+<div class="panel mb-3"><form method="post" enctype="multipart/form-data">{% csrf_token %}<input class="form-control mb-3" type="file" name="file" accept=".xlsx" required><button class="btn btn-primary">Import</button></form></div>
+{% if results %}<div class="panel"><p>Created {{ results.created }}. Failed {{ results.failed }}.</p>{% for error in results.errors %}<div class="text-danger">{{ error }}</div>{% endfor %}</div>{% endif %}
+{% endblock %}

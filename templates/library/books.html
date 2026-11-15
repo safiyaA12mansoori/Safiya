@@ -1,0 +1,8 @@
+{% extends "base.html" %}
+{% block page_title %}Library{% endblock %}
+{% block page_actions %}{% if request.user.role == "ADMIN" %}<a class="btn btn-light" href="{% url 'library:category_create' %}">Category</a> <a class="btn btn-light" href="{% url 'library:issues' %}">Issue / return</a> <a class="btn btn-primary" href="{% url 'library:book_create' %}">Add book</a>{% endif %}{% endblock %}
+{% block body %}
+<div class="panel mb-3"><form class="row g-2"><div class="col-md-4"><input class="form-control" name="q" value="{{ q }}" placeholder="Title, author, ISBN"></div><div class="col-md-3"><select class="form-select" name="category"><option value="">Category</option>{% for row in categories %}<option value="{{ row.pk }}">{{ row.name }}</option>{% endfor %}</select></div><div class="col-auto"><button class="btn btn-navy">Filter</button></div></form></div>
+{% if mine %}<div class="panel mb-3"><h2>My issues</h2>{% for row in mine %}<div>{{ row.book.title }} · due {{ row.due_on }} {% if row.returned_on %}returned{% elif row.is_overdue %}<span class="text-danger">overdue</span>{% else %}open{% endif %}</div>{% endfor %}</div>{% endif %}
+<div class="panel">{% for row in page_obj %}<div class="d-flex justify-content-between border-bottom py-2"><div><b>{{ row.title }}</b><div class="muted">{{ row.author }} · {{ row.isbn }} · {{ row.available }}/{{ row.total_copies }} available</div></div>{% if request.user.role == "ADMIN" %}<a href="{% url 'library:book_edit' row.pk %}">Edit</a>{% endif %}</div>{% empty %}{% include "includes/empty.html" %}{% endfor %}{% include "includes/pagination.html" %}</div>
+{% endblock %}

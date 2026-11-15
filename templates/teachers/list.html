@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block page_title %}Teachers{% endblock %}
+{% block page_actions %}<a class="btn btn-primary" href="{% url 'teachers:create' %}">Add teacher</a>{% endblock %}
+{% block body %}
+<div class="panel">
+  <form class="row g-2 mb-3"><div class="col-md-4"><input class="form-control" name="q" value="{{ q }}" placeholder="Name or employee ID"></div><div class="col-md-3"><select class="form-select" name="department"><option value="">Department</option>{% for row in departments %}<option value="{{ row.pk }}">{{ row.code }}</option>{% endfor %}</select></div><div class="col-auto"><button class="btn btn-navy">Filter</button></div></form>
+  <table class="table">{% for row in page_obj %}<tr><td><a href="{% url 'teachers:detail' row.pk %}">{{ row.employee_id }}</a></td><td>{{ row.user.get_full_name }}</td><td>{{ row.designation }}</td><td>{{ row.department.code }}</td></tr>{% empty %}<tr><td>{% include "includes/empty.html" %}</td></tr>{% endfor %}</table>
+  {% include "includes/pagination.html" %}
+</div>
+{% endblock %}

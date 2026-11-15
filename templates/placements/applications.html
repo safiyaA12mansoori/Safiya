@@ -1,0 +1,3 @@
+{% extends "base.html" %}
+{% block page_title %}Applications{% endblock %}
+{% block body %}<div class="panel"><form class="mb-3"><select class="form-select" name="status" onchange="this.form.submit()"><option value="">All</option>{% for value, label in statuses %}<option value="{{ value }}">{{ label }}</option>{% endfor %}</select></form>{% for row in applications %}<div class="d-flex justify-content-between py-2 border-bottom"><span>{{ row.student }} · {{ row.placement }} · {{ row.get_status_display }}</span><a href="{% url 'placements:update_application' row.pk %}">Update</a></div>{% empty %}{% include "includes/empty.html" %}{% endfor %}</div>{% endblock %}

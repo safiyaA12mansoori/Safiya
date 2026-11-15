@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block page_title %}{{ profile.user.get_full_name }}{% endblock %}
+{% block page_subtitle %}{{ profile.employee_id }} · {{ profile.designation }} · {{ periods }} timetable periods{% endblock %}
+{% block page_actions %}{% if request.user.role == "ADMIN" %}<a class="btn btn-light" href="{% url 'teachers:edit' profile.pk %}">Edit</a>
+<form class="d-inline" method="post" action="{% url 'teachers:toggle' profile.pk %}" data-confirm="Change this teacher's access?">{% csrf_token %}<button class="btn btn-outline-danger">{% if profile.user.is_active %}Deactivate{% else %}Activate{% endif %}</button></form>{% endif %}{% endblock %}
+{% block body %}
+<div class="row g-3">
+  <div class="col-lg-7"><div class="panel"><h2>Workload</h2>{% for load in loads %}<div class="d-flex justify-content-between py-2 border-bottom"><span>{{ load.subject }} · {{ load.classroom }}</span>{% if request.user.role == "ADMIN" %}<form method="post" action="{% url 'teachers:unassign' profile.pk load.pk %}" data-confirm="Remove this assignment?">{% csrf_token %}<button class="btn btn-sm btn-outline-danger">Remove</button></form>{% endif %}</div>{% empty %}<p class="muted">No classes assigned.</p>{% endfor %}</div></div>
+  {% if request.user.role == "ADMIN" %}<div class="col-lg-5"><div class="panel"><h2>Assign subject and class</h2><form method="post">{% csrf_token %}{% include "includes/form_fields.html" %}<button class="btn btn-primary">Assign</button></form></div></div>{% endif %}
+</div>
+{% endblock %}

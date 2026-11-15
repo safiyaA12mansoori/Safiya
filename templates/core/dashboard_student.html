@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block page_title %}{{ greeting }}, {{ request.user.first_name|default:"Student" }}{% endblock %}
+{% block page_subtitle %}{{ profile.course }} · {{ profile.classroom }}{% endblock %}
+{% block body %}
+{% if empty %}
+  <div class="panel">{% include "includes/empty.html" with empty_message="Your student profile is not ready." %}</div>
+{% else %}
+<div class="row g-3 mb-3">
+  <div class="col-lg-4"><div class="panel h-100 d-flex gap-3"><div>{% if request.user.photo %}<img class="avatar-lg" src="{{ request.user.photo.url }}" alt="">{% else %}<div class="avatar-lg">{{ request.user.first_name|first }}</div>{% endif %}</div><div><b>{{ request.user.get_full_name }}</b><div class="muted">{{ profile.student_id }}</div><a href="{% url 'accounts:profile' %}">Edit profile</a></div></div></div>
+  <div class="col-6 col-lg-2"><div class="stat"><span><small class="muted">Attendance</small><b>{{ attendance_rate }}%</b></span></div></div>
+  <div class="col-6 col-lg-2"><div class="stat"><span><small class="muted">Pending work</small><b>{{ pending_assignments|length }}</b></span></div></div>
+  <div class="col-6 col-lg-2"><div class="stat"><span><small class="muted">Exams ahead</small><b>{{ upcoming|length }}</b></span></div></div>
+  <div class="col-6 col-lg-2"><div class="stat"><span><small class="muted">Quizzes</small><b>{{ quizzes|length }}</b></span></div></div>
+</div>
+<div class="panel mb-3"><h2>Learning progress</h2><div class="progress-thin"><span style="width:{{ progress }}%"></span></div><p class="muted mt-2 mb-0">{{ progress }}% of syllabus topics are marked complete.</p></div>
+<div class="row g-3">
+  <div class="col-lg-6"><div class="panel"><h2>Today's timetable</h2>{% for slot in today %}<div class="mb-2"><b>{{ slot.start_time|time:"H:i" }}</b> {{ slot.subject.name }} · {{ slot.room }}</div>{% empty %}<p class="muted">No classes today.</p>{% endfor %}</div></div>
+  <div class="col-lg-6"><div class="panel"><h2>Subjects</h2>{% for subject in subjects %}<div class="mb-2"><a href="{% url 'academics:subject_detail' subject.pk %}">{{ subject }}</a></div>{% empty %}<p class="muted">No subjects yet.</p>{% endfor %}</div></div>
+  <div class="col-lg-6"><div class="panel"><h2>Pending assignments</h2>{% for item in pending_assignments %}<div class="mb-2"><a href="{% url 'assignments:detail' item.pk %}">{{ item.title }}</a> <span class="muted">due {{ item.deadline }}</span></div>{% empty %}<p class="muted">You are caught up.</p>{% endfor %}</div></div>
+  <div class="col-lg-6"><div class="panel"><h2>Upcoming exams</h2>{% for exam in upcoming %}<div class="mb-2"><a href="{% url 'examinations:detail' exam.pk %}">{{ exam.title }}</a></div>{% empty %}<p class="muted">No upcoming exams.</p>{% endfor %}</div></div>
+  <div class="col-lg-6"><div class="panel"><h2>Recent marks</h2>{% for row in marks %}<div class="mb-2">{{ row.title }} · {{ row.score }}/{{ row.max_score }} <span class="muted">{{ row.accuracy }}%</span></div>{% empty %}<p class="muted">Marks show up after you submit work.</p>{% endfor %}</div></div>
+  <div class="col-lg-6"><div class="panel"><h2>Study recommendations</h2>{% for row in recommendations %}<div class="mb-2"><b>{{ row.title }}</b><div class="muted">{{ row.detail }}</div></div>{% empty %}<p class="muted">Recommendations appear after a quiz or exam.</p>{% endfor %}<a href="{% url 'analytics:overview' %}">Open analytics</a></div></div>
+</div>
+{% endif %}
+{% endblock %}

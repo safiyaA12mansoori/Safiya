@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block page_title %}Search{% endblock %}
+{% block page_subtitle %}{% if q %}Results for “{{ q }}”{% else %}Type a name, code, or ISBN.{% endif %}{% endblock %}
+{% block body %}
+<div class="row g-3">
+  {% if students %}<div class="col-lg-6"><div class="panel"><h2>Students</h2>{% for row in students %}<div class="mb-2"><a href="{% url 'students:detail' row.pk %}">{{ row }}</a></div>{% endfor %}</div></div>{% endif %}
+  {% if teachers %}<div class="col-lg-6"><div class="panel"><h2>Teachers</h2>{% for row in teachers %}<div class="mb-2">{{ row.get_full_name }} <span class="muted">{{ row.username }}</span></div>{% endfor %}</div></div>{% endif %}
+  {% if subjects %}<div class="col-lg-6"><div class="panel"><h2>Subjects</h2>{% for row in subjects %}<div class="mb-2"><a href="{% url 'academics:subject_detail' row.pk %}">{{ row }}</a></div>{% endfor %}</div></div>{% endif %}
+  {% if books %}<div class="col-lg-6"><div class="panel"><h2>Library</h2>{% for row in books %}<div class="mb-2">{{ row.title }} <span class="muted">{{ row.isbn }}</span></div>{% endfor %}</div></div>{% endif %}
+  {% if q and not students and not teachers and not subjects and not books %}
+    <div class="col-12"><div class="panel">{% include "includes/empty.html" with empty_message="No matches." %}</div></div>
+  {% endif %}
+</div>
+{% endblock %}

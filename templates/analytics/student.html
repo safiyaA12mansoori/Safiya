@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block page_title %}{{ student.user.get_full_name }}{% endblock %}
+{% block page_subtitle %}Attendance {{ attendance }}% · correct {{ correct }} · incorrect {{ incorrect }}{% endblock %}
+{% block page_actions %}<form method="post">{% csrf_token %}<button class="btn btn-navy">Refresh study plan</button></form>{% if request.user.role == "STUDENT" %}<form method="post" action="{% url 'ai_quiz:adaptive_me' %}">{% csrf_token %}<input type="hidden" name="subject" value=""><button class="btn btn-primary">Practice weak topics</button></form>{% endif %}{% endblock %}
+{% block body %}
+<div class="row g-3">
+  <div class="col-lg-6"><div class="panel"><h2>Topic strength</h2>{% for row in topics %}<div class="mb-2"><div class="d-flex justify-content-between"><span>{{ row.label }}</span><span>{{ row.percent }}%</span></div><div class="progress-thin"><span style="width:{{ row.percent }}%"></span></div></div>{% empty %}<p class="muted">Topic strength appears after a quiz or exam.</p>{% endfor %}</div></div>
+  <div class="col-lg-6"><div class="panel"><h2>Trend</h2>{% for row in history %}<div class="py-1">{{ row.recorded_on }} · {{ row.title }} · {{ row.score }}/{{ row.max_score }}</div>{% empty %}<p class="muted">No assessments yet.</p>{% endfor %}</div></div>
+  <div class="col-12"><div class="panel"><h2>Study recommendations</h2>{% for row in recommendations %}<div class="mb-3"><b>{{ row.get_kind_display }} · {{ row.title }}</b><div>{{ row.detail }}</div>{% if row.material %}<a href="{% url 'learning:detail' row.material.pk %}">Open material</a>{% endif %}</div>{% empty %}<p class="muted">Nothing to recommend yet.</p>{% endfor %}</div></div>
+</div>
+{% endblock %}

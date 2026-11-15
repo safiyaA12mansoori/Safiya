@@ -1,0 +1,4 @@
+{% extends "base.html" %}
+{% block page_title %}Programming tests{% endblock %}
+{% block page_actions %}{% if request.user.role != "STUDENT" %}<a class="btn btn-primary" href="{% url 'examinations:programming_create' %}">New problem</a>{% endif %}{% endblock %}
+{% block body %}<div class="panel">{% for row in problems %}<div class="py-2 border-bottom"><a href="{% url 'examinations:programming_detail' row.pk %}">{{ row.title }}</a><div class="muted">{{ row.subject.code }}</div></div>{% empty %}{% include "includes/empty.html" with empty_message="No programming tests yet." %}{% endfor %}</div>{% endblock %}

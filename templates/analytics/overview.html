@@ -1,0 +1,3 @@
+{% extends "base.html" %}
+{% block page_title %}Performance{% endblock %}
+{% block body %}<div class="panel">{% for row in rows %}<div class="py-2 border-bottom"><a href="{% url 'analytics:student' row.student.pk %}">{{ row.student }}</a> {% if row.latest %}<span class="muted">latest {{ row.latest.title }} {{ row.latest.accuracy }}%</span>{% endif %}</div>{% empty %}{% include "includes/empty.html" with empty_message="No students in scope." %}{% endfor %}</div>{% endblock %}

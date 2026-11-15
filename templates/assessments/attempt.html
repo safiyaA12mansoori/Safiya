@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% load static %}
+{% block page_title %}{{ paper_title }}{% endblock %}
+{% block page_subtitle %}{% if demo %}<span class="badge text-bg-warning">Demo questions</span>{% endif %} {{ instructions }}{% endblock %}
+{% block page_actions %}<b id="timer" data-seconds="{{ seconds_left }}">--:--</b> <span id="save-state" class="muted"></span>{% endblock %}
+{% block body %}
+<div class="row g-3">
+  <div class="col-lg-8">
+    <form id="attempt-form" method="post" class="panel" data-save-url="{{ save_url }}">{% csrf_token %}
+      <input type="hidden" name="action" id="exam-action" value="save">
+      {% for item in items %}
+        <section class="q-panel {% if forloop.first %}active{% endif %}" data-key="{{ item.key }}" id="q-{{ item.number }}">
+          <h2>Question {{ item.number }}</h2>
+          <p>{{ item.text }}</p>
+          {% for option in item.options %}
+            <label class="option-row"><input type="radio" name="q_{{ item.key }}" value="{{ option.id }}" {% if item.selected == option.id %}checked{% endif %}> <span>{{ option.text }}</span></label>
+          {% endfor %}
+          <label class="mt-2"><input type="checkbox" name="review_{{ item.key }}" {% if item.review %}checked{% endif %}> Mark for review</label>
+        </section>
+      {% endfor %}
+      <div class="d-flex gap-2 mt-3">
+        <button class="btn btn-light" type="button" id="prev-q">Previous</button>
+        <button class="btn btn-light" type="button" id="next-q">Next</button>
+        <button class="btn btn-navy" type="submit" name="action" value="save">Save</button>
+        <button class="btn btn-primary" type="submit" name="action" value="submit" data-confirm="Submit now? You cannot change answers after this.">Submit</button>
+      </div>
+    </form>
+  </div>
+  <div class="col-lg-4"><div class="panel"><h2>Question palette</h2><div class="palette" id="palette"></div></div></div>
+</div>
+{% endblock %}
+{% block scripts %}<script src="{% static 'js/attempt.js' %}"></script>{% endblock %}

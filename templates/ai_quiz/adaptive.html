@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block page_title %}Adaptive quiz{% endblock %}
+{% block page_subtitle %}Built from topics where the class scored under 70%. Missing items are labeled samples.{% if demo %} Demo mode is on.{% endif %}{% endblock %}
+{% block body %}
+<div class="panel" style="max-width:640px"><form method="post">{% csrf_token %}
+  <label class="form-label">Class</label><select class="form-select mb-3" name="classroom">{% for row in classes %}<option value="{{ row.pk }}">{{ row }}</option>{% endfor %}</select>
+  <label class="form-label">Subject</label><select class="form-select mb-3" name="subject">{% for row in subjects %}<option value="{{ row.pk }}">{{ row }}</option>{% endfor %}</select>
+  <label class="form-label">Questions</label><input class="form-control mb-3" name="count" value="5">
+  <button class="btn btn-primary">Build and publish</button>
+</form></div>
+{% endblock %}

@@ -1,0 +1,4 @@
+{% extends "base.html" %}
+{% block page_title %}{{ quiz.title }}{% endblock %}
+{% block page_subtitle %}{% if quiz.is_demo %}Demo quiz{% endif %}{% if attempt %} · {{ attempt.score }}/{{ attempt.max_score }}{% endif %}{% endblock %}
+{% block body %}{% for row in rows %}<div class="panel mb-3"><b>{{ row.text }}</b><div>Your answer: {{ row.selected }} {% if row.is_correct %}<span class="text-success">Correct</span>{% else %}<span class="text-danger">Review</span>{% endif %}</div><div class="muted">{{ row.explanation }}</div><div class="muted">Topic: {{ row.topic }}</div></div>{% empty %}<div class="panel">No submitted attempt to show.</div>{% endfor %}{% endblock %}

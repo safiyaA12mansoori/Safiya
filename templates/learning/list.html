@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block page_title %}Study materials{% endblock %}
+{% block page_actions %}{% if request.user.role != "STUDENT" %}<a class="btn btn-primary" href="{% url 'learning:create' %}">Upload</a>{% endif %}{% endblock %}
+{% block body %}
+<div class="panel">
+  <form class="row g-2 mb-3"><div class="col-md-4"><input class="form-control" name="q" value="{{ q }}" placeholder="Title"></div><div class="col-md-3"><select class="form-select" name="subject"><option value="">Subject</option>{% for row in subjects %}<option value="{{ row.pk }}">{{ row.code }}</option>{% endfor %}</select></div><div class="col-md-3"><select class="form-select" name="kind"><option value="">Type</option>{% for value, label in kinds %}<option value="{{ value }}">{{ label }}</option>{% endfor %}</select></div><div class="col-auto"><button class="btn btn-navy">Filter</button></div></form>
+  {% for row in page_obj %}<div class="d-flex justify-content-between border-bottom py-2"><div><a href="{% url 'learning:detail' row.pk %}">{{ row.title }}</a><div class="muted">{{ row.kind }} · {{ row.subject.code }}</div></div></div>{% empty %}{% include "includes/empty.html" with empty_message="No materials yet." %}{% endfor %}
+  {% include "includes/pagination.html" %}
+</div>
+{% endblock %}

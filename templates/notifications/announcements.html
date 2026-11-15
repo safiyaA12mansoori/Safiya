@@ -1,0 +1,4 @@
+{% extends "base.html" %}
+{% block page_title %}Announcements{% endblock %}
+{% block page_actions %}{% if request.user.role != "STUDENT" %}<a class="btn btn-primary" href="{% url 'notifications:announcement_create' %}">New announcement</a>{% endif %}{% endblock %}
+{% block body %}<div class="panel">{% for row in announcements %}<article class="py-3 border-bottom"><h2>{{ row.title }}</h2><p>{{ row.body|linebreaks }}</p><p class="muted">{{ row.get_audience_display }} · {{ row.author }} · {{ row.created_at }}</p>{% if request.user.role == "ADMIN" %}<form method="post" action="{% url 'notifications:announcement_toggle' row.pk %}">{% csrf_token %}<button class="btn btn-sm btn-light">{% if row.is_active %}Hide{% else %}Show{% endif %}</button></form>{% endif %}</article>{% empty %}{% include "includes/empty.html" with empty_message="No announcements." %}{% endfor %}</div>{% endblock %}

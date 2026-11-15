@@ -1,0 +1,4 @@
+{% extends "base.html" %}
+{% block page_title %}Examinations{% endblock %}
+{% block page_actions %}{% if request.user.role != "STUDENT" %}<a class="btn btn-primary" href="{% url 'examinations:create' %}">New exam</a>{% endif %}{% endblock %}
+{% block body %}<div class="panel">{% for row in page_obj %}<div class="py-2 border-bottom"><a href="{% url 'examinations:detail' row.pk %}">{{ row.title }}</a><div class="muted">{{ row.subject.code }} · {{ row.exam_date }} · {% if row.is_published %}Published{% else %}Draft{% endif %}</div></div>{% empty %}{% include "includes/empty.html" with empty_message="No examinations yet." %}{% endfor %}{% include "includes/pagination.html" %}</div>{% endblock %}

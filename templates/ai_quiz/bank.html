@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block page_title %}Question bank{% endblock %}
+{% block page_actions %}<a class="btn btn-primary" href="{% url 'ai_quiz:bank_create' %}">Add question</a>{% endblock %}
+{% block body %}
+<div class="panel">
+  <form class="row g-2 mb-3"><div class="col-md-3"><input class="form-control" name="q" placeholder="Search text" value="{{ request.GET.q }}"></div><div class="col-md-3"><select class="form-select" name="subject"><option value="">Subject</option>{% for row in subjects %}<option value="{{ row.pk }}">{{ row.code }}</option>{% endfor %}</select></div><div class="col-md-2"><select class="form-select" name="difficulty"><option value="">Difficulty</option><option>easy</option><option>medium</option><option>hard</option></select></div><div class="col-auto"><button class="btn btn-navy">Filter</button></div></form>
+  {% for row in page_obj %}<div class="d-flex justify-content-between border-bottom py-2"><div>{{ row.text|truncatechars:140 }}<div class="muted">{{ row.subject.code }} · {{ row.difficulty }} · {{ row.source }} · {{ row.teacher }}</div></div><form method="post" action="{% url 'ai_quiz:bank_delete' row.pk %}" data-confirm="Delete this bank question?">{% csrf_token %}<button class="btn btn-sm btn-outline-danger">Delete</button></form></div>{% empty %}{% include "includes/empty.html" %}{% endfor %}
+  {% include "includes/pagination.html" %}
+</div>
+{% endblock %}

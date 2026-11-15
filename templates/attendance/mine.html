@@ -1,0 +1,4 @@
+{% extends "base.html" %}
+{% block page_title %}My attendance{% endblock %}
+{% block page_subtitle %}Overall present rate {{ overall }}%{% endblock %}
+{% block body %}<div class="panel">{% for row in rows %}<div class="mb-3"><div class="d-flex justify-content-between"><b>{{ row.subject.name }}</b><span>{{ row.percent }}%</span></div><div class="progress-thin"><span style="width:{{ row.percent }}%"></span></div><div class="muted">Present {{ row.present }} · Absent {{ row.absent }} · Leave {{ row.leave }}</div></div>{% empty %}{% include "includes/empty.html" with empty_message="Attendance has not been marked yet." %}{% endfor %}</div>{% endblock %}
