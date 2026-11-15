@@ -1,0 +1,6 @@
+{% extends "base.html" %}
+{% block page_title %}Generate an AI quiz{% endblock %}
+{% block page_subtitle %}{% if demo %}Demo mode: sample questions are labeled, and source-based questions use only the uploaded text.{% else %}Questions are validated before anything is saved.{% endif %}{% endblock %}
+{% block body %}
+<div class="panel" style="max-width:860px"><form method="post" enctype="multipart/form-data">{% csrf_token %}{% include "includes/form_fields.html" %}<button class="btn btn-primary">Generate and review</button></form></div>
+{% endblock %}

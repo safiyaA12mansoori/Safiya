@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% load ui_tags %}
+{% block page_title %}Profile{% endblock %}
+{% block page_subtitle %}{{ request.user.get_role_display }} · {{ request.user.username }}{% endblock %}
+{% block body %}
+<div class="row g-3">
+  <div class="col-lg-4"><div class="panel text-center">{% if request.user.photo %}<img class="avatar-lg" src="{{ request.user.photo.url }}" alt="">{% else %}<div class="avatar-lg mx-auto">{{ request.user|initials }}</div>{% endif %}<h2 class="mt-3">{{ request.user.get_full_name }}</h2><p class="muted">{{ request.user.email }}</p></div></div>
+  <div class="col-lg-8"><div class="panel"><form method="post" enctype="multipart/form-data">{% csrf_token %}{% include "includes/form_fields.html" %}<button class="btn btn-primary">Save profile</button></form></div></div>
+</div>
+{% endblock %}

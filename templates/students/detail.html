@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block page_title %}{{ profile.user.get_full_name }}{% endblock %}
+{% block page_subtitle %}{{ profile.student_id }} · {{ profile.admission_number }} · {{ profile.classroom }}{% endblock %}
+{% block page_actions %}{% if request.user.role == "ADMIN" %}<a class="btn btn-light" href="{% url 'students:edit' profile.pk %}">Edit</a>
+<form class="d-inline" method="post" action="{% url 'students:toggle' profile.pk %}" data-confirm="Change this student's access?">{% csrf_token %}<button class="btn btn-outline-danger">{% if profile.user.is_active %}Deactivate{% else %}Activate{% endif %}</button></form>{% endif %}{% endblock %}
+{% block body %}
+<div class="row g-3">
+  <div class="col-lg-6"><div class="panel"><h2>Academic</h2><p>{{ profile.department }}</p><p>{{ profile.course }}</p><p>Year {{ profile.academic_year }}</p><p>{{ profile.user.email }} · {{ profile.user.phone }}</p></div></div>
+  <div class="col-lg-6"><div class="panel"><h2>Contact</h2><p>Guardian {{ profile.guardian_name }} {{ profile.guardian_phone }}</p><p>{{ profile.address }} {{ profile.city }}</p><a href="{% url 'analytics:student' profile.pk %}">Performance</a></div></div>
+</div>
+{% endblock %}

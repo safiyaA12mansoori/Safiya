@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% block page_title %}{{ subject.name }}{% endblock %}
+{% block page_subtitle %}{{ subject.code }} · syllabus {{ completion }}% complete{% endblock %}
+{% block body %}
+<div class="progress-thin mb-3"><span style="width:{{ completion }}%"></span></div>
+{% for unit in units %}
+  <div class="panel mb-3">
+    <h2>Unit {{ unit.number }} · {{ unit.title }}</h2>
+    {% for chapter in unit.chapters.all %}
+      <h3 class="h6 mt-3">Chapter {{ chapter.number }} · {{ chapter.title }}</h3>
+      {% for topic in chapter.topics.all %}
+        <div class="d-flex justify-content-between align-items-center border-bottom py-2">
+          <span>{{ topic.number }}. {{ topic.title }}</span>
+          {% if can_edit %}
+            <form method="post" action="{% url 'academics:toggle_topic' subject.pk topic.pk %}">{% csrf_token %}
+              <button class="btn btn-sm {% if topic.is_completed %}btn-success{% else %}btn-outline-secondary{% endif %}" type="submit">{% if topic.is_completed %}Completed{% else %}Mark complete{% endif %}</button>
+            </form>
+          {% else %}
+            <span class="muted">{% if topic.is_completed %}Completed{% else %}Pending{% endif %}</span>
+          {% endif %}
+        </div>
+      {% empty %}<p class="muted">No topics in this chapter.</p>{% endfor %}
+      {% if can_edit %}
+        <form class="row g-2 mt-2" method="post">{% csrf_token %}
+          <input type="hidden" name="action" value="topic"><input type="hidden" name="chapter" value="{{ chapter.pk }}">
+          <div class="col-2"><input class="form-control" name="number" placeholder="#"></div>
+          <div class="col"><input class="form-control" name="title" placeholder="New topic"></div>
+          <div class="col-auto"><button class="btn btn-light">Add topic</button></div>
+        </form>
+      {% endif %}
+    {% empty %}<p class="muted">No chapters yet.</p>{% endfor %}
+    {% if can_edit %}
+      <form class="row g-2 mt-3" method="post">{% csrf_token %}
+        <input type="hidden" name="action" value="chapter"><input type="hidden" name="unit" value="{{ unit.pk }}">
+        <div class="col-2"><input class="form-control" name="number" placeholder="#"></div>
+        <div class="col"><input class="form-control" name="title" placeholder="New chapter"></div>
+        <div class="col-auto"><button class="btn btn-light">Add chapter</button></div>
+      </form>
+    {% endif %}
+  </div>
+{% empty %}
+  <div class="panel mb-3">{% include "includes/empty.html" with empty_message="Add the first unit to start the syllabus." %}</div>
+{% endfor %}
+{% if can_edit %}
+  <div class="panel"><h2>Add a unit</h2>
+    <form class="row g-2" method="post">{% csrf_token %}
+      <input type="hidden" name="action" value="unit">
+      <div class="col-2"><input class="form-control" name="number" placeholder="#"></div>
+      <div class="col"><input class="form-control" name="title" placeholder="Unit title"></div>
+      <div class="col-auto"><button class="btn btn-primary">Add unit</button></div>
+    </form>
+  </div>
+{% endif %}
+{% endblock %}

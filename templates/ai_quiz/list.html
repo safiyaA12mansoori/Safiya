@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block page_title %}Quizzes{% endblock %}
+{% block page_subtitle %}{% if demo %}Demo mode is on because no AI API key is configured. Generated questions are labeled.{% endif %}{% endblock %}
+{% block page_actions %}{% if request.user.role != "STUDENT" %}<a class="btn btn-light" href="{% url 'ai_quiz:adaptive' %}">Adaptive</a> <a class="btn btn-primary" href="{% url 'ai_quiz:generate' %}">Generate</a>{% endif %}{% endblock %}
+{% block body %}
+<div class="panel">{% for row in page_obj %}
+  <div class="py-2 border-bottom d-flex justify-content-between">
+    <div>
+      {% if request.user.role == "STUDENT" %}<a href="{% url 'ai_quiz:take' row.pk %}">{{ row.title }}</a>{% else %}<a href="{% url 'ai_quiz:review' row.pk %}">{{ row.title }}</a>{% endif %}
+      <div class="muted">{{ row.subject.code }} · {{ row.get_status_display }} {% if row.is_demo %}· Demo{% endif %} {% if row.is_adaptive %}· Adaptive{% endif %}</div>
+    </div>
+    {% if request.user.role == "STUDENT" and attempts|default_if_none:"" %}{% endif %}
+  </div>
+{% empty %}{% include "includes/empty.html" with empty_message="No quizzes yet." %}{% endfor %}{% include "includes/pagination.html" %}</div>
+{% endblock %}

@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block page_title %}{{ assignment.title }}{% endblock %}
+{% block page_subtitle %}Due {{ assignment.deadline }} · {{ assignment.max_marks }} marks{% endblock %}
+{% block page_actions %}{% if request.user.role != "STUDENT" %}<a class="btn btn-light" href="{% url 'assignments:edit' assignment.pk %}">Edit</a>{% endif %}{% if assignment.file %}<a class="btn btn-navy" href="{% url 'assignments:brief' assignment.pk %}">Download brief</a>{% endif %}{% endblock %}
+{% block body %}
+<div class="panel mb-3"><p>{{ assignment.description|linebreaks }}</p>
+{% if request.user.role == "STUDENT" %}
+  {% if submission %}<p>Submitted {{ submission.submitted_at }}. {% if submission.marks != None %}Marks {{ submission.marks }} / {{ assignment.max_marks }}. {{ submission.feedback }}{% else %}Not graded yet.{% endif %}</p>{% endif %}
+  {% if now <= assignment.deadline and submission.marks == None or not submission and now <= assignment.deadline %}<a class="btn btn-primary" href="{% url 'assignments:submit' assignment.pk %}">{% if submission %}Update submission{% else %}Submit{% endif %}</a>{% endif %}
+{% else %}
+  <h2>Submissions</h2>
+  {% for row in submissions %}<div class="d-flex justify-content-between py-2 border-bottom"><span>{{ row.student }} {% if row.marks != None %}· {{ row.marks }}{% else %}· pending{% endif %}</span><span>{% if row.file %}<a href="{% url 'assignments:submission_file' assignment.pk row.pk %}">File</a>{% endif %} <a href="{% url 'assignments:grade' assignment.pk row.pk %}">Grade</a></span></div>{% empty %}<p class="muted">No submissions yet.</p>{% endfor %}
+{% endif %}
+</div>
+{% endblock %}

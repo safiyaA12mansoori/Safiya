@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block page_title %}{{ problem.title }}{% endblock %}
+{% block body %}
+<div class="panel mb-3"><p>{{ problem.statement|linebreaks }}</p>
+{% for case in samples %}<pre class="code p-3">Input\n{{ case.stdin }}\nOutput\n{{ case.expected_stdout }}</pre>{% endfor %}
+{% if request.user.role == "STUDENT" %}
+<form method="post" class="mt-3">{% csrf_token %}
+  <label class="form-label">Language</label>
+  <select class="form-select mb-2" name="language">{% for value, label in languages %}<option value="{{ value }}">{{ label }}</option>{% endfor %}</select>
+  <textarea class="form-control code" name="code" rows="12" placeholder="Write Python here"></textarea>
+  <button class="btn btn-primary mt-3">Submit</button>
+</form>
+{% endif %}
+</div>
+{% for submission in submissions %}
+  <div class="panel mb-3"><h2>{{ submission.student }} · {{ submission.status }} · {{ submission.score }}/{{ submission.max_score }}</h2>
+    <p class="muted">{{ submission.public_result.message }}</p>
+    {% for case in submission.public_result.cases %}<div class="mb-2">{% if case.ok %}Passed{% else %}Failed{% endif %} {% if case.timed_out %}(timeout){% endif %}<pre class="code p-2">{{ case.stdout }}</pre>{% if case.stderr %}<pre class="code p-2">{{ case.stderr }}</pre>{% endif %}</div>{% endfor %}
+  </div>
+{% endfor %}
+{% endblock %}

@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block page_title %}{{ material.title }}{% endblock %}
+{% block page_subtitle %}{{ material.kind }} · {{ material.subject }}{% endblock %}
+{% block page_actions %}{% if can_manage %}<a class="btn btn-light" href="{% url 'learning:edit' material.pk %}">Edit</a>{% endif %}{% if material.file %}<a class="btn btn-primary" href="{% url 'learning:download' material.pk %}">Download</a>{% endif %}{% endblock %}
+{% block body %}
+<div class="panel">
+  <p>{{ material.description }}</p>
+  {% if embed %}<div class="ratio ratio-16x9"><iframe src="{{ embed }}" title="{{ material.title }}" allowfullscreen></iframe></div>
+  {% elif material.external_url %}<p><a href="{{ material.external_url }}" rel="noopener">Open link</a></p>{% endif %}
+  {% if material.unit %}<p class="muted">{{ material.unit }}{% if material.topic %} · {{ material.topic }}{% endif %}</p>{% endif %}
+</div>
+{% endblock %}

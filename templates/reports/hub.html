@@ -1,0 +1,4 @@
+{% extends "base.html" %}
+{% block page_title %}Reports{% endblock %}
+{% block page_subtitle %}Filter on the next page, then export Excel or PDF.{% endblock %}
+{% block body %}<div class="row g-3">{% for item in reports %}<div class="col-md-4"><a class="stat" href="{% url 'reports:report' item.0 %}"><i class="bi bi-file-earmark-bar-graph"></i><span><b>{{ item.1 }}</b></span></a></div>{% endfor %}</div>{% endblock %}

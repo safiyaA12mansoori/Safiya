@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block page_title %}Fees{% endblock %}
+{% block page_actions %}{% if request.user.role == "ADMIN" %}<a class="btn btn-light" href="{% url 'fees:structure_create' %}">New structure</a> <a class="btn btn-primary" href="{% url 'fees:pay' %}">Record payment</a>{% endif %}{% endblock %}
+{% block body %}
+{% if structures %}<div class="panel mb-3"><h2>Structures</h2>{% for row in structures %}<div class="d-flex justify-content-between py-2 border-bottom"><span>{{ row.name }} · {{ row.course.code }} · {{ row.session }} · {{ row.amount }}</span><form method="post" action="{% url 'fees:generate' row.pk %}">{% csrf_token %}<button class="btn btn-sm btn-light">Generate dues</button></form></div>{% empty %}<p class="muted">No fee structures.</p>{% endfor %}</div>{% endif %}
+<div class="panel"><form class="mb-3"><select class="form-select" name="status" onchange="this.form.submit()"><option value="">All statuses</option>{% for value, label in statuses %}<option value="{{ value }}" {% if request.GET.status == value %}selected{% endif %}>{{ label }}</option>{% endfor %}</select></form>
+{% for row in fees %}<div class="py-2 border-bottom">{{ row.student }} · {{ row.structure.name }} · {{ row.status }} · balance {{ row.balance }} {% if request.user.role == "STUDENT" %}{% for payment in row.payments.all %}<a href="{% url 'fees:receipt' payment.pk %}">{{ payment.receipt_no }}</a>{% endfor %}{% endif %}</div>{% empty %}{% include "includes/empty.html" with empty_message="No fee rows." %}{% endfor %}
+</div>
+{% endblock %}

@@ -1,0 +1,6 @@
+{% extends "base.html" %}
+{% block page_title %}Issue and return{% endblock %}
+{% block body %}
+<div class="row g-3"><div class="col-lg-5"><div class="panel"><h2>Issue a book</h2><form method="post">{% csrf_token %}{% include "includes/form_fields.html" %}<button class="btn btn-primary">Issue</button></form></div></div>
+<div class="col-lg-7"><div class="panel"><h2>Open issues</h2>{% for row in issues %}<div class="d-flex justify-content-between py-2 border-bottom"><span>{{ row.book.title }} · {{ row.student }} · due {{ row.due_on }} {% if row.is_overdue %}<b class="text-danger">overdue</b>{% endif %}</span><form method="post" action="{% url 'library:return' row.pk %}">{% csrf_token %}<button class="btn btn-sm btn-navy">Return</button></form></div>{% empty %}{% include "includes/empty.html" with empty_message="No open issues." %}{% endfor %}</div></div></div>
+{% endblock %}

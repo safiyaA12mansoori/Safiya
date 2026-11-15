@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block page_title %}{{ greeting }}, {{ request.user.first_name|default:"Teacher" }}{% endblock %}
+{% block page_subtitle %}Your classes, not the whole college.{% endblock %}
+{% block body %}
+{% if empty %}
+  <div class="panel">{% include "includes/empty.html" with empty_message="Your teacher profile is not ready." %}</div>
+{% else %}
+<div class="row g-3 mb-3">
+  <div class="col-6 col-md-3"><div class="stat"><i class="bi bi-easel"></i><span><small class="muted">Classes</small><b>{{ class_count }}</b></span></div></div>
+  <div class="col-6 col-md-3"><div class="stat"><i class="bi bi-journal"></i><span><small class="muted">Subjects</small><b>{{ subject_count }}</b></span></div></div>
+  <div class="col-6 col-md-3"><div class="stat"><i class="bi bi-people"></i><span><small class="muted">Students</small><b>{{ student_count }}</b></span></div></div>
+  <div class="col-6 col-md-3"><div class="stat"><i class="bi bi-percent"></i><span><small class="muted">Attendance 14d</small><b>{{ attendance_rate }}%</b></span></div></div>
+</div>
+<div class="row g-3">
+  <div class="col-lg-6"><div class="panel"><h2>Today's timetable</h2>{% for slot in today %}<div class="mb-2"><b>{{ slot.start_time|time:"H:i" }}</b> {{ slot.subject.name }} · {{ slot.classroom }} · {{ slot.room }}</div>{% empty %}{% include "includes/empty.html" with empty_message="No classes on today's timetable." %}{% endfor %}<a href="{% url 'timetable:grid' %}">Full timetable</a></div></div>
+  <div class="col-lg-6"><div class="panel"><h2>Pending evaluations</h2>{% for row in pending_assignments %}<div class="mb-2"><a href="{% url 'assignments:grade' row.assignment_id row.pk %}">{{ row.student }} · {{ row.assignment }}</a></div>{% empty %}<p class="muted">No ungraded submissions.</p>{% endfor %}</div></div>
+  <div class="col-lg-6"><div class="panel"><h2>Upcoming exams</h2>{% for exam in upcoming %}<div class="mb-2"><a href="{% url 'examinations:detail' exam.pk %}">{{ exam.title }}</a> <span class="muted">{{ exam.exam_date }}</span></div>{% empty %}<p class="muted">No upcoming exams.</p>{% endfor %}</div></div>
+  <div class="col-lg-6"><div class="panel"><h2>Recent activity</h2>{% for row in activity %}<div class="mb-2">{{ row.message }}</div>{% empty %}<p class="muted">No recent actions.</p>{% endfor %}<div class="quick mt-3"><a href="{% url 'attendance:mark' %}">Mark attendance</a><a href="{% url 'ai_quiz:generate' %}">Generate quiz</a><a href="{% url 'learning:create' %}">Upload material</a></div></div>
+</div>
+{% endif %}
+{% endblock %}

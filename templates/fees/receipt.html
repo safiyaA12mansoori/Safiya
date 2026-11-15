@@ -1,0 +1,4 @@
+{% extends "base.html" %}
+{% block page_title %}Receipt {{ payment.receipt_no }}{% endblock %}
+{% block page_actions %}<a class="btn btn-navy" href="?format=pdf">Download PDF</a>{% endblock %}
+{% block body %}<div class="panel" style="max-width:640px"><p><b>{{ payment.student_fee.student }}</b></p><p>{{ payment.student_fee.structure.name }}</p><p>Amount {{ payment.amount }} via {{ payment.get_method_display }}</p><p>Paid on {{ payment.paid_on }}</p><p>Reference {{ payment.reference }}</p></div>{% endblock %}

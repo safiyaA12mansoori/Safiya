@@ -1,0 +1,4 @@
+{% extends "base.html" %}
+{% block page_title %}Assignments{% endblock %}
+{% block page_actions %}{% if request.user.role != "STUDENT" %}<a class="btn btn-primary" href="{% url 'assignments:create' %}">New assignment</a>{% endif %}{% endblock %}
+{% block body %}<div class="panel">{% for row in page_obj %}<div class="py-2 border-bottom"><a href="{% url 'assignments:detail' row.pk %}">{{ row.title }}</a><div class="muted">{{ row.subject.code }} · due {{ row.deadline }} · {{ row.max_marks }} marks</div></div>{% empty %}{% include "includes/empty.html" with empty_message="No assignments yet." %}{% endfor %}{% include "includes/pagination.html" %}</div>{% endblock %}

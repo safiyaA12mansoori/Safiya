@@ -1,0 +1,4 @@
+{% extends "base.html" %}
+{% block page_title %}Preview · {{ quiz.title }}{% endblock %}
+{% block page_subtitle %}Teacher preview shows the answer key.{% endblock %}
+{% block body %}{% for question in questions %}<div class="panel mb-3"><h2>Q{{ forloop.counter }}</h2><p>{{ question.text }}</p><ol>{% for option in question.options.all %}<li>{% if option.is_correct %}<b>{{ option.text }}</b>{% else %}{{ option.text }}{% endif %}</li>{% endfor %}</ol></div>{% endfor %}{% endblock %}

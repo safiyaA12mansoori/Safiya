@@ -1,0 +1,5 @@
+{% extends "base.html" %}
+{% block page_title %}My classes{% endblock %}
+{% block body %}
+<div class="row g-3">{% for card in cards %}<div class="col-md-6"><div class="panel"><h2>{{ card.load.subject.name }}</h2><p>{{ card.load.classroom }}</p><p>{{ card.students }} students</p><div class="quick"><a href="{% url 'attendance:mark' %}?classroom={{ card.load.classroom_id }}&subject={{ card.load.subject_id }}">Attendance</a><a href="{% url 'academics:subject_detail' card.load.subject_id %}">Syllabus</a><a href="{% url 'learning:list' %}?subject={{ card.load.subject_id }}">Materials</a></div></div></div>{% empty %}<div class="col-12"><div class="panel">{% include "includes/empty.html" with empty_message="No classes are assigned yet." %}</div></div>{% endfor %}</div>
+{% endblock %}

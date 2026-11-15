@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% load ui_tags %}
+{% block page_title %}{{ title }}{% endblock %}
+{% block page_actions %}
+  <a class="btn btn-navy" href="?{% querystring export='xlsx' %}">Excel</a>
+  <a class="btn btn-primary" href="?{% querystring export='pdf' %}">PDF</a>
+{% endblock %}
+{% block body %}
+<div class="panel">
+  <form class="row g-2 mb-3">
+    <div class="col-md-3"><input class="form-control" name="q" value="{{ request.GET.q }}" placeholder="Search"></div>
+    <div class="col-md-2"><input class="form-control" name="month" type="month" value="{{ request.GET.month }}"></div>
+    <div class="col-md-2"><input class="form-control" name="status" value="{{ request.GET.status }}" placeholder="Status"></div>
+    <div class="col-md-2"><input class="form-control" name="classroom" value="{{ request.GET.classroom }}" placeholder="Class id"></div>
+    <div class="col-md-2"><input class="form-control" name="subject" value="{{ request.GET.subject }}" placeholder="Subject id"></div>
+    <div class="col-auto"><button class="btn btn-navy">Filter</button></div>
+  </form>
+  {% if rows %}<div class="table-responsive"><table class="table"><thead><tr>{% for header in headers %}<th>{{ header }}</th>{% endfor %}</tr></thead><tbody>{% for row in rows %}<tr>{% for cell in row %}<td>{{ cell }}</td>{% endfor %}</tr>{% endfor %}</tbody></table></div>{% else %}{% include "includes/empty.html" with empty_message="No rows for this filter." %}{% endif %}
+</div>
+{% endblock %}

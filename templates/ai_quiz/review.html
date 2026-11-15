@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block page_title %}{{ quiz.title }}{% endblock %}
+{% block page_subtitle %}{{ quiz.get_status_display }} {% if quiz.is_demo %}· Demo mode{% endif %} · {{ quiz.get_source_type_display }}{% endblock %}
+{% block page_actions %}
+{% if quiz.status == "DRAFT" %}
+  <a class="btn btn-light" href="{% url 'ai_quiz:add_question' quiz.pk %}">Add manual</a>
+  <form class="d-inline" method="post" action="{% url 'ai_quiz:regenerate_all' quiz.pk %}" data-confirm="Replace every question?">{% csrf_token %}<button class="btn btn-light">Regenerate all</button></form>
+  <a class="btn btn-navy" href="{% url 'ai_quiz:preview' quiz.pk %}">Preview</a>
+  <form class="d-inline" method="post" action="{% url 'ai_quiz:publish' quiz.pk %}">{% csrf_token %}<button class="btn btn-primary">Approve and publish</button></form>
+{% else %}
+  <a class="btn btn-navy" href="{% url 'ai_quiz:preview' quiz.pk %}">Preview</a>
+{% endif %}
+{% endblock %}
+{% block body %}
+{% if quiz.is_demo %}<div class="alert alert-warning">Demo mode. These are sample or source-bound questions, not a live model response.</div>{% endif %}
+{% for question in questions %}
+  <div class="panel mb-3">
+    <div class="d-flex justify-content-between"><h2>Q{{ forloop.counter }} · {{ question.difficulty }}</h2>
+      {% if quiz.status == "DRAFT" %}<span>
+        <a href="{% url 'ai_quiz:edit_question' quiz.pk question.pk %}">Edit</a>
+        <form class="d-inline" method="post" action="{% url 'ai_quiz:regenerate_one' quiz.pk question.pk %}">{% csrf_token %}<button class="btn btn-sm btn-link">Regenerate</button></form>
+        <form class="d-inline" method="post" action="{% url 'ai_quiz:delete_question' quiz.pk question.pk %}" data-confirm="Delete this question?">{% csrf_token %}<button class="btn btn-sm btn-link text-danger">Delete</button></form>
+      </span>{% endif %}
+    </div>
+    <p>{{ question.text }}</p>
+    <ul>{% for option in question.options.all %}<li>{{ option.text }}{% if option.is_correct %} <b>(correct)</b>{% endif %}</li>{% endfor %}</ul>
+    <p class="muted">{{ question.explanation }}</p>
+  </div>
+{% empty %}<div class="panel">{% include "includes/empty.html" with empty_message="No questions yet." %}</div>{% endfor %}
+{% endblock %}

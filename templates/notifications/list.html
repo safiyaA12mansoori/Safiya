@@ -1,0 +1,4 @@
+{% extends "base.html" %}
+{% block page_title %}Notifications{% endblock %}
+{% block page_actions %}<form method="post" action="{% url 'notifications:read_all' %}">{% csrf_token %}<button class="btn btn-light">Mark all read</button></form>{% endblock %}
+{% block body %}<div class="panel">{% for row in notes %}<div class="d-flex justify-content-between py-2 border-bottom"><div><b>{{ row.title }}</b><div class="muted">{{ row.body }}</div></div>{% if not row.is_read %}<form method="post" action="{% url 'notifications:read' row.pk %}">{% csrf_token %}<button class="btn btn-sm btn-light">Read</button></form>{% endif %}</div>{% empty %}{% include "includes/empty.html" with empty_message="You are all caught up." %}{% endfor %}</div>{% endblock %}

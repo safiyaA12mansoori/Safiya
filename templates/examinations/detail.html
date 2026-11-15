@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block page_title %}{{ exam.title }}{% endblock %}
+{% block page_subtitle %}{{ exam.duration_minutes }} minutes · {{ exam.max_marks }} marks · negative {{ exam.negative_mark }}{% endblock %}
+{% block page_actions %}
+{% if request.user.role == "STUDENT" and exam.is_published %}
+  {% if attempt and attempt.status == "SUBMITTED" %}<a class="btn btn-primary" href="{% url 'examinations:result' exam.pk %}">View result</a>{% else %}<a class="btn btn-primary" href="{% url 'examinations:take' exam.pk %}">Start exam</a>{% endif %}
+{% endif %}
+{% if request.user.role != "STUDENT" %}<a class="btn btn-light" href="{% url 'examinations:edit' exam.pk %}">Edit</a>
+<form class="d-inline" method="post" action="{% url 'examinations:publish' exam.pk %}">{% csrf_token %}<button class="btn btn-primary">Publish</button></form>
+<form class="d-inline" method="post" action="{% url 'examinations:toggle_results' exam.pk %}">{% csrf_token %}<button class="btn btn-navy">{% if exam.results_published %}Unpublish results{% else %}Publish results{% endif %}</button></form>{% endif %}
+{% endblock %}
+{% block body %}
+<div class="panel mb-3"><p>{{ exam.instructions|default:"Read each question and choose one option." }}</p>
+{% for link in links %}<div class="mb-3"><b>Q{{ forloop.counter }}.</b> {{ link.question.text }}{% if request.user.role != "STUDENT" %}<form class="d-inline" method="post" action="{% url 'examinations:remove_question' exam.pk link.pk %}" data-confirm="Remove this question from the exam?">{% csrf_token %}<button class="btn btn-sm btn-link text-danger">Remove</button></form>{% endif %}
+<ul>{% for option in link.question.options.all %}<li>{{ option.text }}{% if request.user.role != "STUDENT" and option.is_correct %} · correct{% endif %}</li>{% endfor %}</ul></div>{% empty %}<p class="muted">No questions yet.</p>{% endfor %}
+</div>
+{% if form %}
+<div class="row g-3">
+  <div class="col-lg-7"><div class="panel"><h2>Add a question</h2><form method="post" action="{% url 'examinations:add_question' exam.pk %}">{% csrf_token %}{% include "includes/form_fields.html" %}<button class="btn btn-primary">Add to exam</button></form></div></div>
+  <div class="col-lg-5"><div class="panel"><h2>From the bank</h2>{% for question in bank %}<form method="post" action="{% url 'examinations:add_question' exam.pk %}" class="mb-2">{% csrf_token %}<input type="hidden" name="bank_id" value="{{ question.pk }}"><button class="btn btn-sm btn-light">Add</button> {{ question.text|truncatechars:80 }}</form>{% empty %}<p class="muted">No extra bank questions for this subject.</p>{% endfor %}</div></div>
+</div>
+{% endif %}
+{% endblock %}
