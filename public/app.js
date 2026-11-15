@@ -12,9 +12,10 @@ const $ = (sel) => document.querySelector(sel);
 const $$ = (sel) => [...document.querySelectorAll(sel)];
 
 function money(cents) {
-  return new Intl.NumberFormat(undefined, {
+  return new Intl.NumberFormat("en-IN", {
     style: "currency",
-    currency: "USD",
+    currency: "INR",
+    maximumFractionDigits: 2,
   }).format((cents || 0) / 100);
 }
 
@@ -592,7 +593,7 @@ document.body.addEventListener("click", async (e) => {
       await api(`/bills/${t.dataset.issueBill}/issue`, { method: "POST" });
       toast("Bill issued");
     } else if (t.dataset.payBill) {
-      const amount = prompt("Payment amount in USD?");
+      const amount = prompt("Payment amount in ₹ (INR)?");
       if (amount == null) return;
       await api(`/bills/${t.dataset.payBill}/payments`, {
         method: "POST",

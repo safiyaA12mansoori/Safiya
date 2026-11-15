@@ -90,7 +90,7 @@ function seedIfEmpty(state) {
     description: "Prophylaxis and exam",
     category: "preventive",
     durationMinutes: 45,
-    basePriceCents: 12000,
+    basePriceCents: 150000,
     active: true,
     createdAt: now(),
   };
@@ -100,7 +100,7 @@ function seedIfEmpty(state) {
     description: "Tooth-colored filling",
     category: "restorative",
     durationMinutes: 60,
-    basePriceCents: 18500,
+    basePriceCents: 250000,
     active: true,
     createdAt: now(),
   };

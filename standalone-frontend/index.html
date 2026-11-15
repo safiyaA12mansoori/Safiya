@@ -270,7 +270,7 @@
                     </select>
                   </div>
                   <div class="mb-2"><label class="form-label">Duration (min)</label><input class="form-control" type="number" min="1" name="durationMinutes" required /></div>
-                  <div class="mb-3"><label class="form-label">Base price (USD)</label><input class="form-control" type="number" min="0" step="0.01" name="basePrice" required /></div>
+                  <div class="mb-3"><label class="form-label">Base price (₹ INR)</label><input class="form-control" type="number" min="0" step="1" name="basePrice" required placeholder="e.g. 1500" /></div>
                   <button class="btn btn-clinic" type="submit">Save treatment</button>
                 </form>
               </div>
@@ -306,7 +306,7 @@
                   <h2 class="h5">Create bill</h2>
                   <div class="mb-2"><label class="form-label">Patient</label><select class="form-select" name="patientId" required></select></div>
                   <div class="mb-2"><label class="form-label">Description</label><input class="form-control" name="description" required /></div>
-                  <div class="mb-3"><label class="form-label">Amount (USD)</label><input class="form-control" type="number" min="0" step="0.01" name="amount" required /></div>
+                  <div class="mb-3"><label class="form-label">Amount (₹ INR)</label><input class="form-control" type="number" min="0" step="1" name="amount" required placeholder="e.g. 1500" /></div>
                   <button class="btn btn-clinic" type="submit">Create draft</button>
                 </form>
               </div>

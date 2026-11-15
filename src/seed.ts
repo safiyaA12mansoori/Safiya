@@ -40,7 +40,7 @@ export function seedDemoData(ctx: AppContext): void {
     description: "Prophylaxis and exam",
     category: "preventive",
     durationMinutes: 45,
-    basePriceCents: 12000,
+    basePriceCents: 150000,
   });
 
   ctx.treatments.create({
@@ -48,7 +48,7 @@ export function seedDemoData(ctx: AppContext): void {
     description: "Tooth-colored filling",
     category: "restorative",
     durationMinutes: 60,
-    basePriceCents: 18500,
+    basePriceCents: 250000,
   });
 
   const start = new Date();

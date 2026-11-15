@@ -1,6 +1,6 @@
 /* Safiya Dental — patient-focused browser store (localStorage). */
 (function (global) {
-  const STORAGE_KEY = "safiya-bootstrap-clinic-v5";
+  const STORAGE_KEY = "safiya-bootstrap-clinic-v6";
 
   class ClinicError extends Error {
     constructor(message, code) {
@@ -104,7 +104,7 @@
       description: "Prophylaxis and exam",
       category: "preventive",
       durationMinutes: 45,
-      basePriceCents: 12000,
+      basePriceCents: 150000,
       active: true,
       createdAt: now(),
     };
@@ -114,7 +114,7 @@
       description: "Tooth-colored filling",
       category: "restorative",
       durationMinutes: 60,
-      basePriceCents: 18500,
+      basePriceCents: 250000,
       active: true,
       createdAt: now(),
     };
@@ -408,6 +408,7 @@
         localStorage.removeItem("safiya-bootstrap-clinic-v2");
         localStorage.removeItem("safiya-bootstrap-clinic-v3");
         localStorage.removeItem("safiya-bootstrap-clinic-v4");
+        localStorage.removeItem("safiya-bootstrap-clinic-v5");
         state = seedIfEmpty(emptyState());
         emit();
       },
