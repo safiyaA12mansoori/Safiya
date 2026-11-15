@@ -1,6 +1,6 @@
 /* Safiya Dental — patient-focused browser store (localStorage). */
 (function (global) {
-  const STORAGE_KEY = "safiya-bootstrap-clinic-v3";
+  const STORAGE_KEY = "safiya-bootstrap-clinic-v4";
 
   class ClinicError extends Error {
     constructor(message, code) {
@@ -41,30 +41,47 @@
     };
   }
 
+  function splitName(fullName) {
+    var parts = String(fullName || "")
+      .trim()
+      .split(/\s+/);
+    if (!parts.length || !parts[0]) return { firstName: "", lastName: "" };
+    if (parts.length === 1) return { firstName: parts[0], lastName: parts[0] };
+    return { firstName: parts[0], lastName: parts.slice(1).join(" ") };
+  }
+
+  function patientDisplayName(p) {
+    if (!p) return "—";
+    if (p.patientName) return p.patientName;
+    return ((p.firstName || "") + " " + (p.lastName || "")).trim() || "—";
+  }
+
   function seedIfEmpty(state) {
     if (state.patients && state.patients.length) return state;
 
-    const alice = {
+    var alice = {
       id: id(),
+      patientName: "Alice Nguyen",
       firstName: "Alice",
       lastName: "Nguyen",
+      address: "12 Maple Street, Suite 4",
       email: "alice.nguyen@example.com",
       phone: "+1-555-0101",
-      dateOfBirth: "1990-04-12",
       notes: "Prefers morning appointments",
       createdAt: now(),
     };
-    const brian = {
+    var brian = {
       id: id(),
+      patientName: "Brian Okoye",
       firstName: "Brian",
       lastName: "Okoye",
+      address: "88 Oak Avenue",
       email: "brian.okoye@example.com",
       phone: "+1-555-0102",
-      dateOfBirth: "1985-11-03",
       notes: "",
       createdAt: now(),
     };
-    const cleaning = {
+    var cleaning = {
       id: id(),
       name: "Routine Cleaning",
       description: "Prophylaxis and exam",
@@ -74,7 +91,7 @@
       active: true,
       createdAt: now(),
     };
-    const filling = {
+    var filling = {
       id: id(),
       name: "Composite Filling",
       description: "Tooth-colored filling",
@@ -85,30 +102,30 @@
       createdAt: now(),
     };
 
-    const tomorrow = new Date();
+    var tomorrow = new Date();
     tomorrow.setDate(tomorrow.getDate() + 1);
     tomorrow.setHours(14, 0, 0, 0);
-    const tomorrowEnd = new Date(tomorrow.getTime() + 45 * 60 * 1000);
+    var tomorrowEnd = new Date(tomorrow.getTime() + 45 * 60 * 1000);
 
-    const todayMorning = new Date();
+    var todayMorning = new Date();
     todayMorning.setHours(9, 0, 0, 0);
-    const todayMorningEnd = new Date(todayMorning.getTime() + 45 * 60 * 1000);
+    var todayMorningEnd = new Date(todayMorning.getTime() + 45 * 60 * 1000);
 
-    const todayNoon = new Date();
+    var todayNoon = new Date();
     todayNoon.setHours(11, 30, 0, 0);
-    const todayNoonEnd = new Date(todayNoon.getTime() + 45 * 60 * 1000);
+    var todayNoonEnd = new Date(todayNoon.getTime() + 45 * 60 * 1000);
 
-    const pastStart = new Date();
+    var pastStart = new Date();
     pastStart.setDate(pastStart.getDate() - 7);
     pastStart.setHours(10, 0, 0, 0);
-    const pastEnd = new Date(pastStart.getTime() + 45 * 60 * 1000);
+    var pastEnd = new Date(pastStart.getTime() + 45 * 60 * 1000);
 
-    const noShowStart = new Date();
+    var noShowStart = new Date();
     noShowStart.setDate(noShowStart.getDate() - 2);
     noShowStart.setHours(16, 0, 0, 0);
-    const noShowEnd = new Date(noShowStart.getTime() + 45 * 60 * 1000);
+    var noShowEnd = new Date(noShowStart.getTime() + 45 * 60 * 1000);
 
-    const appointments = [
+    var appointments = [
       {
         id: id(),
         patientId: alice.id,
@@ -117,6 +134,7 @@
         endTime: pastEnd.toISOString(),
         status: "completed",
         reason: "Checkup",
+        allottedTime: "10:00",
         createdAt: now(),
       },
       {
@@ -127,6 +145,7 @@
         endTime: noShowEnd.toISOString(),
         status: "no_show",
         reason: "Filling",
+        allottedTime: "16:00",
         followUpNote: "Patient did not come",
         markedAt: now(),
         createdAt: now(),
@@ -139,6 +158,7 @@
         endTime: todayMorningEnd.toISOString(),
         status: "scheduled",
         reason: "Morning cleaning",
+        allottedTime: "09:00",
         createdAt: now(),
       },
       {
@@ -149,6 +169,7 @@
         endTime: todayNoonEnd.toISOString(),
         status: "scheduled",
         reason: "Follow-up visit",
+        allottedTime: "11:30",
         createdAt: now(),
       },
       {
@@ -159,11 +180,12 @@
         endTime: tomorrowEnd.toISOString(),
         status: "scheduled",
         reason: "Six-month checkup",
+        allottedTime: "14:00",
         createdAt: now(),
       },
     ];
 
-    const prescriptions = [
+    var prescriptions = [
       {
         id: id(),
         patientId: alice.id,
@@ -177,7 +199,7 @@
       },
     ];
 
-    const bills = [
+    var bills = [
       {
         id: id(),
         patientId: alice.id,
@@ -206,8 +228,7 @@
   }
 
   function createStore() {
-    let state = seedIfEmpty(load() || emptyState());
-    // migrate away from old dentist/medicine-heavy shape
+    var state = seedIfEmpty(load() || emptyState());
     state.patients = state.patients || [];
     state.treatments = state.treatments || [];
     state.appointments = state.appointments || [];
@@ -215,7 +236,7 @@
     state.bills = state.bills || [];
     save(state);
 
-    const listeners = [];
+    var listeners = [];
 
     function emit() {
       save(state);
@@ -233,7 +254,7 @@
     }
 
     function find(list, itemId, label) {
-      const item = state[list].find(function (x) {
+      var item = state[list].find(function (x) {
         return x.id === itemId;
       });
       if (!item) throw new ClinicError(label + " not found", "NOT_FOUND");
@@ -241,20 +262,24 @@
     }
 
     function validatePatient(input) {
-      if (!input.firstName || !String(input.firstName).trim() || !input.lastName || !String(input.lastName).trim()) {
-        throw new ClinicError("First and last name are required");
+      var name = String(input.patientName || "").trim();
+      if (!name) {
+        var fn = String(input.firstName || "").trim();
+        var ln = String(input.lastName || "").trim();
+        if (fn && ln) name = fn + " " + ln;
       }
-      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(input.email || "")) {
-        throw new ClinicError("Valid email is required", "INVALID_EMAIL");
+      if (!name) throw new ClinicError("Patient name is required");
+      if (!input.address || !String(input.address).trim()) {
+        throw new ClinicError("Address is required");
       }
-      if (!input.phone || !String(input.phone).trim()) throw new ClinicError("Phone is required");
-      if (!/^\d{4}-\d{2}-\d{2}$/.test(input.dateOfBirth || "")) {
-        throw new ClinicError("Date of birth must be YYYY-MM-DD", "INVALID_DOB");
+      if (!input.phone || !String(input.phone).trim()) {
+        throw new ClinicError("Phone number is required");
       }
-      const dob = Date.parse(input.dateOfBirth + "T00:00:00.000Z");
-      if (Number.isNaN(dob) || dob > Date.now()) {
-        throw new ClinicError("Date of birth is invalid", "INVALID_DOB");
+      var email = String(input.email || "").trim();
+      if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        throw new ClinicError("Email is invalid", "INVALID_EMAIL");
       }
+      return name;
     }
 
     function intervalsOverlap(aStart, aEnd, bStart, bEnd) {
@@ -277,8 +302,79 @@
       };
     }
 
+    function findOrCreatePatient(input) {
+      var name = validatePatient(input);
+      var phone = String(input.phone).trim();
+      var existing = state.patients.find(function (p) {
+        return (
+          String(p.phone).trim() === phone &&
+          patientDisplayName(p).toLowerCase() === name.toLowerCase()
+        );
+      });
+      if (existing) {
+        existing.address = String(input.address).trim();
+        if (input.email) existing.email = String(input.email).trim().toLowerCase();
+        return existing;
+      }
+      var parts = splitName(name);
+      var patient = {
+        id: id(),
+        patientName: name,
+        firstName: parts.firstName,
+        lastName: parts.lastName,
+        address: String(input.address).trim(),
+        email: input.email ? String(input.email).trim().toLowerCase() : "",
+        phone: phone,
+        notes: input.notes ? String(input.notes).trim() : "",
+        createdAt: now(),
+      };
+      state.patients.push(patient);
+      return patient;
+    }
+
+    function parseTimeSlot(slot) {
+      var m = String(slot || "").match(/^(\d{1,2}):(\d{2})$/);
+      if (!m) throw new ClinicError("Choose an allotted time slot");
+      var h = Number(m[1]);
+      var min = Number(m[2]);
+      if (h < 0 || h > 23 || min < 0 || min > 59) {
+        throw new ClinicError("Invalid time slot");
+      }
+      return { hours: h, minutes: min };
+    }
+
+    function todayDateString() {
+      var d = new Date();
+      var y = d.getFullYear();
+      var m = String(d.getMonth() + 1).padStart(2, "0");
+      var day = String(d.getDate()).padStart(2, "0");
+      return y + "-" + m + "-" + day;
+    }
+
+    var TIME_SLOTS = [
+      "09:00",
+      "09:30",
+      "10:00",
+      "10:30",
+      "11:00",
+      "11:30",
+      "12:00",
+      "13:00",
+      "13:30",
+      "14:00",
+      "14:30",
+      "15:00",
+      "15:30",
+      "16:00",
+      "16:30",
+      "17:00",
+    ];
+
     var api = {
       ClinicError: ClinicError,
+      TIME_SLOTS: TIME_SLOTS,
+      todayDateString: todayDateString,
+      patientDisplayName: patientDisplayName,
       getState: getState,
       subscribe: subscribe,
       totals: billTotals,
@@ -286,6 +382,7 @@
         localStorage.removeItem(STORAGE_KEY);
         localStorage.removeItem("safiya-bootstrap-clinic-v1");
         localStorage.removeItem("safiya-bootstrap-clinic-v2");
+        localStorage.removeItem("safiya-bootstrap-clinic-v3");
         state = seedIfEmpty(emptyState());
         emit();
       },
@@ -362,14 +459,16 @@
         };
       },
       addPatient: function (input) {
-        validatePatient(input);
+        var name = validatePatient(input);
+        var parts = splitName(name);
         state.patients.push({
           id: id(),
-          firstName: String(input.firstName).trim(),
-          lastName: String(input.lastName).trim(),
-          email: String(input.email).trim().toLowerCase(),
+          patientName: name,
+          firstName: parts.firstName,
+          lastName: parts.lastName,
+          address: String(input.address).trim(),
+          email: input.email ? String(input.email).trim().toLowerCase() : "",
           phone: String(input.phone).trim(),
-          dateOfBirth: input.dateOfBirth,
           notes: input.notes ? String(input.notes).trim() : "",
           createdAt: now(),
         });
@@ -415,23 +514,50 @@
         });
       },
       addAppointment: function (input) {
-        find("patients", input.patientId, "Patient");
-        var startTime = new Date(input.startTime).toISOString();
-        var endTime = new Date(input.endTime).toISOString();
+        var patient;
+        if (input.patientName && input.phone && input.address) {
+          patient = findOrCreatePatient(input);
+        } else {
+          patient = find("patients", input.patientId, "Patient");
+        }
+
+        var start;
+        var end;
+        var allotted = input.timeSlot || input.allottedTime;
+
+        if (allotted) {
+          var slot = parseTimeSlot(allotted);
+          var dateStr = input.appointmentDate || todayDateString();
+          start = new Date(dateStr + "T00:00:00");
+          if (Number.isNaN(start.getTime())) {
+            throw new ClinicError("Invalid appointment date");
+          }
+          start.setHours(slot.hours, slot.minutes, 0, 0);
+          end = new Date(start.getTime() + 30 * 60 * 1000);
+        } else {
+          start = new Date(input.startTime);
+          end = new Date(input.endTime);
+        }
+
+        var startTime = start.toISOString();
+        var endTime = end.toISOString();
         if (!(Date.parse(endTime) > Date.parse(startTime))) {
           throw new ClinicError("End must be after start");
         }
-        if (api.hasConflict(input.patientId, startTime, endTime)) {
+        if (api.hasConflict(patient.id, startTime, endTime)) {
           throw new ClinicError("Patient already has an overlapping appointment", "CONFLICT");
         }
         state.appointments.push({
           id: id(),
-          patientId: input.patientId,
+          patientId: patient.id,
           treatmentId: input.treatmentId || undefined,
           startTime: startTime,
           endTime: endTime,
           status: "scheduled",
           reason: input.reason ? String(input.reason).trim() : undefined,
+          allottedTime: allotted || undefined,
+          addressSnapshot: patient.address,
+          phoneSnapshot: patient.phone,
           createdAt: now(),
         });
         emit();

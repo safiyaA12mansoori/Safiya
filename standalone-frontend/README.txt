@@ -1,7 +1,18 @@
 Safiya Dental Clinic — Receptionist + Owner Frontend
 ====================================================
 
-HTML + CSS + JavaScript + Bootstrap 5 (animated)
+HTML + CSS + JavaScript + Bootstrap 5
+Blue / white theme with animated dental equipment
+
+FORMS
+-----
+Add patient / Add appointment collect:
+  - Name
+  - Address
+  - Phone no.
+  - Reason (appointments)
+  - Allotted time (appointments — choose a slot)
+  - Date is set automatically to today
 
 USERS
 -----

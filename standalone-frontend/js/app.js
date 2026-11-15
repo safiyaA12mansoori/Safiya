@@ -39,7 +39,7 @@
   }
 
   function nameOf(person) {
-    return person ? person.firstName + " " + person.lastName : "—";
+    return store.patientDisplayName(person);
   }
 
   function findById(list, id) {
@@ -79,6 +79,45 @@
     return html || `<p class="empty mb-0">${emptyText}</p>`;
   }
 
+  function formatSlotLabel(slot) {
+    const [h, m] = slot.split(":").map(Number);
+    const d = new Date();
+    d.setHours(h, m, 0, 0);
+    return d.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+  }
+
+  function setupAppointmentDateAndSlots() {
+    const dateInput = $("#appointment-date");
+    const chip = $("#appointment-date-chip");
+    const timeSelect = $("#appointment-time");
+    if (!dateInput || !timeSelect) return;
+
+    const today = store.todayDateString();
+    dateInput.value = today;
+    if (chip) {
+      chip.textContent = new Date(today + "T12:00:00").toLocaleDateString(undefined, {
+        weekday: "short",
+        year: "numeric",
+        month: "short",
+        day: "numeric",
+      });
+    }
+
+    const current = timeSelect.value;
+    timeSelect.innerHTML = "";
+    const blank = document.createElement("option");
+    blank.value = "";
+    blank.textContent = "Select allotted time…";
+    timeSelect.appendChild(blank);
+    store.TIME_SLOTS.forEach((slot) => {
+      const opt = document.createElement("option");
+      opt.value = slot;
+      opt.textContent = formatSlotLabel(slot);
+      timeSelect.appendChild(opt);
+    });
+    if ([...timeSelect.options].some((o) => o.value === current)) timeSelect.value = current;
+  }
+
   function enterRole(role) {
     currentRole = role;
     localStorage.setItem("safiya-clinic-role", role);
@@ -105,6 +144,7 @@
     const firstPane = $(first);
     if (firstPane) firstPane.classList.add("show", "active");
 
+    setupAppointmentDateAndSlots();
     render(store.getState());
   }
 
@@ -126,7 +166,12 @@
     detail.classList.remove("d-none");
     detail.classList.add("show-detail");
     $("#detail-name").textContent = nameOf(patient);
-    $("#detail-meta").textContent = `${patient.email} · ${patient.phone} · DOB ${patient.dateOfBirth}`;
+    const metaParts = [
+      patient.phone,
+      patient.address,
+      patient.email || null,
+    ].filter(Boolean);
+    $("#detail-meta").textContent = metaParts.join(" · ");
     $("#detail-notes").textContent = patient.notes ? "Notes: " + patient.notes : "No notes on file.";
 
     $("#detail-appointments").innerHTML = listOrEmpty(
@@ -251,6 +296,7 @@
               <div class="patient-row flex-grow-1" data-patient-id="${a.patientId}">
                 <h3 class="h6 mb-1">${nameOf(patient)}</h3>
                 <p class="meta">${new Date(a.startTime).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })} – ${new Date(a.endTime).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })} · ${a.reason || "Visit"}</p>
+                <p class="meta">${patient ? patient.phone : ""} · ${patient ? patient.address || "" : ""}</p>
                 <span class="badge ${badgeClass(a.status)}">${a.status === "no_show" ? "NO SHOW" : a.status}</span>
               </div>
             </div>`;
@@ -319,7 +365,7 @@
             return `<div class="list-row patient-row ${selectedPatientId === p.id ? "is-selected" : ""} ${missed ? "noshow-row" : ""}" data-patient-id="${p.id}">
               <div>
                 <h3 class="h6 mb-1">${nameOf(p)}</h3>
-                <p class="meta">${p.email} · ${p.phone}</p>
+                <p class="meta">${p.phone} · ${p.address || "No address"}</p>
                 <p class="meta">${missed ? missed + " no-show record(s) · " : ""}Click to view history</p>
               </div>
               ${currentRole === "owner" ? `<button class="btn btn-sm btn-outline-danger" data-delete-patient="${p.id}">Delete</button>` : ""}
@@ -386,10 +432,9 @@
       );
     }
 
-    fillSelect($('#appointment-form [name="patientId"]'), state.patients, nameOf);
-    fillSelect($('#appointment-form [name="treatmentId"]'), state.treatments, (t) => t.name, true, "Optional");
     fillSelect($('#prescription-form [name="patientId"]'), state.patients, nameOf);
     fillSelect($('#bill-form [name="patientId"]'), state.patients, nameOf);
+    setupAppointmentDateAndSlots();
 
     if (selectedPatientId && findById(state.patients, selectedPatientId)) {
       showPatientDetail(selectedPatientId);
@@ -433,37 +478,49 @@
     appointmentForm.addEventListener("submit", (e) => {
       e.preventDefault();
       run(() => {
-        store.addAppointment(formData(e.target));
+        const data = formData(e.target);
+        data.appointmentDate = store.todayDateString();
+        store.addAppointment(data);
         e.target.reset();
+        setupAppointmentDateAndSlots();
         $("#conflict-hint").classList.add("d-none");
       });
     });
 
-    ["patientId", "startTime", "endTime"].forEach((name) => {
-      const el = $(`#appointment-form [name="${name}"]`);
-      if (!el) return;
-      el.addEventListener("change", () => {
+    const timeEl = $("#appointment-time");
+    if (timeEl) {
+      timeEl.addEventListener("change", () => {
         const form = $("#appointment-form");
         const hint = $("#conflict-hint");
-        if (!form.patientId.value || !form.startTime.value || !form.endTime.value) {
+        if (!form.patientName.value || !form.phone.value || !form.timeSlot.value) {
           hint.classList.add("d-none");
           return;
         }
         try {
-          const conflict = store.hasConflict(
-            form.patientId.value,
-            new Date(form.startTime.value).toISOString(),
-            new Date(form.endTime.value).toISOString()
+          const slot = form.timeSlot.value.split(":");
+          const start = new Date();
+          start.setHours(Number(slot[0]), Number(slot[1]), 0, 0);
+          const end = new Date(start.getTime() + 30 * 60 * 1000);
+          const state = store.getState();
+          const match = state.patients.find(
+            (p) =>
+              String(p.phone).trim() === String(form.phone.value).trim() &&
+              nameOf(p).toLowerCase() === String(form.patientName.value).trim().toLowerCase()
           );
+          if (!match) {
+            hint.classList.add("d-none");
+            return;
+          }
+          const conflict = store.hasConflict(match.id, start.toISOString(), end.toISOString());
           hint.classList.toggle("d-none", !conflict);
           hint.textContent = conflict
             ? "Conflict: this patient already has an overlapping appointment."
             : "";
-        } catch (e) {
+        } catch (err) {
           hint.classList.add("d-none");
         }
       });
-    });
+    }
   }
 
   const treatmentForm = $("#treatment-form");
@@ -505,6 +562,7 @@
       if (confirm("Reset all data to demo sample?")) {
         hidePatientDetail();
         store.resetDemo();
+        setupAppointmentDateAndSlots();
         showToast("Demo data restored");
       }
     });
@@ -544,6 +602,7 @@
   });
 
   store.subscribe(render);
+  setupAppointmentDateAndSlots();
 
   if (currentRole === "receptionist" || currentRole === "owner") {
     enterRole(currentRole);
