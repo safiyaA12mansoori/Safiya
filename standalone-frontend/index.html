@@ -90,6 +90,7 @@
                   <div class="mb-2"><label class="form-label">Address</label><input class="form-control" name="address" required placeholder="Home / clinic address" /></div>
                   <div class="mb-2"><label class="form-label">Phone no.</label><input class="form-control" name="phone" required placeholder="Phone number" /></div>
                   <div class="mb-2"><label class="form-label">Reason</label><input class="form-control" name="reason" required placeholder="Cleaning, pain, checkup…" /></div>
+                  <div class="mb-2"><label class="form-label">Dentist</label><select class="form-select" name="dentistId" required></select></div>
                   <div class="mb-2">
                     <label class="form-label">Date (auto)</label>
                     <input class="form-control" name="appointmentDate" id="appointment-date" readonly />
@@ -222,6 +223,30 @@
                   </div>
                 </div>
               </div>
+            </div>
+          </div>
+
+          <div class="tab-pane fade anim-pane" id="tab-dentists" data-roles="owner,receptionist">
+            <div class="section-equip" aria-hidden="true">
+              <svg width="52" height="52" viewBox="0 0 64 64" class="dental-float delay">
+                <path d="M12 48 L28 12 L36 16 L20 52 Z" fill="#1d6fd8"/>
+                <circle cx="44" cy="18" r="8" fill="none" stroke="#0f4ea8" stroke-width="4" class="equip-spin"/>
+              </svg>
+            </div>
+            <h1 class="page-title">Dentists</h1>
+            <p class="text-secondary">STQA module: manage clinic dentists assigned to appointments.</p>
+            <div class="row g-4">
+              <div class="col-lg-4">
+                <form id="dentist-form" class="card clinic-card card-body anim-card">
+                  <h2 class="h5">Add dentist</h2>
+                  <div class="mb-2"><label class="form-label">Name</label><input class="form-control" name="name" required placeholder="Dr. Full name" /></div>
+                  <div class="mb-2"><label class="form-label">Specialization</label><input class="form-control" name="specialization" required placeholder="General, Orthodontics…" /></div>
+                  <div class="mb-2"><label class="form-label">Phone no.</label><input class="form-control" name="phone" required /></div>
+                  <div class="mb-3"><label class="form-label">Email (optional)</label><input class="form-control" type="email" name="email" /></div>
+                  <button class="btn btn-clinic" type="submit">Save dentist</button>
+                </form>
+              </div>
+              <div class="col-lg-8"><div id="dentists-list" class="card clinic-card anim-card"></div></div>
             </div>
           </div>
 

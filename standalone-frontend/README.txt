@@ -1,37 +1,34 @@
-Safiya Dental Clinic — Receptionist + Owner Frontend
-====================================================
+Safiya Dental Clinic — STQA Project
+===================================
+Safiya Mansoori · Dental Clinic Management System
 
-HTML + CSS + JavaScript + Bootstrap 5
-Blue / white theme with animated dental equipment
+STQA REQUIREMENTS
+-----------------
+Develop: patients, dentists, appointments, treatments, billing
+Test: appointment conflicts and billing
 
-FORMS
------
-Add patient / Add appointment collect:
-  - Name
-  - Address
-  - Phone no.
-  - Reason (appointments)
-  - Allotted time (appointments — choose a slot)
-  - Date is set automatically to today
+Modules in this Bootstrap frontend:
+  Patients · Dentists · Appointments · Treatments · Billing
+  (+ prescriptions, daily follow-up, no-shows)
+
+Appointment booking collects name, address, phone, reason, dentist,
+allotted time; date is set automatically. Conflicts block double-booking
+the same dentist (and the same patient) in overlapping slots.
+
+Automated tests (repo root): npm test
+  - tests/appointment-conflict.test.ts
+  - tests/billing.test.ts
+  - tests/api.test.ts
+
+Blue / white theme with animated dental equipment.
 
 USERS
 -----
-1) Receptionist
-   - Appointment entries (today)
-   - Daily follow-up: mark "Appointment done" or "Did not come"
-   - No-shows page (missed patients in RED, stored separately)
-   - Patients list / history
-
-2) Owner
-   - Overview, patients, treatments, prescriptions, billing
-   - Can also view the No-shows page
+Receptionist: Appointments, follow-up, no-shows, patients, dentists
+Owner: Overview, patients, dentists, treatments, prescriptions, billing, no-shows
 
 HOW TO OPEN
 -----------
 1. Unzip
 2. Open index.html
 3. Choose Receptionist or Owner
-
-Daily follow-up tip:
-- Open Receptionist → Daily follow-up
-- Click "Did not come" → patient appears in red on No-shows page

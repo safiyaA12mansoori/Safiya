@@ -13,10 +13,12 @@
       { target: "#tab-followup", label: "Daily follow-up" },
       { target: "#tab-noshows", label: "No-shows" },
       { target: "#tab-patients", label: "Patients" },
+      { target: "#tab-dentists", label: "Dentists" },
     ],
     owner: [
       { target: "#tab-overview", label: "Overview" },
       { target: "#tab-patients", label: "Patients" },
+      { target: "#tab-dentists", label: "Dentists" },
       { target: "#tab-treatments", label: "Treatments" },
       { target: "#tab-prescriptions", label: "Prescriptions" },
       { target: "#tab-billing", label: "Billing" },
@@ -292,11 +294,12 @@
           .map((a) => {
             const patient = findById(state.patients, a.patientId);
             const rowClass = a.status === "no_show" ? "list-row noshow-row" : "list-row";
+            const dentist = findById(state.dentists, a.dentistId);
             return `<div class="${rowClass}">
               <div class="patient-row flex-grow-1" data-patient-id="${a.patientId}">
                 <h3 class="h6 mb-1">${nameOf(patient)}</h3>
                 <p class="meta">${new Date(a.startTime).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })} – ${new Date(a.endTime).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })} · ${a.reason || "Visit"}</p>
-                <p class="meta">${patient ? patient.phone : ""} · ${patient ? patient.address || "" : ""}</p>
+                <p class="meta">${dentist ? dentist.name : "Dentist"} · ${patient ? patient.phone : ""} · ${patient ? patient.address || "" : ""}</p>
                 <span class="badge ${badgeClass(a.status)}">${a.status === "no_show" ? "NO SHOW" : a.status}</span>
               </div>
             </div>`;
@@ -376,6 +379,23 @@
       );
     }
 
+    if ($("#dentists-list")) {
+      $("#dentists-list").innerHTML = listOrEmpty(
+        (state.dentists || [])
+          .map(
+            (d) => `<div class="list-row">
+              <div>
+                <h3 class="h6 mb-1">${d.name}</h3>
+                <p class="meta">${d.specialization} · ${d.phone}${d.email ? " · " + d.email : ""}</p>
+              </div>
+              ${currentRole === "owner" ? `<button class="btn btn-sm btn-outline-danger" data-delete-dentist="${d.id}">Delete</button>` : ""}
+            </div>`
+          )
+          .join(""),
+        "No dentists yet."
+      );
+    }
+
     if ($("#treatments-list")) {
       $("#treatments-list").innerHTML = listOrEmpty(
         state.treatments
@@ -432,6 +452,7 @@
       );
     }
 
+    fillSelect($('#appointment-form [name="dentistId"]'), state.dentists || [], (d) => d.name);
     fillSelect($('#prescription-form [name="patientId"]'), state.patients, nameOf);
     fillSelect($('#bill-form [name="patientId"]'), state.patients, nameOf);
     setupAppointmentDateAndSlots();
@@ -487,12 +508,13 @@
       });
     });
 
-    const timeEl = $("#appointment-time");
-    if (timeEl) {
-      timeEl.addEventListener("change", () => {
+    ["dentistId", "timeSlot"].forEach((name) => {
+      const el = $(`#appointment-form [name="${name}"]`);
+      if (!el) return;
+      el.addEventListener("change", () => {
         const form = $("#appointment-form");
         const hint = $("#conflict-hint");
-        if (!form.patientName.value || !form.phone.value || !form.timeSlot.value) {
+        if (!form.dentistId.value || !form.timeSlot.value) {
           hint.classList.add("d-none");
           return;
         }
@@ -501,26 +523,31 @@
           const start = new Date();
           start.setHours(Number(slot[0]), Number(slot[1]), 0, 0);
           const end = new Date(start.getTime() + 30 * 60 * 1000);
-          const state = store.getState();
-          const match = state.patients.find(
-            (p) =>
-              String(p.phone).trim() === String(form.phone.value).trim() &&
-              nameOf(p).toLowerCase() === String(form.patientName.value).trim().toLowerCase()
+          const conflict = store.hasConflict(
+            form.dentistId.value,
+            start.toISOString(),
+            end.toISOString()
           );
-          if (!match) {
-            hint.classList.add("d-none");
-            return;
-          }
-          const conflict = store.hasConflict(match.id, start.toISOString(), end.toISOString());
           hint.classList.toggle("d-none", !conflict);
           hint.textContent = conflict
-            ? "Conflict: this patient already has an overlapping appointment."
+            ? "Conflict: this dentist already has an overlapping appointment."
             : "";
         } catch (err) {
           hint.classList.add("d-none");
         }
       });
-    }
+    });
+  }
+
+  const dentistForm = $("#dentist-form");
+  if (dentistForm) {
+    dentistForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+      run(() => {
+        store.addDentist(formData(e.target));
+        e.target.reset();
+      });
+    });
   }
 
   const treatmentForm = $("#treatment-form");
@@ -579,7 +606,7 @@
     }
 
     const t = e.target.closest(
-      "[data-mark-done],[data-mark-noshow],[data-delete-patient],[data-delete-treatment],[data-issue-bill],[data-pay-bill],[data-void-bill]"
+      "[data-mark-done],[data-mark-noshow],[data-delete-patient],[data-delete-dentist],[data-delete-treatment],[data-issue-bill],[data-pay-bill],[data-void-bill]"
     );
     if (!t) return;
 
@@ -591,7 +618,8 @@
       } else if (t.dataset.deletePatient) {
         if (selectedPatientId === t.dataset.deletePatient) hidePatientDetail();
         store.deletePatient(t.dataset.deletePatient);
-      } else if (t.dataset.deleteTreatment) store.deleteTreatment(t.dataset.deleteTreatment);
+      } else if (t.dataset.deleteDentist) store.deleteDentist(t.dataset.deleteDentist);
+      else if (t.dataset.deleteTreatment) store.deleteTreatment(t.dataset.deleteTreatment);
       else if (t.dataset.issueBill) store.issueBill(t.dataset.issueBill);
       else if (t.dataset.payBill) {
         const amount = prompt("Payment amount in USD?");

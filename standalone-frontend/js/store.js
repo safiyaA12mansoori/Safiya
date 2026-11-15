@@ -1,6 +1,6 @@
 /* Safiya Dental — patient-focused browser store (localStorage). */
 (function (global) {
-  const STORAGE_KEY = "safiya-bootstrap-clinic-v4";
+  const STORAGE_KEY = "safiya-bootstrap-clinic-v5";
 
   class ClinicError extends Error {
     constructor(message, code) {
@@ -34,6 +34,7 @@
   function emptyState() {
     return {
       patients: [],
+      dentists: [],
       prescriptions: [],
       treatments: [],
       appointments: [],
@@ -79,6 +80,22 @@
       email: "brian.okoye@example.com",
       phone: "+1-555-0102",
       notes: "",
+      createdAt: now(),
+    };
+    var drPatel = {
+      id: id(),
+      name: "Dr. Anika Patel",
+      specialization: "General Dentistry",
+      phone: "+1-555-0201",
+      email: "anika.patel@safiya.dental",
+      createdAt: now(),
+    };
+    var drChen = {
+      id: id(),
+      name: "Dr. Wei Chen",
+      specialization: "Orthodontics",
+      phone: "+1-555-0202",
+      email: "wei.chen@safiya.dental",
       createdAt: now(),
     };
     var cleaning = {
@@ -129,6 +146,7 @@
       {
         id: id(),
         patientId: alice.id,
+        dentistId: drPatel.id,
         treatmentId: cleaning.id,
         startTime: pastStart.toISOString(),
         endTime: pastEnd.toISOString(),
@@ -140,6 +158,7 @@
       {
         id: id(),
         patientId: brian.id,
+        dentistId: drChen.id,
         treatmentId: filling.id,
         startTime: noShowStart.toISOString(),
         endTime: noShowEnd.toISOString(),
@@ -153,6 +172,7 @@
       {
         id: id(),
         patientId: alice.id,
+        dentistId: drPatel.id,
         treatmentId: cleaning.id,
         startTime: todayMorning.toISOString(),
         endTime: todayMorningEnd.toISOString(),
@@ -164,6 +184,7 @@
       {
         id: id(),
         patientId: brian.id,
+        dentistId: drChen.id,
         treatmentId: cleaning.id,
         startTime: todayNoon.toISOString(),
         endTime: todayNoonEnd.toISOString(),
@@ -175,6 +196,7 @@
       {
         id: id(),
         patientId: alice.id,
+        dentistId: drPatel.id,
         treatmentId: cleaning.id,
         startTime: tomorrow.toISOString(),
         endTime: tomorrowEnd.toISOString(),
@@ -220,6 +242,7 @@
 
     return {
       patients: [alice, brian],
+      dentists: [drPatel, drChen],
       treatments: [cleaning, filling],
       appointments: appointments,
       prescriptions: prescriptions,
@@ -230,6 +253,7 @@
   function createStore() {
     var state = seedIfEmpty(load() || emptyState());
     state.patients = state.patients || [];
+    state.dentists = state.dentists || [];
     state.treatments = state.treatments || [];
     state.appointments = state.appointments || [];
     state.prescriptions = state.prescriptions || [];
@@ -383,6 +407,7 @@
         localStorage.removeItem("safiya-bootstrap-clinic-v1");
         localStorage.removeItem("safiya-bootstrap-clinic-v2");
         localStorage.removeItem("safiya-bootstrap-clinic-v3");
+        localStorage.removeItem("safiya-bootstrap-clinic-v4");
         state = seedIfEmpty(emptyState());
         emit();
       },
@@ -481,6 +506,43 @@
         });
         emit();
       },
+      addDentist: function (input) {
+        if (!input.name || !String(input.name).trim()) {
+          throw new ClinicError("Dentist name is required");
+        }
+        if (!input.specialization || !String(input.specialization).trim()) {
+          throw new ClinicError("Specialization is required");
+        }
+        if (!input.phone || !String(input.phone).trim()) {
+          throw new ClinicError("Phone number is required");
+        }
+        var email = String(input.email || "").trim();
+        if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+          throw new ClinicError("Email is invalid", "INVALID_EMAIL");
+        }
+        state.dentists.push({
+          id: id(),
+          name: String(input.name).trim(),
+          specialization: String(input.specialization).trim(),
+          phone: String(input.phone).trim(),
+          email: email ? email.toLowerCase() : "",
+          createdAt: now(),
+        });
+        emit();
+      },
+      deleteDentist: function (dentistId) {
+        find("dentists", dentistId, "Dentist");
+        var booked = state.appointments.some(function (a) {
+          return a.dentistId === dentistId && a.status !== "cancelled";
+        });
+        if (booked) {
+          throw new ClinicError("Cannot delete a dentist with active appointments");
+        }
+        state.dentists = state.dentists.filter(function (d) {
+          return d.id !== dentistId;
+        });
+        emit();
+      },
       addTreatment: function (input) {
         if (!input.name || !String(input.name).trim()) throw new ClinicError("Name is required");
         var durationMinutes = Number(input.durationMinutes);
@@ -506,7 +568,14 @@
         });
         emit();
       },
-      hasConflict: function (patientId, startTime, endTime, excludeId) {
+      hasConflict: function (dentistId, startTime, endTime, excludeId) {
+        return state.appointments.some(function (a) {
+          if (a.dentistId !== dentistId || a.status === "cancelled") return false;
+          if (excludeId && a.id === excludeId) return false;
+          return intervalsOverlap(startTime, endTime, a.startTime, a.endTime);
+        });
+      },
+      hasPatientConflict: function (patientId, startTime, endTime, excludeId) {
         return state.appointments.some(function (a) {
           if (a.patientId !== patientId || a.status === "cancelled") return false;
           if (excludeId && a.id === excludeId) return false;
@@ -520,6 +589,7 @@
         } else {
           patient = find("patients", input.patientId, "Patient");
         }
+        var dentist = find("dentists", input.dentistId, "Dentist");
 
         var start;
         var end;
@@ -544,12 +614,16 @@
         if (!(Date.parse(endTime) > Date.parse(startTime))) {
           throw new ClinicError("End must be after start");
         }
-        if (api.hasConflict(patient.id, startTime, endTime)) {
+        if (api.hasConflict(dentist.id, startTime, endTime)) {
+          throw new ClinicError("Dentist already has an overlapping appointment", "CONFLICT");
+        }
+        if (api.hasPatientConflict(patient.id, startTime, endTime)) {
           throw new ClinicError("Patient already has an overlapping appointment", "CONFLICT");
         }
         state.appointments.push({
           id: id(),
           patientId: patient.id,
+          dentistId: dentist.id,
           treatmentId: input.treatmentId || undefined,
           startTime: startTime,
           endTime: endTime,
