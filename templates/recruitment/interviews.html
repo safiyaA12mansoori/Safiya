@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% block title %}Interviews · Safiya RMS{% endblock %}
+{% block content %}
+<h1 class="page-title h3 mb-3">Interview scheduling</h1>
+<p class="text-secondary">Only candidates who <strong>passed screening</strong> can be scheduled.</p>
+<div class="row g-4">
+  <div class="col-lg-5">
+    <div class="panel">
+      <h2 class="h5 mb-3">Schedule interview</h2>
+      <form method="post" class="vstack gap-2">
+        {% csrf_token %}
+        {% for field in form %}
+          <div>
+            <label class="form-label small mb-1" for="{{ field.id_for_label }}">{{ field.label }}</label>
+            {{ field.errors }}
+            {{ field.as_widget|safe }}
+          </div>
+        {% endfor %}
+        <button class="btn btn-teal mt-2" type="submit">Schedule</button>
+      </form>
+    </div>
+  </div>
+  <div class="col-lg-7">
+    <div class="panel">
+      <h2 class="h5 mb-3">Scheduled interviews</h2>
+      <div class="table-responsive">
+        <table class="table align-middle">
+          <thead><tr><th>Candidate</th><th>Job</th><th>When</th><th>Interviewer</th><th>Status</th></tr></thead>
+          <tbody>
+            {% for interview in interviews %}
+            <tr>
+              <td>{{ interview.application.applicant.full_name }}</td>
+              <td>{{ interview.application.job.title }}</td>
+              <td>{{ interview.scheduled_at }}</td>
+              <td>{{ interview.interviewer_name }}</td>
+              <td>{{ interview.get_status_display }}</td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="5" class="text-secondary">No interviews yet.</td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+<style>
+  form input, form select, form textarea { width: 100%; padding: .45rem .65rem; border: 1px solid #ced4da; border-radius: .4rem; }
+</style>
+{% endblock %}

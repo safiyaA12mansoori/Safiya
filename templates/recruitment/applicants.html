@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block title %}Applicants · Safiya RMS{% endblock %}
+{% block content %}
+<h1 class="page-title h3 mb-3">Applicant registration</h1>
+<div class="row g-4">
+  <div class="col-lg-5">
+    <div class="panel">
+      <h2 class="h5 mb-3">Register / update applicant</h2>
+      <form method="post" class="vstack gap-2">
+        {% csrf_token %}
+        {% for field in form %}
+          <div>
+            <label class="form-label small mb-1" for="{{ field.id_for_label }}">{{ field.label }}</label>
+            {{ field.errors }}
+            {{ field.as_widget|safe }}
+          </div>
+        {% endfor %}
+        <button class="btn btn-teal mt-2" type="submit">Save applicant</button>
+      </form>
+    </div>
+  </div>
+  <div class="col-lg-7">
+    <div class="panel">
+      <h2 class="h5 mb-3">Registered applicants</h2>
+      <div class="table-responsive">
+        <table class="table align-middle">
+          <thead><tr><th>Name</th><th>Email</th><th>Education</th><th>Exp</th><th>Skills</th></tr></thead>
+          <tbody>
+            {% for a in applicants %}
+            <tr>
+              <td>{{ a.full_name }}</td>
+              <td class="small">{{ a.email }}</td>
+              <td>{{ a.get_education_display }}</td>
+              <td>{{ a.experience_years }}y</td>
+              <td class="small">{{ a.skills|default:"—" }}</td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="5" class="text-secondary">No applicants yet.</td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+<style>
+  form input, form select, form textarea { width: 100%; padding: .45rem .65rem; border: 1px solid #ced4da; border-radius: .4rem; }
+</style>
+{% endblock %}
