@@ -351,7 +351,7 @@ document.body.addEventListener("click", (e) => {
     else if (t.dataset.deleteAppointment) store.deleteAppointment(t.dataset.deleteAppointment);
     else if (t.dataset.issueBill) store.issueBill(t.dataset.issueBill);
     else if (t.dataset.payBill) {
-        const amount = prompt("Payment amount in ₹ (INR)?");
+      const amount = prompt("Payment amount in ₹ (INR)?");
       if (amount == null) return;
       store.payBill(t.dataset.payBill, amount);
     } else if (t.dataset.voidBill) store.voidBill(t.dataset.voidBill);
