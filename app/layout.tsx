@@ -24,7 +24,7 @@ export const metadata: Metadata = {
     template: "%s · Lerniqo",
   },
   description:
-    "Lerniqo teaches Tally Prime with GST, MS Office, and a basic computer course. Fees are in rupees. Purchase opens WhatsApp.",
+    "Lerniqo teaches accounts, Office, computers, design, and programming. Fees are in rupees. Purchase opens WhatsApp.",
 };
 
 export const viewport: Viewport = {

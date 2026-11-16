@@ -8,7 +8,7 @@ import { courses, formatInr, getFeaturedCourses } from "@/lib/courses";
 const steps = [
   {
     title: "Choose a course",
-    body: "Pick Tally Prime with GST, MS Office, or the basic computer course. The fee is listed in rupees before you write to us.",
+    body: "Pick accounts, Office, computers, design, or programming. The fee is listed in rupees before you write to us.",
   },
   {
     title: "Purchase on WhatsApp",
@@ -31,8 +31,8 @@ export default function HomePage() {
           <h1>Learn More. Grow More.</h1>
           <Swoosh />
           <p className="lede">
-            Practical courses in Tally Prime with GST, MS Office, and computers from scratch. See
-            the fee, then enrol on WhatsApp.
+            Practical courses in accounts, Office, computers, design, and programming. See the fee,
+            then enrol on WhatsApp.
           </p>
           <div className="hero-actions">
             <Link className="btn btn-primary" href="#courses">
