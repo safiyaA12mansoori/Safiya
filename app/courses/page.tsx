@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 
 export default function CoursesPage() {
   return (
-    <section className="section catalog-page">
+    <section className="section catalog-page section-cream">
       <div className="wrap">
         <CourseCatalog courses={courses} />
       </div>

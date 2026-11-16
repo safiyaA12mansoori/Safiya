@@ -28,7 +28,7 @@ export default async function CoursePage({ params }: PageProps) {
   if (!course) notFound();
 
   return (
-    <article className="section course-page">
+    <article className="section course-page section-cream">
       <div className="wrap">
         <nav className="crumbs" aria-label="Breadcrumb">
           <ol>

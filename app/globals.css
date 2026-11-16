@@ -688,6 +688,122 @@ a:hover {
   border-block: 1px solid var(--line);
 }
 
+.section-cream {
+  background: #fbf6f0;
+  color: #1c1810;
+  border-block: 1px solid rgba(176, 144, 56, 0.28);
+}
+
+.section-cream h2,
+.section-cream h3,
+.section-cream .card-title a,
+.section-cream .path-note h3 a,
+.section-cream .card-category,
+.section-cream .crumbs a {
+  color: #1c1810;
+}
+
+.section-cream .lede,
+.section-cream .card-summary,
+.section-cream .card-meta,
+.section-cream .path-note p,
+.section-cream .steps p,
+.section-cream .result-count,
+.section-cream .empty {
+  color: #5c5344;
+}
+
+.section-cream .eyebrow {
+  color: #8a7328;
+}
+
+.section-cream .swoosh {
+  color: #b09038;
+}
+
+.section-cream .card,
+.section-cream .steps li,
+.section-cream .path-note {
+  background: #fffdf8;
+  border-color: rgba(176, 144, 56, 0.35);
+}
+
+.section-cream .card-title a:hover,
+.section-cream .path-note h3 a:hover {
+  color: #8a7328;
+}
+
+.section-cream .filter {
+  background: #fffdf8;
+  border-color: rgba(176, 144, 56, 0.4);
+  color: #1c1810;
+}
+
+.section-cream .filter[aria-pressed="true"] {
+  background: var(--gold);
+  color: #14120c;
+}
+
+.section-cream .btn-ghost {
+  background: #fffdf8;
+  color: #1c1810;
+  border-color: #b09038;
+}
+
+.section-cream .crumbs {
+  color: #5c5344;
+}
+
+.section-cream .enroll-panel,
+.section-cream .enrol {
+  background: #120e08;
+  color: var(--ink);
+}
+
+.section-cream .enroll-panel h2,
+.section-cream .enrol h1,
+.section-cream .enroll-panel .lede,
+.section-cream .enrol .lede {
+  color: var(--ink);
+}
+
+.section-cream .enroll-panel .lede,
+.section-cream .enrol .fine {
+  color: var(--muted);
+}
+
+.section-gold {
+  background:
+    linear-gradient(180deg, #d0b058 0%, #c8a850 38%, #c6aa53 72%, #b09038 100%);
+  color: #14120c;
+  border-block: 1px solid #b09038;
+}
+
+.section-gold h2,
+.section-gold h3,
+.section-gold .path-note h3 a {
+  color: #14120c;
+}
+
+.section-gold .lede,
+.section-gold .path-note p {
+  color: #3a3218;
+}
+
+.section-gold .eyebrow,
+.section-gold .swoosh {
+  color: #3a3218;
+}
+
+.section-gold .path-note {
+  background: #fbf6f0;
+  border-color: rgba(20, 18, 12, 0.18);
+}
+
+.section-gold .path-note h3 a:hover {
+  color: #8a7328;
+}
+
 .section-head {
   max-width: 40rem;
   margin-bottom: 1.4rem;

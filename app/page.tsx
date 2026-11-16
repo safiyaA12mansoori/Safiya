@@ -112,7 +112,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="section section-tight" id="courses">
+      <section className="section section-tight section-cream" id="courses">
         <div className="wrap">
           <div className="section-head">
             <p className="eyebrow">Courses</p>
@@ -126,7 +126,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="section" id="paths">
+      <section className="section section-gold" id="paths">
         <div className="wrap">
           <div className="section-head">
             <p className="eyebrow">Paths</p>
@@ -181,7 +181,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="section" id="how-it-works">
+      <section className="section section-cream" id="how-it-works">
         <div className="wrap">
           <div className="section-head">
             <p className="eyebrow">How it works</p>
