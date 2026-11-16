@@ -12,7 +12,6 @@ export function Footer() {
         </div>
         <nav aria-label="Footer">
           <Link href="/courses">Courses</Link>
-          <Link href="/#what-you-learn">What you learn</Link>
           <Link href="/#enrol">Enrol</Link>
           <a href={contactHref}>WhatsApp +91 76200 68321</a>
         </nav>

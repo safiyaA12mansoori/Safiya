@@ -59,30 +59,6 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="section section-paper" id="what-you-learn">
-        <div className="wrap">
-          <div className="section-head">
-            <p className="eyebrow">What you learn</p>
-            <h2>The topics in each course</h2>
-          </div>
-          <div className="learn-grid">
-            {courses.map((course) => (
-              <article key={course.slug} className="learn-card">
-                <h3>
-                  <Link href={`/courses/${course.slug}`}>{course.title}</Link>
-                </h3>
-                <p className="card-summary">{course.summary}</p>
-                <ol className="lessons">
-                  {course.lessons.map((lesson) => (
-                    <li key={lesson}>{lesson}</li>
-                  ))}
-                </ol>
-              </article>
-            ))}
-          </div>
-        </div>
-      </section>
-
       <section className="section" id="how-it-works">
         <div className="wrap">
           <div className="section-head">

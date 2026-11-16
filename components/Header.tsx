@@ -8,7 +8,6 @@ import { Logo } from "@/components/Logo";
 const links = [
   { href: "/", label: "Home" },
   { href: "/courses", label: "Courses" },
-  { href: "/#what-you-learn", label: "What you learn" },
   { href: "/#enrol", label: "Enrol" },
 ];
 

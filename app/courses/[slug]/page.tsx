@@ -74,17 +74,6 @@ export default async function CoursePage({ params }: PageProps) {
           </aside>
         </div>
 
-        <section className="detail-block" id="what-you-learn">
-          <p className="eyebrow">What you learn</p>
-          <h2>Topics in this course</h2>
-          <p className="lede">{course.description}</p>
-          <ol className="lessons">
-            {course.lessons.map((lesson) => (
-              <li key={lesson}>{lesson}</li>
-            ))}
-          </ol>
-        </section>
-
         <section className="enroll-panel enroll-repeat" aria-label="Enrol in this course">
           <div>
             <p className="eyebrow">Enrol</p>
