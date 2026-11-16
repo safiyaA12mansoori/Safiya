@@ -42,6 +42,27 @@ export const contactHref = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURICom
   "Hi, I have a question about Lerniqo courses.",
 )}`;
 
+export type ContactFields = {
+  name: string;
+  email: string;
+  phone: string;
+  message: string;
+};
+
+export function contactFormMessage(fields: ContactFields): string {
+  return [
+    "Hi, I want to contact Lerniqo.",
+    `Name: ${fields.name}`,
+    `Email: ${fields.email}`,
+    `Phone: ${fields.phone}`,
+    `Message: ${fields.message}`,
+  ].join("\n");
+}
+
+export function contactFormHref(fields: ContactFields): string {
+  return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(contactFormMessage(fields))}`;
+}
+
 export function formatInr(amount: number): string {
   return new Intl.NumberFormat("en-IN", {
     style: "currency",

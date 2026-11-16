@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { ContactSection } from "@/components/ContactSection";
 import { Logo } from "@/components/Logo";
 import { Swoosh } from "@/components/Swoosh";
 import { courses } from "@/lib/courses";
@@ -80,7 +81,7 @@ export default function HomePage() {
             </div>
             <div className="orbit-card orbit-whatsapp">
               <strong>WA</strong>
-              <span>Enrol on chat</span>
+              <span>Write on chat</span>
             </div>
             <div className="orbit-card orbit-fee">
               <strong>INR</strong>
@@ -95,14 +96,14 @@ export default function HomePage() {
             <Swoosh />
             <p className="lede">
               Practical courses in accounts, Office, computers, design, programming, marketing,
-              analytics, and workplace skills. See the fee, then enrol on WhatsApp.
+              analytics, and workplace skills. See the fee, then write to us on WhatsApp.
             </p>
             <div className="hero-actions">
               <Link className="btn btn-primary" href="/courses">
                 Browse courses
               </Link>
-              <Link className="btn btn-ghost" href="/courses">
-                Enrol on WhatsApp
+              <Link className="btn btn-ghost" href="/contact">
+                Contact us
               </Link>
             </div>
           </div>
@@ -146,18 +147,18 @@ export default function HomePage() {
               </p>
               <p className="why-stat">
                 <strong>INR</strong>
-                <span>Every fee listed before you enrol</span>
+                <span>Every fee listed before you write to us</span>
               </p>
             </article>
             <article className="why-panel why-copy">
-              <p className="eyebrow">Enrol</p>
+              <p className="eyebrow">WhatsApp</p>
               <h3>Purchase opens WhatsApp</h3>
               <p>
                 There is no login and no card form. Tap Purchase and a chat opens to +91 76200 68321
-                with the course already named.
+                with the course already named. Questions go through the contact form.
               </p>
-              <Link className="btn btn-primary" href="/courses">
-                Enrol on WhatsApp
+              <Link className="btn btn-primary" href="/contact">
+                Contact us
               </Link>
             </article>
           </div>
@@ -185,6 +186,7 @@ export default function HomePage() {
         </div>
       </section>
 
+      <ContactSection />
     </>
   );
 }

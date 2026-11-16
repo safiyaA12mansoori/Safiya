@@ -8,19 +8,20 @@ import { Logo } from "@/components/Logo";
 const links = [
   { href: "/", label: "Home" },
   { href: "/courses", label: "Courses" },
-  { href: "/courses", label: "Enrol" },
+  { href: "/contact", label: "Contact" },
 ];
 
 function isCurrent(pathname: string, href: string): boolean {
   if (href === "/") return pathname === "/";
   if (href === "/courses") return pathname.startsWith("/courses");
+  if (href === "/contact") return pathname === "/contact";
   return false;
 }
 
 function NavLinks({ pathname }: { pathname: string }) {
   return links.map((link) => (
     <Link
-      key={link.href}
+      key={link.label}
       href={link.href}
       className="nav-link"
       aria-current={isCurrent(pathname, link.href) ? "page" : undefined}

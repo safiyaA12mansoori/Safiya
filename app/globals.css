@@ -484,6 +484,70 @@ a:hover {
   display: inline-block;
 }
 
+.detail-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.85rem 1.25rem;
+  margin: 0.85rem 0 0;
+}
+
+.contact-wrap {
+  display: grid;
+  gap: 0.4rem;
+}
+
+.contact-form {
+  display: grid;
+  gap: 0.95rem;
+  max-width: 36rem;
+  background: #fffdf8;
+  border: 1px solid rgba(176, 144, 56, 0.35);
+  border-radius: 1.25rem;
+  padding: 1.4rem 1.3rem 1.2rem;
+}
+
+.contact-form label {
+  display: grid;
+  gap: 0.4rem;
+  color: #1c1810;
+  font-weight: 600;
+}
+
+.contact-form input,
+.contact-form textarea {
+  width: 100%;
+  min-height: 3rem;
+  padding: 0.7rem 0.9rem;
+  border: 1px solid rgba(176, 144, 56, 0.45);
+  border-radius: 0.75rem;
+  background: #fff;
+  color: #1c1810;
+  font: inherit;
+}
+
+.contact-form input:focus,
+.contact-form textarea:focus {
+  outline: 2px solid var(--gold);
+  outline-offset: 1px;
+}
+
+.contact-form textarea {
+  min-height: 8.5rem;
+  resize: vertical;
+}
+
+.contact-form .btn {
+  appearance: none;
+  justify-self: start;
+  min-width: 10rem;
+}
+
+.contact-form .fine {
+  margin: 0;
+  color: #5c5344;
+  font-size: 0.92rem;
+}
+
 .hero-grid {
   display: grid;
   gap: 2rem;

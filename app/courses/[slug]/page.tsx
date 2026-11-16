@@ -71,26 +71,16 @@ export default async function CoursePage({ params }: PageProps) {
               Opens WhatsApp to +91 76200 68321 with a message that names {course.title}. We do not
               collect card details on this site.
             </p>
+            <p className="detail-links">
+              <Link className="text-link" href="/courses">
+                Back to all courses
+              </Link>
+              <Link className="text-link" href="/contact">
+                Contact us
+              </Link>
+            </p>
           </aside>
         </div>
-
-        <section className="enroll-panel enroll-repeat" aria-label="Enrol in this course">
-          <div>
-            <p className="eyebrow">Enrol</p>
-            <h2>Start {course.title}</h2>
-            <p className="lede">{course.audience}</p>
-          </div>
-          <div className="enroll-repeat-action">
-            <p className="enrol-price">
-              <span className="sr-only">Fee </span>
-              {formatInr(course.price)}
-            </p>
-            <PurchaseLink title={course.title} className="btn btn-purchase btn-block" />
-            <Link className="text-link" href="/courses">
-              Back to all courses
-            </Link>
-          </div>
-        </section>
       </div>
     </article>
   );
