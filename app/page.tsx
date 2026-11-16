@@ -1,8 +1,7 @@
 import Link from "next/link";
-import { CourseCard } from "@/components/CourseCard";
 import { Logo } from "@/components/Logo";
 import { Swoosh } from "@/components/Swoosh";
-import { courses, getFeaturedCourses } from "@/lib/courses";
+import { courses } from "@/lib/courses";
 
 const paths = [
   {
@@ -65,8 +64,6 @@ const steps = [
 ];
 
 export default function HomePage() {
-  const featured = getFeaturedCourses();
-
   return (
     <>
       <section className="hero">
@@ -101,27 +98,13 @@ export default function HomePage() {
               analytics, and workplace skills. See the fee, then enrol on WhatsApp.
             </p>
             <div className="hero-actions">
-              <Link className="btn btn-primary" href="#courses">
+              <Link className="btn btn-primary" href="/courses">
                 Browse courses
               </Link>
               <Link className="btn btn-ghost" href="/courses">
                 Enrol on WhatsApp
               </Link>
             </div>
-          </div>
-        </div>
-      </section>
-
-      <section className="section section-tight section-cream" id="courses">
-        <div className="wrap">
-          <div className="section-head">
-            <p className="eyebrow">Courses</p>
-            <h2>Choose a course and start</h2>
-          </div>
-          <div className="course-grid">
-            {featured.map((course) => (
-              <CourseCard key={course.slug} course={course} headingLevel="h3" />
-            ))}
           </div>
         </div>
       </section>
