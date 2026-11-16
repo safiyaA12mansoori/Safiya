@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Manrope, Source_Sans_3 } from "next/font/google";
+import { AmbientMotion } from "@/components/AmbientMotion";
 import { Footer } from "@/components/Footer";
 import { Header } from "@/components/Header";
 import "./globals.css";
@@ -37,6 +38,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en" className={`${manrope.variable} ${sourceSans.variable}`}>
       <body>
+        <AmbientMotion />
         <div className="gold-bar" aria-hidden="true" />
         <a className="skip" href="#main">
           Skip to content
