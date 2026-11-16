@@ -1,0 +1,50 @@
+import type { Metadata, Viewport } from "next";
+import { Manrope, Source_Sans_3 } from "next/font/google";
+import { Footer } from "@/components/Footer";
+import { Header } from "@/components/Header";
+import "./globals.css";
+
+const manrope = Manrope({
+  subsets: ["latin"],
+  weight: ["500", "600", "700", "800"],
+  variable: "--font-display",
+  display: "swap",
+});
+
+const sourceSans = Source_Sans_3({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-body",
+  display: "swap",
+});
+
+export const metadata: Metadata = {
+  title: {
+    default: "Lerniqo — Learn More. Grow More.",
+    template: "%s · Lerniqo",
+  },
+  description:
+    "Lerniqo is a studio of practical courses in programming, design, business, data, and languages. Fees are in rupees. Purchase opens WhatsApp.",
+};
+
+export const viewport: Viewport = {
+  themeColor: "#fbf6f0",
+  width: "device-width",
+  initialScale: 1,
+};
+
+export default function RootLayout({ children }: { children: React.ReactNode }) {
+  return (
+    <html lang="en" className={`${manrope.variable} ${sourceSans.variable}`}>
+      <body>
+        <div className="gold-bar" aria-hidden="true" />
+        <a className="skip" href="#main">
+          Skip to content
+        </a>
+        <Header />
+        <main id="main">{children}</main>
+        <Footer />
+      </body>
+    </html>
+  );
+}
