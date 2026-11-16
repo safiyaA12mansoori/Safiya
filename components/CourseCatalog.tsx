@@ -30,7 +30,7 @@ export function CourseCatalog({ courses }: CourseCatalogProps) {
       <div className="catalog-bar">
         <h1>Courses</h1>
         <p className="lede">
-          Ten courses across accounts, Office, computers, design, and programming. Every fee is in
+          Courses across accounts, Office, computers, design, and programming. Every fee is in
           rupees. Purchase opens WhatsApp with the course already named. This site does not take
           card details.
         </p>
