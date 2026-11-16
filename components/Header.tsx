@@ -8,7 +8,7 @@ import { Logo } from "@/components/Logo";
 const links = [
   { href: "/", label: "Home" },
   { href: "/courses", label: "Courses" },
-  { href: "/#enrol", label: "Enrol" },
+  { href: "/courses", label: "Enrol" },
 ];
 
 function isCurrent(pathname: string, href: string): boolean {

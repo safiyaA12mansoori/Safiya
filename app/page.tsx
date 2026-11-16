@@ -1,9 +1,8 @@
 import Link from "next/link";
 import { CourseCard } from "@/components/CourseCard";
 import { Logo } from "@/components/Logo";
-import { PurchaseLink } from "@/components/PurchaseLink";
 import { Swoosh } from "@/components/Swoosh";
-import { courses, formatInr, getFeaturedCourses } from "@/lib/courses";
+import { courses, getFeaturedCourses } from "@/lib/courses";
 
 const paths = [
   {
@@ -105,9 +104,9 @@ export default function HomePage() {
               <Link className="btn btn-primary" href="#courses">
                 Browse courses
               </Link>
-              <a className="btn btn-ghost" href="#enrol">
+              <Link className="btn btn-ghost" href="/courses">
                 Enrol on WhatsApp
-              </a>
+              </Link>
             </div>
           </div>
         </div>
@@ -174,7 +173,7 @@ export default function HomePage() {
                 There is no login and no card form. Tap Purchase and a chat opens to +91 76200 68321
                 with the course already named.
               </p>
-              <Link className="btn btn-primary" href="#enrol">
+              <Link className="btn btn-primary" href="/courses">
                 Enrol on WhatsApp
               </Link>
             </article>
@@ -203,29 +202,6 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="section section-tight" id="enrol">
-        <div className="wrap enroll-panel">
-          <div>
-            <p className="eyebrow">Enrol</p>
-            <h2>Purchase opens WhatsApp</h2>
-            <p className="lede">
-              Each button messages +91 76200 68321 with the course already named. Lerniqo does not
-              collect card details on this site.
-            </p>
-          </div>
-          <ul className="enroll-list">
-            {courses.map((course) => (
-              <li key={course.slug}>
-                <div>
-                  <strong>{course.title}</strong>
-                  <span>{formatInr(course.price)}</span>
-                </div>
-                <PurchaseLink title={course.title} />
-              </li>
-            ))}
-          </ul>
-        </div>
-      </section>
     </>
   );
 }

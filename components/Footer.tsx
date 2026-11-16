@@ -12,7 +12,7 @@ export function Footer() {
         </div>
         <nav aria-label="Footer">
           <Link href="/courses">Courses</Link>
-          <Link href="/#enrol">Enrol</Link>
+          <Link href="/courses">Enrol</Link>
           <a href={contactHref}>WhatsApp +91 76200 68321</a>
         </nav>
         <p className="footer-note">
