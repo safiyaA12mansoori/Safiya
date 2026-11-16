@@ -5,6 +5,51 @@ import { PurchaseLink } from "@/components/PurchaseLink";
 import { Swoosh } from "@/components/Swoosh";
 import { courses, formatInr, getFeaturedCourses } from "@/lib/courses";
 
+const paths = [
+  {
+    title: "Accounts",
+    href: "/courses?category=Accounting",
+    tilt: "left",
+    pin: "gold",
+    body: "Tally Prime with GST for billing, stock, and GST in one place.",
+  },
+  {
+    title: "Office",
+    href: "/courses?category=Office",
+    tilt: "right",
+    pin: "dark",
+    body: "MS Office for documents, spreadsheets, and presentations.",
+  },
+  {
+    title: "Design",
+    href: "/courses?category=Design",
+    tilt: "left",
+    pin: "bright",
+    body: "Photoshop, Illustrator, Canva, video, logos, and UI/UX.",
+  },
+  {
+    title: "Programming",
+    href: "/courses?category=Programming",
+    tilt: "right",
+    pin: "gold",
+    body: "HTML, CSS, JavaScript, Python, Java, C, C++, SQL, and DSA.",
+  },
+  {
+    title: "Marketing",
+    href: "/courses?category=Marketing",
+    tilt: "left",
+    pin: "dark",
+    body: "SEO, social, Google Ads, content, and affiliate work.",
+  },
+  {
+    title: "Analytics",
+    href: "/courses?category=Analytics",
+    tilt: "right",
+    pin: "bright",
+    body: "Excel, Python, Power BI, and Tableau for tables and dashboards.",
+  },
+];
+
 const steps = [
   {
     title: "Choose a course",
@@ -78,6 +123,61 @@ export default function HomePage() {
             {featured.map((course) => (
               <CourseCard key={course.slug} course={course} headingLevel="h3" />
             ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="section" id="paths">
+        <div className="wrap">
+          <div className="section-head">
+            <p className="eyebrow">Paths</p>
+            <h2>Choose a path, then a course</h2>
+            <p className="lede">
+              Six groups from the catalog. Each card opens that subject. Fees stay in rupees.
+            </p>
+          </div>
+          <ul className="path-board">
+            {paths.map((path) => (
+              <li key={path.title} className={`path-note path-${path.tilt}`}>
+                <span className={`path-pin pin-${path.pin}`} aria-hidden="true" />
+                <h3>
+                  <Link href={path.href}>{path.title}</Link>
+                </h3>
+                <p>{path.body}</p>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+
+      <section className="section section-paper" id="why">
+        <div className="wrap">
+          <div className="section-head">
+            <p className="eyebrow">Why Lerniqo</p>
+            <h2>See the course, see the fee, then write to us</h2>
+          </div>
+          <div className="why-grid">
+            <article className="why-panel">
+              <p className="why-stat">
+                <strong>{courses.length}</strong>
+                <span>Courses on this site</span>
+              </p>
+              <p className="why-stat">
+                <strong>INR</strong>
+                <span>Every fee listed before you enrol</span>
+              </p>
+            </article>
+            <article className="why-panel why-copy">
+              <p className="eyebrow">Enrol</p>
+              <h3>Purchase opens WhatsApp</h3>
+              <p>
+                There is no login and no card form. Tap Purchase and a chat opens to +91 76200 68321
+                with the course already named.
+              </p>
+              <Link className="btn btn-primary" href="#enrol">
+                Enrol on WhatsApp
+              </Link>
+            </article>
           </div>
         </div>
       </section>
