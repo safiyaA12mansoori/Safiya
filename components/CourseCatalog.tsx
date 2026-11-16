@@ -30,7 +30,7 @@ export function CourseCatalog({ courses }: CourseCatalogProps) {
       <div className="catalog-bar">
         <h1>Courses</h1>
         <p className="lede">
-          Ten courses across programming, design, business, data, and languages. Every fee is in
+          Three courses: Tally Prime with GST, MS Office, and Basic Computer. Every fee is in
           rupees. Purchase opens WhatsApp with the course already named. This site does not take
           card details.
         </p>

@@ -2,7 +2,7 @@
 
 Marketing site for **Lerniqo** — Learn More. Grow More.
 
-The site lists practical courses in programming, design, business, data, and languages. Each course has a duration, a level, and a fee in INR. Every **Purchase** link is a normal anchor that opens WhatsApp at `https://wa.me/917620068321` with a message that names the course. There is no account, cart, or card checkout.
+The site lists three practical courses: Tally Prime with GST, MS Office, and Basic Computer. Each course has a duration, a level, a poster, and a fee in INR. Every **Purchase** link is a normal anchor that opens WhatsApp at `https://wa.me/917620068321` with a message that names the course. There is no account, cart, or card checkout.
 
 ## Run locally
 

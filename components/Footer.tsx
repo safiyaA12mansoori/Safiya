@@ -12,8 +12,8 @@ export function Footer() {
         </div>
         <nav aria-label="Footer">
           <Link href="/courses">Courses</Link>
-          <Link href="/#how-it-works">How it works</Link>
-          <Link href="/#why-lerniqo">Why Lerniqo</Link>
+          <Link href="/#what-you-learn">What you learn</Link>
+          <Link href="/#enrol">Enrol</Link>
           <a href={contactHref}>WhatsApp +91 76200 68321</a>
         </nav>
         <p className="footer-note">

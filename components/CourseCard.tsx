@@ -13,6 +13,7 @@ export function CourseCard({ course, headingLevel = "h2" }: CourseCardProps) {
 
   return (
     <article className="card">
+      <img className="poster" src={course.image} alt="" />
       <p className="card-category">{course.category}</p>
       <Heading className="card-title">
         <Link href={href}>{course.title}</Link>

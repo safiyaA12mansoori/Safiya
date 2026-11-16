@@ -4,10 +4,11 @@
   --bg-soft: #1c1c1c;
   --ink: #f4efe6;
   --muted: #d4c8b4;
-  --gold: #e4b454;
-  --gold-bright: #f0d48a;
-  --gold-deep: #c9963a;
-  --line: rgba(228, 180, 84, 0.32);
+  --gold: #c6aa53;
+  --gold-bright: #d0b058;
+  --gold-deep: #b09038;
+  --gold-edge: #f0e880;
+  --line: rgba(198, 170, 83, 0.38);
   --shadow: 0 20px 44px rgba(0, 0, 0, 0.45);
   --logo-plate: #fbf6f0;
   color-scheme: dark;
@@ -26,7 +27,7 @@ html {
 body {
   margin: 0;
   background:
-    radial-gradient(900px 420px at 100% -10%, rgba(228, 180, 84, 0.14), transparent 58%),
+    radial-gradient(900px 420px at 100% -10%, rgba(198, 170, 83, 0.16), transparent 58%),
     var(--bg);
   color: var(--ink);
   font-family: var(--font-body), "Segoe UI", sans-serif;
@@ -119,7 +120,19 @@ a:hover {
 
 .gold-bar {
   height: 6px;
-  background: linear-gradient(90deg, #b8882e, #e4b454 35%, #f3d48a 50%, #e4b454 65%, #b8882e);
+  background: linear-gradient(
+    90deg,
+    #b09038 0%,
+    #b89840 22%,
+    #c0a048 40%,
+    #c8a850 48%,
+    #d0b058 49.4%,
+    #f0e880 50%,
+    #d0b058 50.6%,
+    #c6aa53 64%,
+    #c0a048 82%,
+    #b89840 100%
+  );
 }
 
 .wrap {
@@ -151,7 +164,7 @@ a:hover {
   background: var(--logo-plate);
   border-radius: 12px;
   padding: 0.15rem 0.4rem 0.15rem 0.2rem;
-  box-shadow: 0 0 0 1px rgba(228, 180, 84, 0.45);
+  box-shadow: 0 0 0 1px rgba(192, 160, 72, 0.55);
 }
 
 .brand img {
@@ -242,12 +255,109 @@ a:hover {
 
 .mobile-panel .nav-link:hover,
 .mobile-panel .nav-link[aria-current="page"] {
-  background: rgba(228, 180, 84, 0.16);
+  background: rgba(198, 170, 83, 0.16);
   box-shadow: none;
 }
 
 .hero {
-  padding: 2.5rem 0 2.2rem;
+  padding: 2.75rem 0 1.4rem;
+}
+
+.hero-statement {
+  max-width: 44rem;
+}
+
+.section-tight {
+  padding-top: 1.2rem;
+}
+
+.learn-grid {
+  display: grid;
+  gap: 1rem;
+}
+
+.learn-card {
+  background: var(--bg-raised);
+  border: 1px solid var(--line);
+  border-top: 4px solid var(--gold);
+  border-radius: 1.1rem;
+  padding: 1.15rem 1.15rem 0.4rem;
+}
+
+.learn-card h3 a {
+  color: var(--ink);
+  text-decoration: none;
+}
+
+.learn-card h3 a:hover {
+  color: var(--gold);
+}
+
+.enroll-panel {
+  display: grid;
+  gap: 1.25rem;
+  background: #120e08;
+  border: 1px solid var(--line);
+  border-radius: 1.25rem;
+  padding: 1.4rem 1.3rem;
+}
+
+.enroll-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.75rem;
+}
+
+.enroll-list li {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.85rem 0;
+  border-top: 1px solid var(--line);
+}
+
+.enroll-list strong {
+  display: block;
+  color: var(--ink);
+  font-family: var(--font-display), sans-serif;
+}
+
+.enroll-list span {
+  color: var(--gold);
+  font-family: var(--font-display), sans-serif;
+  font-weight: 800;
+}
+
+.detail-hero {
+  display: grid;
+  gap: 1.4rem;
+  align-items: start;
+}
+
+.detail-hero .enrol {
+  grid-area: auto;
+  position: static;
+  min-width: 0;
+}
+
+.detail-poster {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  height: auto;
+}
+
+.enroll-repeat {
+  margin-top: 2rem;
+}
+
+.enroll-repeat-action .text-link {
+  display: inline-block;
 }
 
 .hero-grid {
@@ -264,7 +374,7 @@ a:hover {
   background: var(--logo-plate);
   border-radius: 16px;
   padding: 0.55rem 0.75rem;
-  box-shadow: 0 0 0 1px rgba(228, 180, 84, 0.45);
+  box-shadow: 0 0 0 1px rgba(192, 160, 72, 0.55);
 }
 
 .hero-copy .lede {
@@ -311,15 +421,17 @@ a:hover {
 .btn-primary,
 .btn-purchase,
 .btn-gold {
-  background: var(--gold);
-  color: #111;
+  background: linear-gradient(180deg, #d0b058 0%, #c8a850 38%, #c6aa53 72%, #c0a048 100%);
+  color: #14120c;
+  border-color: #b09038;
+  box-shadow: inset 0 1px 0 #f0e880;
 }
 
 .btn-primary:hover,
 .btn-purchase:hover,
 .btn-gold:hover {
-  background: var(--gold-bright);
-  color: #111;
+  background: linear-gradient(180deg, #c8a850 0%, #c6aa53 46%, #b89840 100%);
+  color: #14120c;
 }
 
 .btn-ghost {
@@ -472,7 +584,7 @@ a:hover {
   min-height: 2.75rem;
   padding: 0.35rem 0.95rem;
   border-radius: 999px;
-  background: rgba(228, 180, 84, 0.12);
+  background: rgba(198, 170, 83, 0.14);
   color: var(--gold-bright);
   text-decoration: none;
   font-family: var(--font-display), sans-serif;
@@ -492,6 +604,19 @@ a:hover {
   display: grid;
   grid-template-columns: 1fr;
   gap: 1rem;
+}
+
+.poster {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 0.85rem;
+  margin: 0 0 0.9rem;
+  border: 1px solid var(--line);
+}
+
+.detail-poster {
+  margin-bottom: 1.1rem;
 }
 
 .card {
@@ -640,7 +765,7 @@ a:hover {
   background: var(--logo-plate);
   border-radius: 12px;
   padding: 0.4rem 0.55rem;
-  box-shadow: 0 0 0 1px rgba(228, 180, 84, 0.45);
+  box-shadow: 0 0 0 1px rgba(192, 160, 72, 0.55);
 }
 
 .footer-brand p,
@@ -726,7 +851,7 @@ a:hover {
 .crumbs li:not(:last-child)::after {
   content: "/";
   margin-left: 0.5rem;
-  color: rgba(228, 180, 84, 0.55);
+  color: rgba(198, 170, 83, 0.55);
 }
 
 .crumbs a {
@@ -757,8 +882,14 @@ a:hover {
   grid-area: enrol;
 }
 
+.enrol h1 {
+  font-size: clamp(2rem, 3vw, 2.75rem);
+}
+
 #how-it-works,
-#why-lerniqo {
+#what-you-learn,
+#courses,
+#enrol {
   scroll-margin-top: 5.2rem;
 }
 
@@ -903,8 +1034,19 @@ a:hover {
     gap: 1.5rem 2.75rem;
   }
 
-  .course-grid {
+  .course-grid,
+  .learn-grid {
     grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .enroll-panel {
+    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+    align-items: center;
+  }
+
+  .detail-hero {
+    grid-template-columns: 58% 42%;
+    gap: 2rem;
   }
 
   .enrol {

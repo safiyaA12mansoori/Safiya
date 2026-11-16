@@ -5,7 +5,7 @@ import { courses } from "@/lib/courses";
 export const metadata: Metadata = {
   title: "Courses",
   description:
-    "Browse Lerniqo courses in programming, design, business, data, and languages. Fees are listed in INR. Purchase opens WhatsApp.",
+    "Browse Lerniqo courses in Tally Prime with GST, MS Office, and basic computers. Fees are listed in INR. Purchase opens WhatsApp.",
 };
 
 export default function CoursesPage() {
