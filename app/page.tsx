@@ -26,21 +26,44 @@ export default function HomePage() {
   return (
     <>
       <section className="hero">
-        <div className="wrap hero-statement">
-          <Logo className="hero-logo" alt="" />
-          <h1>Learn More. Grow More.</h1>
-          <Swoosh />
-          <p className="lede">
-            Practical courses in accounts, Office, computers, design, programming, marketing,
-            analytics, and workplace skills. See the fee, then enrol on WhatsApp.
-          </p>
-          <div className="hero-actions">
-            <Link className="btn btn-primary" href="#courses">
-              Browse courses
-            </Link>
-            <a className="btn btn-ghost" href="#enrol">
-              Enrol on WhatsApp
-            </a>
+        <div className="wrap hero-stage">
+          <div className="hero-orbit" aria-hidden="true">
+            <span className="orbit-chip orbit-ps">Ps</span>
+            <span className="orbit-chip orbit-ai">Ai</span>
+            <span className="orbit-chip orbit-pr">Pr</span>
+            <span className="orbit-chip orbit-py">Py</span>
+            <span className="orbit-chip orbit-js">JS</span>
+            <div className="orbit-card orbit-courses">
+              <strong>{courses.length}</strong>
+              <span>Courses</span>
+            </div>
+            <div className="orbit-card orbit-whatsapp">
+              <strong>WA</strong>
+              <span>Enrol on chat</span>
+            </div>
+            <div className="orbit-card orbit-fee">
+              <strong>INR</strong>
+              <span>Fees listed</span>
+            </div>
+          </div>
+          <div className="hero-statement">
+            <Logo className="hero-logo" alt="" />
+            <h1>
+              Learn More. <span className="hero-mark">Grow</span> More.
+            </h1>
+            <Swoosh />
+            <p className="lede">
+              Practical courses in accounts, Office, computers, design, programming, marketing,
+              analytics, and workplace skills. See the fee, then enrol on WhatsApp.
+            </p>
+            <div className="hero-actions">
+              <Link className="btn btn-primary" href="#courses">
+                Browse courses
+              </Link>
+              <a className="btn btn-ghost" href="#enrol">
+                Enrol on WhatsApp
+              </a>
+            </div>
           </div>
         </div>
       </section>
