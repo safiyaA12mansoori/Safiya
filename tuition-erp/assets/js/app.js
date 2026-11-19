@@ -95,20 +95,31 @@
   }
 
   function theme() {
-    return document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
+    try {
+      return localStorage.getItem(THEME_KEY) === 'dark' ? 'dark' : 'light';
+    } catch (err) {
+      return 'light';
+    }
   }
 
-  function setTheme(next) {
-    if (next === 'dark') document.documentElement.setAttribute('data-theme', 'dark');
+  function applyTheme(next, persist) {
+    var mode = next === 'dark' ? 'dark' : 'light';
+    if (mode === 'dark') document.documentElement.setAttribute('data-theme', 'dark');
     else document.documentElement.removeAttribute('data-theme');
-    try { localStorage.setItem(THEME_KEY, next); } catch (err) { /* ignore */ }
+    if (persist) {
+      try { localStorage.setItem(THEME_KEY, mode); } catch (err) { /* ignore */ }
+    }
     var button = document.getElementById('theme-toggle');
     if (button) {
-      var dark = next === 'dark';
+      var dark = mode === 'dark';
       button.innerHTML = icon(dark ? 'sun' : 'moon');
       button.setAttribute('aria-label', dark ? 'Switch to light mode' : 'Switch to dark mode');
     }
-    document.dispatchEvent(new CustomEvent('themechange', { detail: next }));
+    if (persist) document.dispatchEvent(new CustomEvent('themechange', { detail: mode }));
+  }
+
+  function setTheme(next) {
+    applyTheme(next, true);
   }
 
   function ensureToast() {
@@ -243,7 +254,7 @@
       document.getElementById('logout-btn').addEventListener('click', function () {
         Auth.logout();
       });
-      setTheme(theme());
+      applyTheme(theme(), false);
     }
     document.querySelector('.brand-name').textContent = data.institute.name;
     document.getElementById('sidebar-year').textContent = data.currentAcademicYear || '—';
@@ -382,6 +393,14 @@
       return '<option value="' + esc(value) + '"' + (value === selected ? ' selected' : '') + '>' + esc(labelOf(item)) + '</option>';
     }).join('');
   }
+
+  window.addEventListener('pageshow', function (event) {
+    if (event.persisted) {
+      location.reload();
+      return;
+    }
+    applyTheme(theme(), false);
+  });
 
   document.addEventListener('pageshow', function () {
     if (document.body.dataset.page === 'login') return;
