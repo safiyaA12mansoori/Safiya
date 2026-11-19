@@ -177,6 +177,14 @@
     return html;
   }
 
+  function noticesHtml(user) {
+    var items = Storage.announcementsFor(user).slice(0, 4);
+    var body = items.length ? '<div class="list">' + items.map(function (item) {
+      return '<div class="list-row"><div><strong>' + App.esc(item.title) + '</strong><div class="muted">' + App.esc(Storage.formatDate(item.date)) + ' · ' + App.esc(item.audience) + (item.pinned ? ' · Pinned' : '') + '</div><div>' + App.esc(item.message) + '</div></div></div>';
+    }).join('') + '</div>' : App.empty('No announcements for you.');
+    return '<article class="card" style="margin-bottom:14px"><div class="card-head"><h2 class="card-title">Announcements</h2><a class="btn btn-ghost btn-sm" href="' + App.pageHref('announcements.html') + '">Open</a></div>' + body + '</article>';
+  }
+
   function paintStaff(user) {
     destroyCharts();
     var full = Storage.load();
@@ -221,6 +229,7 @@
         '</section>';
       html += '<div class="quick-actions"><a class="btn btn-primary" href="' + App.pageHref('payments.html') + '">Record payment</a><a class="btn btn-secondary" href="' + App.pageHref('fees.html') + '">Fee structures</a><a class="btn btn-secondary" href="' + App.pageHref('reports.html') + '">Reports</a></div>';
     }
+    html += noticesHtml(user);
 
     if (user.role !== 'teacher') {
       html += '<section class="chart-grid"><article class="card"><h2 class="card-title">Monthly revenue</h2><div class="chart-box"><canvas id="revenue-chart"></canvas></div></article>';
@@ -279,7 +288,7 @@
       return;
     }
     var more = full ? '' : '<div class="quick-actions"><a class="btn btn-primary" href="' + App.pageHref('student-portal.html') + '">Open full portal</a></div>';
-    content.innerHTML = more + portal(student, full);
+    content.innerHTML = noticesHtml(user) + more + portal(student, full);
   }
 
   function paintParent(full) {
@@ -293,14 +302,14 @@
     }
     if (!childId || !students.some(function (student) { return student.id === childId; })) childId = students[0].id;
     if (!full) {
-      content.innerHTML = '<div class="quick-actions"><a class="btn btn-primary" href="' + App.pageHref('parents.html') + '">Open children portal</a></div><section class="split-2">' + students.map(function (student) {
+      content.innerHTML = noticesHtml(user) + '<div class="quick-actions"><a class="btn btn-primary" href="' + App.pageHref('parents.html') + '">Open children portal</a></div><section class="split-2">' + students.map(function (student) {
         var facts = studentFacts(student);
         return '<article class="card"><h2 class="card-title">' + App.esc(student.name) + '</h2><p class="muted">' + App.esc(Storage.nameOf('batches', student.batchId, 'No batch')) + '</p><div class="kv" style="margin-top:10px"><span>Attendance</span><div>' + facts.summary.rate + '%</div><span>Balance</span><div>' + App.money(facts.balance) + '</div><span>Results</span><div>' + facts.results.length + '</div></div></article>';
       }).join('') + '</section>';
       return;
     }
     var current = students.find(function (student) { return student.id === childId; });
-    content.innerHTML = '<div class="child-switch">' + students.map(function (student) {
+    content.innerHTML = noticesHtml(user) + '<div class="child-switch">' + students.map(function (student) {
       return '<button type="button" class="tab" data-child="' + App.esc(student.id) + '" aria-selected="' + (student.id === childId ? 'true' : 'false') + '">' + App.esc(student.name) + '</button>';
     }).join('') + '</div>' + portal(current, true);
     content.querySelectorAll('[data-child]').forEach(function (button) {

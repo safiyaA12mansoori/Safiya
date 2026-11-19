@@ -257,6 +257,10 @@ tr:hover td { background: var(--surface-muted); }
 .badge-partial, .badge-late, .badge-on-leave, .badge-scheduled { background: var(--warning-soft); color: var(--warning); }
 .badge-pending, .badge-inactive, .badge-alumni { background: var(--info-soft); color: var(--info); }
 .badge-overdue, .badge-absent, .badge-fail, .badge-resigned { background: var(--danger-soft); color: var(--danger); }
+.badge-new, .badge-pinned { background: var(--accent-soft); color: var(--accent-text); }
+.badge-contacted { background: var(--warning-soft); color: var(--warning); }
+.badge-converted { background: var(--success-soft); color: var(--success); }
+.badge-closed { background: var(--surface-muted); color: var(--muted); }
 
 .pager { display: flex; justify-content: flex-end; align-items: center; gap: 10px; margin-top: 12px; color: var(--muted); font-size: 13px; }
 .empty, .empty-card { text-align: center; padding: 28px 16px; }

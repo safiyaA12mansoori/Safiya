@@ -167,8 +167,78 @@
       invoices: [],
       payments: [],
       exams: [],
-      results: []
+      results: [],
+      enquiries: [],
+      courseSubjects: [],
+      timetable: [],
+      staffAttendance: [],
+      announcements: [],
+      officeSeeded: false
     };
+  }
+
+  function seedOffice(data) {
+    var todayIso = today();
+    if (!Array.isArray(data.enquiries) || !data.enquiries.length) {
+      data.enquiries = [
+        { id: 'enq-1', instituteId: INSTITUTE_ID, name: 'Aanya Krishnan', phone: '9845111001', email: 'aanya.k@email.com', courseId: 'crs-10', message: 'Looking for a weekday morning batch for Class 10 maths and science.', enquiryDate: addDays(todayIso, -1), followUpDate: addDays(todayIso, 2), status: 'New' },
+        { id: 'enq-2', instituteId: INSTITUTE_ID, name: 'Rohit Bansal', phone: '9845111002', email: 'rohit.bansal@email.com', courseId: 'crs-jee', message: 'Asked about the weekend JEE batch and the annual fee.', enquiryDate: addDays(todayIso, -6), followUpDate: addDays(todayIso, 1), status: 'Contacted' },
+        { id: 'enq-3', instituteId: INSTITUTE_ID, name: 'Sneha Iyer', phone: '9845111003', email: 'sneha.iyer@email.com', courseId: 'crs-py', message: 'Joined the Python installment plan after the demo class.', enquiryDate: addDays(todayIso, -12), followUpDate: addDays(todayIso, -9), status: 'Converted' },
+        { id: 'enq-4', instituteId: INSTITUTE_ID, name: 'Vikram Das', phone: '9845111004', email: 'vikram.das@email.com', courseId: 'crs-eng', message: 'Wanted evening spoken English. Dates did not suit him.', enquiryDate: addDays(todayIso, -20), followUpDate: addDays(todayIso, -15), status: 'Closed' }
+      ];
+    }
+    if (!Array.isArray(data.courseSubjects) || !data.courseSubjects.length) {
+      data.courseSubjects = [
+        { id: 'subj-c10-math', instituteId: INSTITUTE_ID, courseId: 'crs-10', name: 'Mathematics', topics: ['Real numbers', 'Polynomials', 'Linear equations', 'Triangles'] },
+        { id: 'subj-c10-sci', instituteId: INSTITUTE_ID, courseId: 'crs-10', name: 'Science', topics: ['Chemical reactions', 'Acids and bases', 'Life processes', 'Electricity'] },
+        { id: 'subj-c12-phy', instituteId: INSTITUTE_ID, courseId: 'crs-12', name: 'Physics', topics: ['Electrostatics', 'Current electricity', 'Ray optics'] },
+        { id: 'subj-c12-chem', instituteId: INSTITUTE_ID, courseId: 'crs-12', name: 'Chemistry', topics: ['Solutions', 'Electrochemistry', 'Coordination compounds'] },
+        { id: 'subj-c12-math', instituteId: INSTITUTE_ID, courseId: 'crs-12', name: 'Mathematics', topics: ['Matrices', 'Continuity', 'Integrals'] }
+      ];
+    }
+    if (!Array.isArray(data.timetable) || !data.timetable.length) {
+      data.timetable = [
+        { id: 'tt-1', instituteId: INSTITUTE_ID, batchId: 'bat-c10-am', day: 1, startTime: '07:00', endTime: '07:45', subjectId: 'subj-c10-math', teacherId: 'tch-priya' },
+        { id: 'tt-2', instituteId: INSTITUTE_ID, batchId: 'bat-c10-am', day: 1, startTime: '07:45', endTime: '08:30', subjectId: 'subj-c10-sci', teacherId: 'tch-priya' },
+        { id: 'tt-3', instituteId: INSTITUTE_ID, batchId: 'bat-c10-am', day: 3, startTime: '07:00', endTime: '08:30', subjectId: 'subj-c10-math', teacherId: 'tch-priya' },
+        { id: 'tt-4', instituteId: INSTITUTE_ID, batchId: 'bat-c10-am', day: 5, startTime: '07:00', endTime: '08:30', subjectId: 'subj-c10-sci', teacherId: 'tch-priya' },
+        { id: 'tt-5', instituteId: INSTITUTE_ID, batchId: 'bat-c12', day: 1, startTime: '16:00', endTime: '17:00', subjectId: 'subj-c12-phy', teacherId: 'tch-priya' },
+        { id: 'tt-6', instituteId: INSTITUTE_ID, batchId: 'bat-c12', day: 2, startTime: '16:00', endTime: '17:00', subjectId: 'subj-c12-chem', teacherId: 'tch-priya' },
+        { id: 'tt-7', instituteId: INSTITUTE_ID, batchId: 'bat-c12', day: 4, startTime: '16:00', endTime: '17:30', subjectId: 'subj-c12-math', teacherId: 'tch-priya' }
+      ];
+    }
+    if (!Array.isArray(data.staffAttendance) || !data.staffAttendance.length) {
+      data.staffAttendance = [];
+      ['tch-priya', 'tch-rohan', 'tch-ananya', 'tch-kabir', 'tch-meera'].forEach(function (teacherId, index) {
+        var offset;
+        for (offset = -6; offset <= 0; offset += 1) {
+          var date = addDays(todayIso, offset);
+          if (weekday(date) === 0) continue;
+          var status = 'present';
+          if (teacherId === 'tch-meera') status = 'absent';
+          else if ((index + offset) % 7 === 0) status = 'late';
+          else if (teacherId === 'tch-rohan' && offset === -2) status = 'absent';
+          data.staffAttendance.push({
+            id: 'staff-' + teacherId + '-' + date,
+            instituteId: INSTITUTE_ID,
+            teacherId: teacherId,
+            date: date,
+            status: status,
+            markedBy: 'seed',
+            updatedAt: date + 'T09:00:00.000Z'
+          });
+        }
+      });
+    }
+    if (!Array.isArray(data.announcements) || !data.announcements.length) {
+      data.announcements = [
+        { id: 'ann-1', instituteId: INSTITUTE_ID, title: 'Unit tests next week', message: 'Class 10 and Class 12 unit tests start Monday. Bring the syllabus notes shared in class.', date: addDays(todayIso, -1), audience: 'All', pinned: true },
+        { id: 'ann-2', instituteId: INSTITUTE_ID, title: 'Friday staff meeting', message: 'Short meeting at 6:30 pm in room B1. Please bring your batch attendance sheets.', date: todayIso, audience: 'Teachers', pinned: false },
+        { id: 'ann-3', instituteId: INSTITUTE_ID, title: 'Bring graph books', message: 'Mathematics classes this week need a graph book and a geometry box.', date: addDays(todayIso, -2), audience: 'Students', pinned: false },
+        { id: 'ann-4', instituteId: INSTITUTE_ID, title: 'Parent meeting Saturday', message: 'Meet the class teacher between 10 am and 12 pm. No appointment is needed.', date: addDays(todayIso, 3), audience: 'Parents', pinned: true }
+      ];
+    }
+    data.officeSeeded = true;
   }
 
   function pushResult(data, exam, studentId, scores) {
@@ -497,13 +567,14 @@
     pushResult(data, examWeekly, 'stu-sana', [24, 26]);
     pushResult(data, examBcom, 'stu-harshita', [82]);
     pushResult(data, examBcom, 'stu-dev', [55]);
+    seedOffice(data);
     return data;
   }
 
   function normalize(data) {
     var base = blank();
     var merged = Object.assign(base, data || {});
-    ['users', 'students', 'teachers', 'courses', 'batches', 'attendance', 'feeStructures', 'invoices', 'payments', 'exams', 'results', 'academicYears'].forEach(function (key) {
+    ['users', 'students', 'teachers', 'courses', 'batches', 'attendance', 'feeStructures', 'invoices', 'payments', 'exams', 'results', 'academicYears', 'enquiries', 'courseSubjects', 'timetable', 'staffAttendance', 'announcements'].forEach(function (key) {
       if (!Array.isArray(merged[key])) merged[key] = [];
     });
     if (!merged.institute || !merged.institute.id) merged.institute = base.institute;
@@ -518,7 +589,12 @@
         localStorage.setItem(DATA_KEY, JSON.stringify(seeded));
         return seeded;
       }
-      return normalize(JSON.parse(raw));
+      var stored = normalize(JSON.parse(raw));
+      if (!stored.officeSeeded) {
+        seedOffice(stored);
+        localStorage.setItem(DATA_KEY, JSON.stringify(stored));
+      }
+      return stored;
     } catch (err) {
       var fresh = seed();
       localStorage.setItem(DATA_KEY, JSON.stringify(fresh));
@@ -608,6 +684,19 @@
     };
   }
 
+  function announcementsFor(user) {
+    var audience = { teacher: 'Teachers', student: 'Students', parent: 'Parents' };
+    return load().announcements.filter(function (item) {
+      if (!user || user.role === 'admin') return true;
+      if (user.role === 'accountant') return item.audience === 'All';
+      var own = audience[user.role];
+      return item.audience === 'All' || item.audience === own;
+    }).sort(function (a, b) {
+      if (!!a.pinned !== !!b.pinned) return a.pinned ? -1 : 1;
+      return a.date < b.date ? 1 : -1;
+    });
+  }
+
   function defaultPeriod(structure, yearLabel) {
     var now = new Date();
     if (!structure || structure.type === 'monthly') return monthLabel(now);
@@ -645,6 +734,7 @@
     nameOf: nameOf,
     scope: scope,
     attendanceSummary: attendanceSummary,
+    announcementsFor: announcementsFor,
     defaultPeriod: defaultPeriod
   };
 })();

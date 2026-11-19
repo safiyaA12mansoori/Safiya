@@ -1,6 +1,6 @@
 # Safiya Tuition ERP — Phase 1 demo
 
-A browser-only tuition institute demo for one sample institute, Safiya Tuition Academy. It covers admissions, teachers, courses, batches, attendance, fees, payments, examinations, results, reports, and role-based portals.
+A browser-only tuition institute demo for one sample institute, Safiya Tuition Academy. It covers admissions, teachers, courses, batches, attendance, fees, payments, examinations, results, reports, enquiries, academics, staff attendance, announcements, and role-based portals.
 
 Phase 1 does **not** include Flask, PostgreSQL, or real authentication. Records stay in `localStorage` in this browser. A later phase can replace `assets/js/storage.js` with a server, using the same record shapes. The role checks only hide screens. They are not security.
 
@@ -26,11 +26,11 @@ The login page lists these accounts. "Use" fills the form. Passwords are stored 
 
 | Role | Email | Password | What you can open |
 | --- | --- | --- | --- |
-| Admin | admin@safiya.edu | Admin@123 | Everything, including users and the institute profile |
-| Teacher | teacher@safiya.edu | Teacher@123 | Priya Nair's batches, their students, attendance, exams, and marks |
-| Accountant | accountant@safiya.edu | Account@123 | Fee structures, invoices, payments, student fee details, fee reports |
-| Student | student@safiya.edu | Student@123 | Aarav Mehta's profile, attendance, fees, and results |
-| Parent | parent@safiya.edu | Parent@123 | Aarav Mehta and Diya Mehta |
+| Admin | admin@safiya.edu | Admin@123 | Everything, including users, enquiries, academics, staff attendance, announcements, and the institute profile |
+| Teacher | teacher@safiya.edu | Teacher@123 | Priya Nair's batches, their students, attendance, exams, marks, academics, her own staff-attendance history, and announcements for teachers |
+| Accountant | accountant@safiya.edu | Account@123 | Fee structures, invoices, payments, student fee details, fee reports, and announcements for everyone |
+| Student | student@safiya.edu | Student@123 | Aarav Mehta's profile, attendance, fees, results, his batch timetable, and announcements for students |
+| Parent | parent@safiya.edu | Parent@123 | Aarav Mehta and Diya Mehta, their timetables, and announcements for parents |
 
 You can also sign in with the usernames `admin`, `priya`, `accounts`, `aarav`, and `rajesh`.
 
@@ -50,6 +50,10 @@ Remember me keeps the session after the browser closes. Without it, the session 
 - Reports with search, date and batch filters, print, and CSV export
 - Confirmation before deletes, and success or error messages
 - A direct link to a page your role cannot use shows a not-allowed message
+- Enquiries with search and a status filter (admin)
+- Subjects, a weekly timetable, and a topic list per subject (admin and teacher). Students and parents see the timetable for their batch or linked child
+- Staff attendance for a date, with one row per teacher, plus history. Teachers see only their own history
+- Announcements with an audience and an optional pin. Each dashboard shows the notes that role should see
 
 ## What is not implemented
 
