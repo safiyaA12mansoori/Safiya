@@ -145,12 +145,16 @@ grocery-shop-erp/
 
 The folders `Database/migrations/` and `Database/seeds/` are empty on purpose. The first account is created with `npm run seed`, not with SQL.
 
+## Products
+
+The shop catalog lives in `Backend/data/products.json`, which is gitignored. The first time the server starts with an empty catalog it writes 20 grocery items. Staff can open **Products** after sign-in. Super Admin, Admin, Manager, and Inventory Staff can add or edit items. Selling prices are stored in paise and shown in INR. This file is still not a database.
+
 ## Left for a later phase
 
 - Approving and connecting PostgreSQL
 - Running migrations
 - Replacing the JSON user file with the database
-- Products, inventory, purchases, sales, customers, suppliers, accounts, and reports
+- Inventory, purchases, sales, customers, suppliers, accounts, and reports
 - Live Chart.js charts
 - Saving shop, GST, and billing settings
 

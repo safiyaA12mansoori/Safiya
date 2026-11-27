@@ -64,6 +64,18 @@
   root.getShopName = getShopName;
   root.setShopName = setShopName;
   root.applyShopName = applyShopName;
+  function formatInr(paise) {
+    const amount = Number(paise);
+    if (!Number.isInteger(amount)) {
+      return '';
+    }
+    return new Intl.NumberFormat('en-IN', {
+      style: 'currency',
+      currency: 'INR',
+    }).format(amount / 100);
+  }
+
   root.formatWhen = formatWhen;
   root.formatNow = formatNow;
+  root.formatInr = formatInr;
 })();

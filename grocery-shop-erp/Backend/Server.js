@@ -51,6 +51,8 @@ async function start() {
       const { seedSampleShop } = require('./Utils/seedSuperAdmin');
       await seedSampleShop();
     }
+    const { ensureProductCatalog } = require('./Services/productService');
+    await ensureProductCatalog();
   } catch (error) {
     console.error(error.message);
     process.exit(1);
@@ -59,7 +61,7 @@ async function start() {
   app.listen(config.port, () => {
     console.log('Grocery Shop ERP (Phase 1)');
     console.log(`Open http://127.0.0.1:${config.port}/login.html`);
-    console.log('User store: temporary JSON file. PostgreSQL is not connected.');
+    console.log('User store and product catalog: temporary JSON files. PostgreSQL is not connected.');
     if (isSampleMode()) {
       console.log('Sample shop mode is on. Use Enter the sample shop on the login page.');
     }

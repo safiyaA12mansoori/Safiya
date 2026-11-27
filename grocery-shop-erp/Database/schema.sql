@@ -35,6 +35,19 @@ CREATE TABLE users (
 
 -- Suggested role names, matching Phase 1:
 -- Super Admin, Admin, Manager, Cashier, Inventory Staff, Accountant
--- Suggested permission codes, matching Phase 1:
--- dashboard.view, users.manage, settings.view
+-- Suggested permission codes, matching the running app:
+-- dashboard.view, users.manage, settings.view, products.view, products.manage
+
+CREATE TABLE products (
+  id uuid PRIMARY KEY,
+  sku text NOT NULL UNIQUE,
+  name text NOT NULL,
+  category text NOT NULL,
+  pack_size text NOT NULL,
+  unit text NOT NULL,
+  price_paise integer NOT NULL CHECK (price_paise > 0),
+  is_active boolean NOT NULL DEFAULT true,
+  created_at timestamptz NOT NULL DEFAULT now(),
+  updated_at timestamptz NOT NULL DEFAULT now()
+);
 -- Inserts are intentionally omitted so this file cannot be mistaken for a seed that should be run.

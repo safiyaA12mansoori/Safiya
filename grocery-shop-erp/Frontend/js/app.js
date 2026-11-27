@@ -13,6 +13,9 @@
     if (hash === '#/settings') {
       return 'settings';
     }
+    if (hash === '#/products') {
+      return 'products';
+    }
     if (hash === '#/dashboard' || hash === '' || hash === '#' || hash === '#/') {
       return 'dashboard';
     }
@@ -77,6 +80,16 @@
           return;
         }
         root.initUsersPage();
+      } else if (name === 'products') {
+        if (!state.permissions.includes('products.view')) {
+          view.innerHTML = '<section class="panel"><h1 class="h4">Products</h1><p class="mb-0">Your role cannot view the product list.</p></section>';
+          return;
+        }
+        await loadFragment('/pages/products.html');
+        if (token !== navToken) {
+          return;
+        }
+        root.initProductsPage();
       } else {
         view.innerHTML = '<section class="panel"><h1 class="h4">Not in this phase</h1><p class="mb-0">That screen is not part of Phase 1.</p></section>';
       }

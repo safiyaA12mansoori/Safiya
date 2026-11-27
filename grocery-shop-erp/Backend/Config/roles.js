@@ -15,6 +15,8 @@ const PERMISSIONS = Object.freeze({
   'dashboard.view': ALL_ROLES,
   'users.manage': Object.freeze(['Super Admin', 'Admin']),
   'settings.view': ALL_ROLES,
+  'products.view': ALL_ROLES,
+  'products.manage': Object.freeze(['Super Admin', 'Admin', 'Manager', 'Inventory Staff']),
 });
 
 function permissionsFor(role) {

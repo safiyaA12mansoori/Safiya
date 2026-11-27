@@ -67,6 +67,9 @@ function getConfig() {
     jwtExpiresIn: process.env.JWT_EXPIRES_IN || '8h',
     jwtMaxAgeMs: expiresToMs(process.env.JWT_EXPIRES_IN || '8h'),
     dataFile,
+    productsFile: process.env.PRODUCTS_FILE
+      ? path.resolve(process.env.PRODUCTS_FILE)
+      : path.join(path.dirname(dataFile), 'products.json'),
     bcryptRounds: Number.isInteger(rounds) && rounds >= 4 && rounds <= 15 ? rounds : 12,
     cookieName: 'gs_session',
     nodeEnv: process.env.NODE_ENV || 'development',
