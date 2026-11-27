@@ -1,0 +1,36 @@
+<section>
+  <div class="page-heading">
+    <div>
+      <h1>Products</h1>
+      <p class="lede mb-0">Items on the shop shelf. Prices are selling prices in Indian Rupees. Stock and sales stay closed.</p>
+    </div>
+    <button class="btn btn-primary" id="add-product" type="button">Add product</button>
+  </div>
+  <div class="toolbar">
+    <label class="visually-hidden" for="product-search">Search products</label>
+    <input class="form-control" id="product-search" type="search" placeholder="Search name, SKU, or category">
+    <label class="visually-hidden" for="product-category-filter">Filter by category</label>
+    <select class="form-select" id="product-category-filter">
+      <option value="">All categories</option>
+    </select>
+  </div>
+  <p id="product-status" class="quiet" role="status">Loading products…</p>
+  <div class="panel p-0 overflow-hidden">
+    <div class="table-responsive">
+      <table class="table align-middle mb-0">
+        <thead>
+          <tr>
+            <th scope="col">SKU</th>
+            <th scope="col">Name</th>
+            <th scope="col">Category</th>
+            <th scope="col">Pack</th>
+            <th scope="col">Selling price</th>
+            <th scope="col">Status</th>
+            <th scope="col" id="product-actions-heading">Actions</th>
+          </tr>
+        </thead>
+        <tbody id="product-rows"></tbody>
+      </table>
+    </div>
+  </div>
+</section>

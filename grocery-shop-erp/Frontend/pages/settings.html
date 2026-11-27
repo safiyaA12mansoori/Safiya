@@ -1,0 +1,36 @@
+<section>
+  <div class="page-heading">
+    <div>
+      <h1>Settings</h1>
+      <p class="lede mb-0">Phase 1 does not save shop or financial settings.</p>
+    </div>
+  </div>
+  <div class="split">
+    <form class="panel" id="display-name-form">
+      <h2>Name on this screen</h2>
+      <p class="quiet">This label is kept only in this browser session. It is not written to the server.</p>
+      <div id="settings-error" class="alert alert-danger form-error" role="alert" hidden></div>
+      <label class="form-label" for="shop-name-input">Shop display name</label>
+      <input class="form-control mb-3" id="shop-name-input" maxlength="60" required>
+      <button class="btn btn-primary" type="submit">Apply for this session</button>
+    </form>
+    <section class="panel">
+      <h2>Fixed for Phase 1</h2>
+      <div class="fixed-note mb-3">
+        <strong>Currency</strong>
+        <div>Indian Rupee (INR)</div>
+      </div>
+      <div class="fixed-note mb-3">
+        <strong>Time zone</strong>
+        <div>Asia/Kolkata</div>
+      </div>
+      <label class="form-label" for="gstin">GSTIN</label>
+      <input class="form-control mb-2" id="gstin" value="" placeholder="Later phase" disabled>
+      <label class="form-label" for="address">Shop address</label>
+      <input class="form-control mb-2" id="address" value="" placeholder="Later phase" disabled>
+      <label class="form-label" for="bill-prefix">Bill prefix</label>
+      <input class="form-control" id="bill-prefix" value="" placeholder="Later phase" disabled>
+      <p class="quiet small mt-3 mb-0">GST, address, and billing are not saved. There is no button for them in Phase 1.</p>
+    </section>
+  </div>
+</section>

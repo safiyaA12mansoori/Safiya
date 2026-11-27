@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Grocery Shop ERP</title>
+  <link rel="icon" href="/assets/logo.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/assets/vendor/bootstrap.min.css">
+  <link rel="stylesheet" href="/assets/vendor/bootstrap-icons.min.css">
+  <link rel="stylesheet" href="/css/app.css">
+</head>
+<body>
+  <div class="boot" id="boot">
+    <div class="spinner-border text-success" role="status" aria-hidden="true"></div>
+    <p class="mb-0">Loading the shop…</p>
+  </div>
+  <div class="shell d-none" id="shell">
+    <aside class="sidebar" id="sidebar">
+      <div class="brand">
+        <img src="/assets/logo.svg" alt="">
+        <div>
+          <p class="brand-kicker">Kirana and supermarket</p>
+          <strong data-shop-name>Grocery Shop</strong>
+        </div>
+      </div>
+      <p class="side-section">Phase 1</p>
+      <a class="side-link" href="#/dashboard" data-route="dashboard"><i class="bi bi-grid-1x2" aria-hidden="true"></i><span>Dashboard</span></a>
+      <a class="side-link" href="#/users" data-route="users" data-permission="users.manage"><i class="bi bi-people" aria-hidden="true"></i><span>Users</span></a>
+      <a class="side-link" href="#/settings" data-route="settings"><i class="bi bi-gear" aria-hidden="true"></i><span>Settings</span></a>
+      <p class="side-section">Shop</p>
+      <a class="side-link" href="#/products" data-route="products"><i class="bi bi-box-seam" aria-hidden="true"></i><span>Products</span></a>
+      <p class="side-section">Later phases</p>
+      <button class="side-link" type="button" disabled title="Available in a later phase"><i class="bi bi-clipboard-data" aria-hidden="true"></i><span>Inventory</span><span class="later">Later</span></button>
+      <button class="side-link" type="button" disabled title="Available in a later phase"><i class="bi bi-bag" aria-hidden="true"></i><span>Purchases</span><span class="later">Later</span></button>
+      <button class="side-link" type="button" disabled title="Available in a later phase"><i class="bi bi-receipt" aria-hidden="true"></i><span>Sales</span><span class="later">Later</span></button>
+      <button class="side-link" type="button" disabled title="Available in a later phase"><i class="bi bi-person" aria-hidden="true"></i><span>Customers</span><span class="later">Later</span></button>
+      <button class="side-link" type="button" disabled title="Available in a later phase"><i class="bi bi-truck" aria-hidden="true"></i><span>Suppliers</span><span class="later">Later</span></button>
+      <button class="side-link" type="button" disabled title="Available in a later phase"><i class="bi bi-journal-text" aria-hidden="true"></i><span>Accounts</span><span class="later">Later</span></button>
+      <button class="side-link" type="button" disabled title="Available in a later phase"><i class="bi bi-bar-chart" aria-hidden="true"></i><span>Reports</span><span class="later">Later</span></button>
+      <p class="sidebar-foot">Sign-in, users, and products</p>
+    </aside>
+    <button class="backdrop" id="backdrop" type="button" hidden aria-label="Close menu"></button>
+    <div class="app-main">
+      <header class="topbar">
+        <button class="btn btn-outline-secondary" id="menu-toggle" type="button" aria-expanded="false" aria-controls="sidebar">Menu</button>
+        <div>
+          <strong data-shop-name>Grocery Shop</strong>
+          <div class="clock" id="clock">Asia/Kolkata</div>
+        </div>
+        <div class="ms-auto d-flex align-items-center gap-3">
+          <div class="user-chip">
+            <strong id="current-user-name"></strong>
+            <small id="current-user-role"></small>
+          </div>
+          <div class="dropdown">
+            <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">Account</button>
+            <ul class="dropdown-menu dropdown-menu-end">
+              <li><button class="dropdown-item" id="open-password" type="button">Change password</button></li>
+              <li><button class="dropdown-item" id="logout-button" type="button">Log out</button></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <main id="view" aria-live="polite"></main>
+    </div>
+  </div>
+
+  <div class="modal fade" id="password-modal" tabindex="-1" aria-labelledby="password-title" aria-hidden="true">
+    <div class="modal-dialog">
+      <form class="modal-content" id="password-form">
+        <div class="modal-header">
+          <h2 class="modal-title h5" id="password-title">Change password</h2>
+          <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div id="password-error" class="alert alert-danger form-error" role="alert" hidden></div>
+          <div class="mb-3">
+            <label class="form-label" for="current-password">Current password</label>
+            <input class="form-control" id="current-password" name="currentPassword" type="password" autocomplete="current-password" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label" for="new-password">New password</label>
+            <input class="form-control" id="new-password" name="newPassword" type="password" autocomplete="new-password" required minlength="8" maxlength="72">
+            <div class="form-text">8 to 72 characters, with a letter and a number.</div>
+          </div>
+          <div class="mb-0">
+            <label class="form-label" for="confirm-password">Confirm new password</label>
+            <input class="form-control" id="confirm-password" type="password" autocomplete="new-password" required minlength="8" maxlength="72">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-outline-secondary" type="button" data-bs-dismiss="modal">Cancel</button>
+          <button class="btn btn-primary" type="submit">Update password</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="modal fade" id="user-modal" tabindex="-1" aria-labelledby="user-modal-title" aria-hidden="true">
+    <div class="modal-dialog">
+      <form class="modal-content" id="user-form">
+        <div class="modal-header">
+          <h2 class="modal-title h5" id="user-modal-title">Add user</h2>
+          <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div id="user-form-error" class="alert alert-danger form-error" role="alert" hidden></div>
+          <input type="hidden" id="user-id">
+          <div class="mb-3">
+            <label class="form-label" for="user-name">Name</label>
+            <input class="form-control" id="user-name" required minlength="2" maxlength="80" autocomplete="name">
+          </div>
+          <div class="mb-3">
+            <label class="form-label" for="user-email">Email</label>
+            <input class="form-control" id="user-email" type="email" required maxlength="254" autocomplete="off">
+          </div>
+          <div class="mb-3">
+            <label class="form-label" for="user-role">Role</label>
+            <select class="form-select" id="user-role" required></select>
+          </div>
+          <div class="mb-0" id="user-password-wrap">
+            <label class="form-label" for="user-password">Password</label>
+            <input class="form-control" id="user-password" type="password" autocomplete="new-password" minlength="8" maxlength="72">
+            <div class="form-text" id="user-password-help">8 to 72 characters, with a letter and a number.</div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-outline-secondary" type="button" data-bs-dismiss="modal">Cancel</button>
+          <button class="btn btn-primary" id="user-save" type="submit">Save user</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="modal fade" id="confirm-modal" tabindex="-1" aria-labelledby="confirm-title" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2 class="modal-title h5" id="confirm-title">Please confirm</h2>
+          <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <p id="confirm-message" class="mb-0"></p>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-outline-secondary" type="button" data-bs-dismiss="modal">Cancel</button>
+          <button class="btn btn-danger" id="confirm-accept" type="button">Confirm</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="product-modal" tabindex="-1" aria-labelledby="product-modal-title" aria-hidden="true">
+    <div class="modal-dialog">
+      <form class="modal-content" id="product-form">
+        <div class="modal-header">
+          <h2 class="modal-title h5" id="product-modal-title">Add product</h2>
+          <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div id="product-form-error" class="alert alert-danger form-error" role="alert" hidden></div>
+          <input type="hidden" id="product-id">
+          <div class="mb-3">
+            <label class="form-label" for="product-name">Name</label>
+            <input class="form-control" id="product-name" required minlength="2" maxlength="80">
+          </div>
+          <div class="row g-3">
+            <div class="col-sm-6">
+              <label class="form-label" for="product-category">Category</label>
+              <select class="form-select" id="product-category" required></select>
+            </div>
+            <div class="col-sm-6">
+              <label class="form-label" for="product-unit">Unit</label>
+              <select class="form-select" id="product-unit" required></select>
+            </div>
+            <div class="col-sm-6">
+              <label class="form-label" for="product-pack">Pack</label>
+              <input class="form-control" id="product-pack" required maxlength="40" placeholder="1 kg">
+            </div>
+            <div class="col-sm-6">
+              <label class="form-label" for="product-price">Selling price (INR)</label>
+              <input class="form-control" id="product-price" inputmode="decimal" required placeholder="0.00">
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-outline-secondary" type="button" data-bs-dismiss="modal">Cancel</button>
+          <button class="btn btn-primary" id="product-save" type="submit">Save product</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="toast-stack" id="toasts" aria-live="polite"></div>
+  <script src="/assets/vendor/bootstrap.bundle.min.js"></script>
+  <script src="/js/format.js"></script>
+  <script src="/js/api.js"></script>
+  <script src="/js/toast.js"></script>
+  <script src="/js/users.js"></script>
+  <script src="/js/products.js"></script>
+  <script src="/js/settings.js"></script>
+  <script src="/js/app.js"></script>
+</body>
+</html>
