@@ -4,61 +4,67 @@ const fs = require('fs/promises');
 const os = require('os');
 const path = require('path');
 
-const dataFile = path.join(os.tmpdir(), `grocery-erp-sample-${process.pid}.json`);
-delete process.env.JWT_SECRET;
+const dataFile = path.join(os.tmpdir(), `grocery-erp-sample-off-${process.pid}.json`);
+delete process.env.ALLOW_SAMPLE_LOGIN;
+process.env.NODE_ENV = 'test';
+process.env.JWT_SECRET = 'test-jwt-secret-phase1-grocery-shop-erp';
+process.env.JWT_EXPIRES_IN = '2h';
+process.env.BCRYPT_ROUNDS = '4';
+process.env.DATA_FILE = dataFile;
 delete process.env.SUPER_ADMIN_NAME;
 delete process.env.SUPER_ADMIN_EMAIL;
 delete process.env.SUPER_ADMIN_PASSWORD;
-process.env.NODE_ENV = 'test';
-process.env.BCRYPT_ROUNDS = '4';
-process.env.DATA_FILE = dataFile;
 
-const { after, before, test } = require('node:test');
+const { after, before, describe, test } = require('node:test');
 const assert = require('node:assert/strict');
 const { createApp } = require('../Backend/Server');
-const { seedSampleShop } = require('../Backend/Utils/seedSuperAdmin');
+const { seedSuperAdmin } = require('../Backend/Utils/seedSuperAdmin');
 const { listen, request } = require('./helpers');
 
-let server;
+describe('sample sign-in stays off by default', { concurrency: false }, () => {
+  let server;
+  let base;
 
-before(async () => {
-  await fs.rm(dataFile, { force: true });
-  const app = createApp();
-  await seedSampleShop();
-  const started = await listen(app);
-  server = started.server;
-  global.baseUrl = started.base;
-});
-
-after(async () => {
-  if (server) {
-    await new Promise((resolve, reject) => {
-      server.close((error) => (error ? reject(error) : resolve()));
-    });
-  }
-  await fs.rm(dataFile, { force: true });
-});
-
-test('sample shop signs in without configured secrets', async () => {
-  const health = await request(`${global.baseUrl}/api/health`);
-  assert.equal(health.status, 200);
-  assert.equal(health.data.sample, true);
-  assert.equal(health.data.database, 'not-connected');
-
-  const entered = await request(`${global.baseUrl}/api/auth/sample-login`, {
-    method: 'POST',
-    body: {},
+  before(async () => {
+    await fs.rm(dataFile, { force: true });
+    process.env.SUPER_ADMIN_NAME = 'Test Owner';
+    process.env.SUPER_ADMIN_EMAIL = 'owner@example.com';
+    process.env.SUPER_ADMIN_PASSWORD = 'Ownerpass1';
+    await seedSuperAdmin();
+    const started = await listen(createApp());
+    server = started.server;
+    base = started.base;
   });
-  assert.equal(entered.status, 200);
-  assert.equal(entered.data.sample, true);
-  assert.equal(entered.data.user.role, 'Super Admin');
-  assert.equal(entered.data.user.passwordHash, undefined);
-  assert.equal(entered.data.token, undefined);
-  assert.match(entered.session, /HttpOnly/);
 
-  const me = await request(`${global.baseUrl}/api/auth/me`, {
-    headers: { cookie: entered.cookieHeader },
+  after(async () => {
+    if (server) {
+      await new Promise((resolve, reject) => {
+        server.close((error) => (error ? reject(error) : resolve()));
+      });
+    }
+    await fs.rm(dataFile, { force: true });
   });
-  assert.equal(me.status, 200);
-  assert.equal(me.data.user.email, 'owner@example.com');
+
+  test('sample login is rejected when the opt-in flag is off', async () => {
+    const health = await request(`${base}/api/health`);
+    assert.equal(health.status, 200);
+    assert.deepEqual(health.data, { ok: true });
+    const sample = await request(`${base}/api/auth/sample-login`, { method: 'POST', body: {} });
+    assert.equal(sample.status, 404);
+  });
+
+  test('a missing JWT secret does not open sample sign-in', () => {
+    const previous = process.env.JWT_SECRET;
+    delete process.env.JWT_SECRET;
+    delete process.env.ALLOW_SAMPLE_LOGIN;
+    assert.throws(() => createApp(), /JWT_SECRET/);
+    process.env.JWT_SECRET = previous;
+  });
+
+  test('the sample secret from the example env file is rejected', () => {
+    const previous = process.env.JWT_SECRET;
+    process.env.JWT_SECRET = 'replace-with-a-long-random-string';
+    assert.throws(() => createApp(), /JWT_SECRET/);
+    process.env.JWT_SECRET = previous;
+  });
 });

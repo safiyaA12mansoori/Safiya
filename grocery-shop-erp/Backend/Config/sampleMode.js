@@ -1,9 +1,6 @@
 'use strict';
 
-const crypto = require('crypto');
-
 const SAMPLE_JWT_SECRET = 'replace-with-a-long-random-string';
-const SAMPLE_PASSWORD = 'replace-with-a-strong-password';
 const SAMPLE_EMAIL = 'owner@example.com';
 
 let enabled = false;
@@ -13,20 +10,25 @@ function hasRealSecret() {
   return secret.length >= 24 && secret !== SAMPLE_JWT_SECRET;
 }
 
-function hasRealAdmin() {
-  const password = process.env.SUPER_ADMIN_PASSWORD || '';
-  const email = process.env.SUPER_ADMIN_EMAIL || '';
-  return Boolean(email && password && password !== SAMPLE_PASSWORD);
+function isLoopbackHost(hostHeader) {
+  const raw = String(hostHeader || '').trim().toLowerCase();
+  const host = raw.startsWith('[')
+    ? raw.slice(1, raw.indexOf(']'))
+    : raw.replace(/:\d+$/, '');
+  return host === 'localhost' || host === '127.0.0.1' || host === '::1';
 }
 
 function enableSampleMode() {
-  if (enabled) {
-    return true;
-  }
-  if (hasRealSecret() || hasRealAdmin()) {
+  enabled = false;
+  if (process.env.NODE_ENV === 'production') {
     return false;
   }
-  process.env.JWT_SECRET = crypto.randomBytes(32).toString('hex');
+  if (process.env.ALLOW_SAMPLE_LOGIN !== 'true') {
+    return false;
+  }
+  if (!hasRealSecret()) {
+    return false;
+  }
   enabled = true;
   return true;
 }
@@ -39,4 +41,5 @@ module.exports = {
   SAMPLE_EMAIL,
   enableSampleMode,
   isSampleMode,
+  isLoopbackHost,
 };

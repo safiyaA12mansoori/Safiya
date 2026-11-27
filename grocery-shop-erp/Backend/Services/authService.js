@@ -5,7 +5,7 @@ const { hashPassword, verifyPassword } = require('../Utils/passwords');
 const { signToken } = require('../Utils/tokens');
 const { validateLogin, validateChangePassword } = require('../Utils/validate');
 const { httpError } = require('../Utils/httpError');
-const { isSampleMode, SAMPLE_EMAIL } = require('../Config/sampleMode');
+const { isSampleMode, isLoopbackHost, SAMPLE_EMAIL } = require('../Config/sampleMode');
 
 let dummyHashPromise = null;
 
@@ -42,8 +42,9 @@ async function login(body) {
   };
 }
 
-async function sampleLogin() {
-  if (!isSampleMode()) {
+async function sampleLogin(req) {
+  const host = req && req.headers ? req.headers.host : '';
+  if (!isSampleMode() || !isLoopbackHost(host)) {
     throw httpError(404, 'Not found');
   }
   const store = createUserStore();

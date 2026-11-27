@@ -29,7 +29,7 @@ const login = asyncHandler(async (req, res) => {
 });
 
 const sampleLogin = asyncHandler(async (req, res) => {
-  const result = await authService.sampleLogin();
+  const result = await authService.sampleLogin(req);
   setSessionCookie(res, getConfig(), result.token);
   res.json({ user: result.user, sample: true });
 });

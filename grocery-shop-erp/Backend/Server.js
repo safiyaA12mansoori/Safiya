@@ -47,9 +47,15 @@ async function start() {
   try {
     enableSampleMode();
     app = createApp();
+    const { seedSampleShop, seedSuperAdmin } = require('./Utils/seedSuperAdmin');
     if (isSampleMode()) {
-      const { seedSampleShop } = require('./Utils/seedSuperAdmin');
       await seedSampleShop();
+    } else if (
+      process.env.SUPER_ADMIN_EMAIL &&
+      process.env.SUPER_ADMIN_PASSWORD &&
+      process.env.SUPER_ADMIN_PASSWORD !== 'replace-with-a-strong-password'
+    ) {
+      await seedSuperAdmin();
     }
     const { ensureProductCatalog } = require('./Services/productService');
     await ensureProductCatalog();
@@ -63,7 +69,7 @@ async function start() {
     console.log(`Open http://127.0.0.1:${config.port}/login.html`);
     console.log('User store and product catalog: temporary JSON files. PostgreSQL is not connected.');
     if (isSampleMode()) {
-      console.log('Sample shop mode is on. Use Enter the sample shop on the login page.');
+      console.log('Local sample sign-in is on. It is refused for public hosts.');
     }
   });
 }

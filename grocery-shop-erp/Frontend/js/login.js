@@ -9,16 +9,11 @@
   const password = document.getElementById('password');
 
   const sampleButton = document.getElementById('sample-login');
-  fetch('/api/health')
-    .then((response) => response.json())
-    .then((data) => {
-      if (!data.sample) {
-        return;
-      }
-      sampleButton.hidden = false;
-      document.getElementById('sample-note').hidden = false;
-    })
-    .catch(() => {});
+  const host = window.location.hostname;
+  if (host === 'localhost' || host === '127.0.0.1' || host === '::1') {
+    sampleButton.hidden = false;
+    document.getElementById('sample-note').hidden = false;
+  }
 
   sampleButton.addEventListener('click', async () => {
     window.ShopERP.setBusy(sampleButton, true, 'Opening the sample shop…');

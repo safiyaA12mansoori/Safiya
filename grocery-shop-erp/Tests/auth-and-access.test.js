@@ -5,6 +5,7 @@ const os = require('os');
 const path = require('path');
 
 const dataFile = path.join(os.tmpdir(), `grocery-erp-users-${process.pid}.json`);
+delete process.env.ALLOW_SAMPLE_LOGIN;
 process.env.NODE_ENV = 'test';
 process.env.JWT_SECRET = 'test-jwt-secret-phase1-grocery-shop-erp';
 process.env.JWT_EXPIRES_IN = '2h';
@@ -228,9 +229,7 @@ describe('phase 1 auth and access', { concurrency: false }, () => {
   test('health and pages do not pretend the database is connected', async () => {
     const health = await request(`${base}/api/health`);
     assert.equal(health.status, 200);
-    assert.equal(health.data.database, 'not-connected');
-    assert.equal(health.data.store, 'file');
-    assert.equal(health.data.sample, false);
+    assert.deepEqual(health.data, { ok: true });
     const sample = await request(`${base}/api/auth/sample-login`, { method: 'POST', body: {} });
     assert.equal(sample.status, 404);
 
