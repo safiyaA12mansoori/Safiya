@@ -19,18 +19,43 @@ const { after, before, test } = require('node:test');
 const assert = require('node:assert/strict');
 const { createApp } = require('../Backend/Server');
 const { seedSampleShop } = require('../Backend/Utils/seedSuperAdmin');
-const { listen, request } = require('./helpers');
+const { request } = require('./helpers');
+
+function listenAll(app) {
+  return new Promise((resolve, reject) => {
+    const server = app.listen(0, '0.0.0.0');
+    server.once('listening', () => {
+      const { port } = server.address();
+      resolve({ server, base: `http://127.0.0.1:${port}`, port });
+    });
+    server.once('error', reject);
+  });
+}
+
+function otherLocalAddress() {
+  const interfaces = os.networkInterfaces();
+  for (const entries of Object.values(interfaces)) {
+    for (const entry of entries || []) {
+      if (!entry.internal && (entry.family === 'IPv4' || entry.family === 4)) {
+        return entry.address;
+      }
+    }
+  }
+  return '';
+}
 
 let server;
 let base;
+let port;
 
 before(async () => {
   await fs.rm(dataFile, { force: true });
   const app = createApp();
   await seedSampleShop();
-  const started = await listen(app);
+  const started = await listenAll(app);
   server = started.server;
   base = started.base;
+  port = started.port;
 });
 
 after(async () => {
@@ -57,10 +82,19 @@ test('local sample sign-in works only on a loopback host when opted in', async (
   assert.match(entered.session, /HttpOnly/);
   assert.doesNotMatch(entered.session, /Secure/);
 
-  const remote = await request(`${base}/api/auth/sample-login`, {
+  const renamed = await request(`${base}/api/auth/sample-login`, {
     method: 'POST',
     body: {},
-    headers: { host: 'shop.example' },
+    headers: { host: 'shop.example', 'x-forwarded-host': 'localhost' },
+  });
+  assert.equal(renamed.status, 200);
+
+  const remoteAddress = otherLocalAddress();
+  assert.ok(remoteAddress, 'this computer needs a non-loopback address for the socket test');
+  const remote = await request(`http://${remoteAddress}:${port}/api/auth/sample-login`, {
+    method: 'POST',
+    body: {},
+    headers: { host: 'localhost', 'x-forwarded-host': 'localhost' },
   });
   assert.equal(remote.status, 404);
 });

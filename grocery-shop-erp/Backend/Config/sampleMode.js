@@ -10,12 +10,9 @@ function hasRealSecret() {
   return secret.length >= 24 && secret !== SAMPLE_JWT_SECRET;
 }
 
-function isLoopbackHost(hostHeader) {
-  const raw = String(hostHeader || '').trim().toLowerCase();
-  const host = raw.startsWith('[')
-    ? raw.slice(1, raw.indexOf(']'))
-    : raw.replace(/:\d+$/, '');
-  return host === 'localhost' || host === '127.0.0.1' || host === '::1';
+function isLoopbackSocket(remoteAddress) {
+  const address = String(remoteAddress || '').trim().toLowerCase().replace(/^::ffff:/, '');
+  return address === '127.0.0.1' || address === '::1';
 }
 
 function enableSampleMode() {
@@ -41,5 +38,5 @@ module.exports = {
   SAMPLE_EMAIL,
   enableSampleMode,
   isSampleMode,
-  isLoopbackHost,
+  isLoopbackSocket,
 };

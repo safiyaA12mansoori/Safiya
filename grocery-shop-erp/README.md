@@ -65,7 +65,7 @@ node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
 
 The sample values in `.env.example` are placeholders. The server rejects that JWT secret, and the seed script rejects the sample password. A missing secret does not open a sample shop. Do not commit `.env`.
 
-Sample sign-in is off unless you set `ALLOW_SAMPLE_LOGIN=true` on this computer, with a real `JWT_SECRET`, and you open the app at localhost. Production ignores that flag. Delete `Backend/data/users.json` before `npm run seed` if a sample shop was already created on this computer.
+Sample sign-in is off unless you set `ALLOW_SAMPLE_LOGIN=true` on this computer, with a real `JWT_SECRET`, and the connection comes from this computer (`127.0.0.1` or `::1`). The browser address is not checked. Production ignores that flag. Delete `Backend/data/users.json` before `npm run seed` if a sample shop was already created on this computer.
 
 Create the first Super Admin (writes the gitignored JSON file, not a database):
 
