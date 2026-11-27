@@ -1,0 +1,35 @@
+<section>
+  <div class="page-heading">
+    <div>
+      <h1>Users</h1>
+      <p class="lede mb-0">Staff who can sign in. Super Admin and Admin can manage this list.</p>
+    </div>
+    <button class="btn btn-primary" id="add-user" type="button">Add user</button>
+  </div>
+  <div class="toolbar">
+    <label class="visually-hidden" for="user-search">Search users</label>
+    <input class="form-control" id="user-search" type="search" placeholder="Search name, email, or role">
+    <label class="visually-hidden" for="user-role-filter">Filter by role</label>
+    <select class="form-select" id="user-role-filter">
+      <option value="">All roles</option>
+    </select>
+  </div>
+  <p id="user-status" class="quiet" role="status">Loading staff…</p>
+  <div class="panel p-0 overflow-hidden">
+    <div class="table-responsive">
+      <table class="table align-middle mb-0">
+        <thead>
+          <tr>
+            <th scope="col">Name</th>
+            <th scope="col">Email</th>
+            <th scope="col">Role</th>
+            <th scope="col">Status</th>
+            <th scope="col">Added (IST)</th>
+            <th scope="col">Actions</th>
+          </tr>
+        </thead>
+        <tbody id="user-rows"></tbody>
+      </table>
+    </div>
+  </div>
+</section>
