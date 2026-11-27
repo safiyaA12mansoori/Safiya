@@ -28,6 +28,12 @@ const login = asyncHandler(async (req, res) => {
   }
 });
 
+const sampleLogin = asyncHandler(async (req, res) => {
+  const result = await authService.sampleLogin();
+  setSessionCookie(res, getConfig(), result.token);
+  res.json({ user: result.user, sample: true });
+});
+
 const logout = asyncHandler(async (req, res) => {
   await authService.endSession(req.user.id);
   clearSessionCookie(res, getConfig());
@@ -53,6 +59,7 @@ const changePassword = asyncHandler(async (req, res) => {
 
 module.exports = {
   login,
+  sampleLogin,
   logout,
   me,
   changePassword,

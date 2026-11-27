@@ -8,6 +8,36 @@
   const toggle = document.getElementById('toggle-password');
   const password = document.getElementById('password');
 
+  const sampleButton = document.getElementById('sample-login');
+  fetch('/api/health')
+    .then((response) => response.json())
+    .then((data) => {
+      if (!data.sample) {
+        return;
+      }
+      sampleButton.hidden = false;
+      document.getElementById('sample-note').hidden = false;
+    })
+    .catch(() => {});
+
+  sampleButton.addEventListener('click', async () => {
+    window.ShopERP.setBusy(sampleButton, true, 'Opening the sample shop…');
+    errorBox.hidden = true;
+    try {
+      await window.ShopERP.api('/api/auth/sample-login', {
+        method: 'POST',
+        redirectOn401: false,
+        body: {},
+      });
+      window.location.href = '/';
+    } catch (error) {
+      errorBox.hidden = false;
+      errorBox.textContent = error.message;
+      window.ShopERP.toast(error.message, 'error');
+      window.ShopERP.setBusy(sampleButton, false);
+    }
+  });
+
   window.ShopERP.api('/api/auth/me', { redirectOn401: false })
     .then(() => {
       window.location.href = '/';

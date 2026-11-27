@@ -3,6 +3,7 @@
 const express = require('express');
 const authRoutes = require('./authRoutes');
 const userRoutes = require('./userRoutes');
+const { isSampleMode } = require('../Config/sampleMode');
 
 const router = express.Router();
 
@@ -13,6 +14,7 @@ router.get('/health', (req, res) => {
     service: 'grocery-shop-erp',
     store: 'file',
     database: 'not-connected',
+    sample: isSampleMode(),
   });
 });
 

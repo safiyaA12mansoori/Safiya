@@ -63,7 +63,9 @@ Edit `.env`. Replace `JWT_SECRET` with a long random string, and set the first S
 node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
 ```
 
-The sample values in `.env.example` are placeholders. The server and the seed script reject them. Do not commit `.env`.
+The sample values in `.env.example` are placeholders. The seed script rejects them. Do not commit `.env`.
+
+If those values are not set, the server still starts in sample shop mode. The login page shows **Enter the sample shop**. That account exists only in the local JSON file, and the button disappears once `JWT_SECRET` and the Super Admin values are set. Delete `Backend/data/users.json` before `npm run seed` if a sample shop was already created on this computer.
 
 Create the first Super Admin (writes the gitignored JSON file, not a database):
 

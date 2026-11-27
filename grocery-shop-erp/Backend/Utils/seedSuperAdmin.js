@@ -1,6 +1,8 @@
 'use strict';
 
+const crypto = require('crypto');
 const { getConfig } = require('../Config');
+const { SAMPLE_EMAIL } = require('../Config/sampleMode');
 const { createUserStore, toPublicUser } = require('../Services/userStore');
 const { hashPassword } = require('./passwords');
 const { validateCreateUser, SAMPLE_PASSWORD } = require('./validate');
@@ -59,4 +61,21 @@ if (require.main === module) {
     });
 }
 
-module.exports = { seedSuperAdmin };
+async function seedSampleShop() {
+  const store = createUserStore();
+  const users = await store.list();
+  if (users.length > 0) {
+    return { created: false };
+  }
+  const passwordHash = await hashPassword(crypto.randomBytes(24).toString('hex'));
+  await store.create({
+    name: 'Shop Owner',
+    email: SAMPLE_EMAIL,
+    role: 'Super Admin',
+    passwordHash,
+    active: true,
+  });
+  return { created: true };
+}
+
+module.exports = { seedSuperAdmin, seedSampleShop };

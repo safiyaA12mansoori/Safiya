@@ -5,6 +5,7 @@ const { hashPassword, verifyPassword } = require('../Utils/passwords');
 const { signToken } = require('../Utils/tokens');
 const { validateLogin, validateChangePassword } = require('../Utils/validate');
 const { httpError } = require('../Utils/httpError');
+const { isSampleMode, SAMPLE_EMAIL } = require('../Config/sampleMode');
 
 let dummyHashPromise = null;
 
@@ -34,6 +35,21 @@ async function login(body) {
   }
   if (!user.active) {
     throw httpError(403, 'This account is inactive. Ask a Super Admin or Admin to activate it.');
+  }
+  return {
+    token: issueToken(user),
+    user: toPublicUser(user),
+  };
+}
+
+async function sampleLogin() {
+  if (!isSampleMode()) {
+    throw httpError(404, 'Not found');
+  }
+  const store = createUserStore();
+  const user = await store.findByEmail(SAMPLE_EMAIL);
+  if (!user || !user.active || user.role !== 'Super Admin') {
+    throw httpError(503, 'The sample shop is not ready');
   }
   return {
     token: issueToken(user),
@@ -82,6 +98,7 @@ async function changePassword(userId, body) {
 
 module.exports = {
   login,
+  sampleLogin,
   changePassword,
   endSession,
   issueToken,

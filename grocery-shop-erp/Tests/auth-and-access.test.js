@@ -230,6 +230,9 @@ describe('phase 1 auth and access', { concurrency: false }, () => {
     assert.equal(health.status, 200);
     assert.equal(health.data.database, 'not-connected');
     assert.equal(health.data.store, 'file');
+    assert.equal(health.data.sample, false);
+    const sample = await request(`${base}/api/auth/sample-login`, { method: 'POST', body: {} });
+    assert.equal(sample.status, 404);
 
     const dashboard = await request(`${base}/pages/dashboard.html`, { raw: true });
     assert.equal(dashboard.status, 200);

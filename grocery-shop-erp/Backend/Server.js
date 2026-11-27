@@ -3,6 +3,7 @@
 const path = require('path');
 const express = require('express');
 const { assertJwtSecret, getConfig } = require('./Config');
+const { enableSampleMode, isSampleMode } = require('./Config/sampleMode');
 const apiRoutes = require('./Routes');
 const { errorHandler } = require('./Middleware/errorHandler');
 
@@ -21,6 +22,7 @@ function securityHeaders(req, res, next) {
 }
 
 function createApp() {
+  enableSampleMode();
   const config = getConfig();
   assertJwtSecret(config.jwtSecret);
   const app = express();
@@ -40,10 +42,15 @@ function createApp() {
   return app;
 }
 
-function start() {
+async function start() {
   let app;
   try {
+    enableSampleMode();
     app = createApp();
+    if (isSampleMode()) {
+      const { seedSampleShop } = require('./Utils/seedSuperAdmin');
+      await seedSampleShop();
+    }
   } catch (error) {
     console.error(error.message);
     process.exit(1);
@@ -53,6 +60,9 @@ function start() {
     console.log('Grocery Shop ERP (Phase 1)');
     console.log(`Open http://127.0.0.1:${config.port}/login.html`);
     console.log('User store: temporary JSON file. PostgreSQL is not connected.');
+    if (isSampleMode()) {
+      console.log('Sample shop mode is on. Use Enter the sample shop on the login page.');
+    }
   });
 }
 
