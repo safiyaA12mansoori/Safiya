@@ -1,0 +1,10 @@
+# Static site for the Safiya Tuition ERP demo.
+# Render serves the tuition-erp folder as-is. There is no build step.
+services:
+  - type: web
+    name: safiya-tuition-erp
+    runtime: static
+    branch: cursor/tuition-erp-phase1-7339
+    buildCommand: "true"
+    staticPublishPath: ./tuition-erp
+    autoDeployTrigger: commit
